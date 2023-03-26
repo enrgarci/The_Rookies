@@ -1,0 +1,6 @@
+*
+
+#Ignore All but these files:
+!.gitignore
+!*.cpp
+!*.h
