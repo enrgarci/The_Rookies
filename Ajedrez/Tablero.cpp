@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-26 20:10:49
+ //  Modified time: 2023-03-27 00:59:51
  //  Description:
  //
 #include "Tablero.h"
@@ -26,7 +26,7 @@ Tablero::Tablero(string fen)
 		{
 			for (int i = 0; i < (c - '0'); i++)
 			{
-				this->m_casilla[cell].setPiece(Pieza::figura::Vacio);
+				this->m_casilla[cell].setFigure(Pieza::figura::Vacio);
 				this->m_casilla[cell].setColor(Pieza::color::noColor);
 				cell++;
 			}
@@ -36,52 +36,52 @@ Tablero::Tablero(string fen)
 		{
 		//black
 		case 'r':
-			this->m_casilla[cell].setPiece(Pieza::figura::Torre);
+			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		case 'n':
-			this->m_casilla[cell].setPiece(Pieza::figura::Caballo);
+			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		case 'b':
-			this->m_casilla[cell].setPiece(Pieza::figura::Alfil);
+			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		case 'q':
-			this->m_casilla[cell].setPiece(Pieza::figura::Reina);
+			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		case 'k':
-			this->m_casilla[cell].setPiece(Pieza::figura::Rey);
+			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		case 'p':
-			this->m_casilla[cell].setPiece(Pieza::figura::Peon);
+			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
 			break;
 		//white
 		case 'R':
-			this->m_casilla[cell].setPiece(Pieza::figura::Torre);
+			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		case 'N':
-			this->m_casilla[cell].setPiece(Pieza::figura::Caballo);
+			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		case 'B':
-			this->m_casilla[cell].setPiece(Pieza::figura::Alfil);
+			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		case 'Q':
-			this->m_casilla[cell].setPiece(Pieza::figura::Reina);
+			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		case 'K':
-			this->m_casilla[cell].setPiece(Pieza::figura::Rey);
+			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		case 'P':
-			this->m_casilla[cell].setPiece(Pieza::figura::Peon);
+			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
 			break;
 		default:
@@ -91,18 +91,20 @@ Tablero::Tablero(string fen)
 	}
 }
 
+/// @brief Prints a console representation of the board
 void	Tablero::print ()
 {
 	int cell = 0;
 	const int UnicodeVal= 9812;
+	const int NumOfPieces= 6;
 
 	setlocale(LC_ALL, "en_US.UTF-8");
 	for(auto casilla: m_casilla) 
 	{
-		int pieceVal = int(casilla.getPiece());
+		int pieceVal = int(casilla.getFigure());
 		int colorVal = int(casilla.getColor());
-		pieceVal = colorVal == 1 ? pieceVal + 6 : pieceVal; // blanco o negro
-		pieceVal = pieceVal == 0 ? (-UnicodeVal + 32) : pieceVal - 1; // si está vacio -> espacio
+		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
+		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
 		if(!(++cell % 8)) cout << endl; 
 	}
