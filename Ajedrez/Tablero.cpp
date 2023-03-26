@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-26 18:47:38
+ //  Modified time: 2023-03-26 19:03:40
  //  Description:
  //
 #include "Tablero.h"
@@ -94,4 +94,5 @@ void	Tablero::print ()
 {
 	for(auto casilla: m_casilla) 
 		cout << int(casilla.getPiece());
+	cout << endl << "Turno de " << m_mueve << endl;
 }
