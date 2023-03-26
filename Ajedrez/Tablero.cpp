@@ -2,11 +2,12 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-26 19:03:40
+ //  Modified time: 2023-03-26 20:10:49
  //  Description:
  //
 #include "Tablero.h"
 #include "Casilla.cpp"
+#include <stdio.h>
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
@@ -92,7 +93,18 @@ Tablero::Tablero(string fen)
 
 void	Tablero::print ()
 {
+	int cell = 0;
+	const int UnicodeVal= 9812;
+
+	setlocale(LC_ALL, "en_US.UTF-8");
 	for(auto casilla: m_casilla) 
-		cout << int(casilla.getPiece());
-	cout << endl << "Turno de " << m_mueve << endl;
+	{
+		int pieceVal = int(casilla.getPiece());
+		int colorVal = int(casilla.getColor());
+		pieceVal = colorVal == 1 ? pieceVal + 6 : pieceVal; // blanco o negro
+		pieceVal = pieceVal == 0 ? (-UnicodeVal + 32) : pieceVal - 1; // si está vacio -> espacio
+		wprintf(L"%lc", UnicodeVal + pieceVal);
+		if(!(++cell % 8)) cout << endl; 
+	}
+	cout << endl << "Turno de " << (!m_mueve ? "Blancas" : "Negras") << endl;
 }
