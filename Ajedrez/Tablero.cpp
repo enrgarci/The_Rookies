@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 18:14:08
+ //  Modified time: 2023-03-27 22:45:02
  //  Description:
  //
 #include "Tablero.h"
@@ -15,9 +15,10 @@
 /// @todo check if fen is correct read extra informatios as castling rights etc..
 Tablero::Tablero(string fen)
 {	
+	int		cell = 0;
+	bool	all_pos = false;
+
 	m_initial_board = fen;
-	int	cell = 0;
-	bool all_pos = false;
 	for(char c:fen)
 	{
 		if (c == 'w') {this->m_mueve = Blanco; break;}
@@ -30,6 +31,7 @@ Tablero::Tablero(string fen)
 			{
 				this->m_casilla[cell].setFigure(Pieza::figura::Vacio);
 				this->m_casilla[cell].setColor(Pieza::color::noColor);
+				this->m_casilla[cell].setId(cell);
 				cell++;
 			}
 			continue;
@@ -40,51 +42,63 @@ Tablero::Tablero(string fen)
 		case 'r':
 			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'n':
 			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'b':
 			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'q':
 			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'k':
 			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'p':
 			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
 			this->m_casilla[cell].setColor(Pieza::color::Negro);
+			this->m_casilla[cell].setId(cell);
 			break;
 		//white
 		case 'R':
 			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'N':
 			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'B':
 			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'Q':
 			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'K':
 			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		case 'P':
 			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
 			this->m_casilla[cell].setColor(Pieza::color::Blanco);
+			this->m_casilla[cell].setId(cell);
 			break;
 		default:
 			break;
@@ -172,4 +186,91 @@ string Tablero::get_fen()
 	//add turn
 	fen += m_mueve ? " w" : " b";
 	return (fen);
+}
+
+/// @brief Calculates the set of legal moves for the piece in a given cell
+/// @param cell 
+/// @return a pointer to the first element of an array containing legal move cells
+Casilla	*Tablero::get_possible_moves(Casilla cell)
+{
+	const int	MaxPosibleMoves = 21;
+	Casilla 	*moves[MaxPosibleMoves];
+
+	if (!cell.getFigure()) return NULL;
+}
+
+/// @brief Gets the x,y position of the board (0,0) is upper left
+/// 		Expects correct input
+/// @param x The absolute x coordinate, equivalent to letters on real board
+/// @param y The absolute y coordinate, equivalent to numbers on real board
+/// @return The cell on the (x,y) coordinate
+Casilla	Tablero::get_cell(int x, int y)
+{
+	const	int size = 8;
+	//out of borders
+	if(x < 0 || x >= size || y < 0 || y >= size )
+	{
+		Casilla	invalid;
+		invalid.setId(-1);
+		return (invalid);
+	}
+	return (m_casilla[x + 8 * y]);
+}
+
+/// @brief Gets the cell int the A,N position,(0,0) = a8. (7,7) = a1
+/// @param c the column
+/// @param y the row
+/// @return The (c,y) position on the board (Looking as white pieces)
+Casilla	Tablero::get_cell(char c, int y)
+{
+	const	int size = 8;
+	//out of borders
+	if(c < 'a' ||
+	 c > 'h' ||
+	  y <= 0 ||
+	   y > size )
+	{
+		Casilla	invalid;
+		invalid.setId(-1);
+		return (invalid);
+	}
+	return (m_casilla[(c - 'a') + 8 * ( size - y)]);
+}
+
+/// @brief Gets the x position cell, counting row by row from upper left
+///			Expects valid input
+/// @param x The positio on the board 
+/// @return the cell in the x position
+inline Casilla	Tablero::get_cell(int x)
+{
+	// 0 is upper left corner, 63 is opposite one.
+	//out of borders
+	if(x < 0 || x > 63)
+	{
+		Casilla	invalid;
+		invalid.setId(-1);
+		return (invalid);
+	}
+	return (m_casilla[x]);
+}
+
+/// @brief Gets the cell int the x,y position to the self cell
+/// @param self The local cell
+/// @param relative_x the x relative position from self
+/// @param relative_y the y relative position from self
+/// @return 
+Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
+{
+	const	int size = 8;
+	//out of borders
+	if(self.getId() % 8 + relative_x < 0 ||
+	 	self.getId() % 8 + relative_x >= size ||
+		self.getId() / 8 - relative_y < 0 ||
+		 self.getId() / 8 - relative_y >= size )
+	{
+		Casilla	invalid;
+		invalid.setId(-1);
+		return (invalid);
+	}
+	return (get_cell(self.getId() +  relative_x - 8 * relative_y));
 }
