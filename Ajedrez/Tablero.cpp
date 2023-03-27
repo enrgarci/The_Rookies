@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 00:59:51
+ //  Modified time: 2023-03-27 18:14:08
  //  Description:
  //
 #include "Tablero.h"
@@ -11,9 +11,11 @@
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
+// FEN: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 /// @todo check if fen is correct read extra informatios as castling rights etc..
 Tablero::Tablero(string fen)
 {	
+	m_initial_board = fen;
 	int	cell = 0;
 	bool all_pos = false;
 	for(char c:fen)
@@ -109,4 +111,65 @@ void	Tablero::print ()
 		if(!(++cell % 8)) cout << endl; 
 	}
 	cout << endl << "Turno de " << (!m_mueve ? "Blancas" : "Negras") << endl;
+}
+
+/// @brief Gets the FEN code of the current board state
+/// @return FEN code as string
+// FEN: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+string Tablero::get_fen()
+{
+	string	fen = "";
+	char	new_piece;
+	bool	empty = false;
+	int		empty_count = 0;
+	int		cell_count = 0;
+
+	for(Casilla cell: m_casilla)
+	{
+		//empty cell management
+		empty = cell.getFigure() == Pieza::Vacio ? true : false;
+		if (empty) empty_count++;
+		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
+		//cell with piece
+		switch (cell.getFigure())
+		{
+		case Pieza::Rey:
+			new_piece = 'K';
+			break;
+		case Pieza::Reina:
+			new_piece = 'Q';
+			break;
+		case Pieza::Torre:
+			new_piece = 'R';
+			break;
+		case Pieza::Alfil:
+			new_piece = 'B';
+			break;
+		case Pieza::Caballo:
+			new_piece = 'N';
+			break;
+		case Pieza::Peon:
+			new_piece = 'P';
+			break;
+		default:
+			break;
+		}
+		//change to lower if color is black
+		if (cell.getColor() == 2) new_piece += ('a' - 'A'); 
+		if (!empty) fen += new_piece;
+		//end of board row management
+		if (!(++cell_count % 8))
+		{
+			if (empty_count)
+			{
+				fen += '0' + empty_count;
+				empty = false;
+				empty_count = 0;
+			}
+			fen += '/';
+		}
+	}
+	//add turn
+	fen += m_mueve ? " w" : " b";
+	return (fen);
 }
