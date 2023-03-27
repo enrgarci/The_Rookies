@@ -2,29 +2,26 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 22:16:50
+ //  Modified time: 2023-03-28 01:37:00
  //  Description:
  //
  
 #ifndef TABLERO_H
 #define TABLERO_H
 
+#include "header.h"
 #include "Casilla.h"
-#include "Moves.h"
 
 using std::cout;
 using std::endl;
 using std::string;
-
-enum Turno {Blanco, Negro};
 
  class Tablero
 {
 private:
 	Casilla m_casilla[64];
 	Casilla	m_last_move[2];				///#TODO
-	Casilla	*m_possible_moves;
-	Turno	m_mueve;
+	Pieza::color	m_mueve;
 	string	m_initial_board;
 	string	m_game;						///TODO
 	bool	m_can_castle = true;		///#TODO
@@ -40,7 +37,16 @@ public:
 	Casilla get_cell(int x, int y);
 	Casilla get_cell(char c, int y);
 	Casilla get_cell(Casilla self, int relative_x, int relative_y);
-	Casilla *get_possible_moves(Casilla cell);
+	void	set_possible_moves(Casilla cell);
+	void	reset_possible_moves();
+	bool	can_Move_To(Casilla dst, Casilla src);
+	void	posible_king(Casilla cell);
+	void	posible_queen(Casilla cell);
+	void	posible_rook(Casilla cell);
+	void	posible_bishop(Casilla cell);
+	void	posible_knight(Casilla cell);
+	void	posible_pawn(Casilla cell);
+	void	printPosibleMoves (Casilla cell);
 };
 
 #endif

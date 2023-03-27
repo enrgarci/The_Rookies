@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 22:45:02
+ //  Modified time: 2023-03-28 01:47:50
  //  Description:
  //
 #include "Tablero.h"
@@ -21,8 +21,8 @@ Tablero::Tablero(string fen)
 	m_initial_board = fen;
 	for(char c:fen)
 	{
-		if (c == 'w') {this->m_mueve = Blanco; break;}
-		if (all_pos && c == 'b') {this->m_mueve = Negro; break;}
+		if (c == 'w') {this->m_mueve = Pieza::Blanco; break;}
+		if (all_pos && c == 'b') {this->m_mueve = Pieza::Negro; break;}
 		if (c == '/') {continue;}
 		if (c == ' ') {all_pos = true;continue;}
 		if (c >= '1' && c <= '8')
@@ -115,7 +115,7 @@ void	Tablero::print ()
 	const int NumOfPieces= 6;
 
 	setlocale(LC_ALL, "en_US.UTF-8");
-	for(auto casilla: m_casilla) 
+	for(Casilla casilla: m_casilla) 
 	{
 		int pieceVal = int(casilla.getFigure());
 		int colorVal = int(casilla.getColor());
@@ -126,7 +126,25 @@ void	Tablero::print ()
 	}
 	cout << endl << "Turno de " << (!m_mueve ? "Blancas" : "Negras") << endl;
 }
+/// @brief Prints a console representation of the possible moves of a piece
+void	Tablero::printPosibleMoves (Casilla cell)
+{
+	int cell_count = 0;
+	const int UnicodeBox= 2610;
+	const int UnicodeXBox= 2612;
 
+	set_possible_moves(cell);
+	setlocale(LC_ALL, "en_US.UTF-8");
+	for(Casilla casilla: m_casilla) 
+	{
+		int pieceVal;
+		bool b = casilla.getPosMove();
+		pieceVal = b ? 'x' : ' '; // si es posible moverse marca
+		wprintf(L"%lc", '0' + b);
+		if(!(++cell_count % 8)) cout << endl; 
+	}
+	cout << endl;
+}
 /// @brief Gets the FEN code of the current board state
 /// @return FEN code as string
 // FEN: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -191,12 +209,38 @@ string Tablero::get_fen()
 /// @brief Calculates the set of legal moves for the piece in a given cell
 /// @param cell 
 /// @return a pointer to the first element of an array containing legal move cells
-Casilla	*Tablero::get_possible_moves(Casilla cell)
+void Tablero::set_possible_moves(Casilla cell)
 {
-	const int	MaxPosibleMoves = 21;
-	Casilla 	*moves[MaxPosibleMoves];
+	posible_king(cell);///bypass
+	if (!cell.getFigure()) return;
+	switch (cell.getFigure())
+	{
+		case Pieza::Rey:
+			posible_king(cell);
+			break;
+		case Pieza::Reina:
+			posible_king(cell);
+			break;
+		case Pieza::Torre:
+			posible_king(cell);
+			break;
+		case Pieza::Alfil:
+			posible_king(cell);
+			break;
+		case Pieza::Caballo:
+			posible_king(cell);
+			break;
+		case Pieza::Peon:
+			posible_king(cell);
+			break;
+		default:
+			break;
+	}
+}
 
-	if (!cell.getFigure()) return NULL;
+void Tablero::reset_possible_moves()
+{
+	for(auto i: m_casilla) i.setPosMove(false);
 }
 
 /// @brief Gets the x,y position of the board (0,0) is upper left
@@ -273,4 +317,29 @@ Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 		return (invalid);
 	}
 	return (get_cell(self.getId() +  relative_x - 8 * relative_y));
+}
+
+/// @brief Checks if a cell is a valid destination for a move
+/// @param cell 
+/// @return 1 if cell is a valid destination
+bool Tablero::can_Move_To(Casilla dst, Casilla src)
+{
+	if (dst.getFigure() == Pieza::Vacio || dst.getColor() != src.getColor()) 
+		return true;
+	return false;
+}
+
+/// @brief set True as posible moves the posible king moves from cell
+void Tablero::posible_king(Casilla cell)
+{	
+	for (int x = -1; x < 2; x++)
+	{
+		for (int y = -1; y < 2; y++)
+		{
+			if (!x && !y) continue;
+			Casilla relative = get_cell(cell, x, y);
+			if(relative.getId() >= 0 && can_Move_To(relative, cell)) /*&& !get_cell(cell, x, y).getCheck()*/
+				m_casilla[relative.getId()].setPosMove(true);
+		}
+	}
 }
