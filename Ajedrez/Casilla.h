@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:15:45
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 20:10:13
+ //  Modified time: 2023-03-27 22:09:25
  //  Description:
  //
 #ifndef CASILLA_H
@@ -27,6 +27,7 @@ public:
 	Pieza::color	getColor();
 	Pieza			getPiece();
 	bool			getCheck();
+	int				getId();
 };
 
 #endif

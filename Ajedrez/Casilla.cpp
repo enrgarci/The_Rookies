@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:15:45
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 20:10:22
+ //  Modified time: 2023-03-27 22:36:00
  //  Description:
  //
  
@@ -17,3 +17,4 @@ inline Pieza::figura	Casilla::getFigure(){return m_piece.fig;}
 inline Pieza::color		Casilla::getColor(){return m_piece.col;}
 inline bool				Casilla::getCheck(){return m_in_check;}
 inline	void			Casilla::setId(int id){m_id = id;}
+inline	int				Casilla::getId(){return m_id;}
