@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:15:45
  //  Modified by: enrgarci
- //  Modified time: 2023-03-27 22:09:25
+ //  Modified time: 2023-03-28 01:43:30
  //  Description:
  //
 #ifndef CASILLA_H
@@ -16,6 +16,8 @@ private:
 	int		m_id;
 	Pieza	m_piece;
 	bool	m_in_check;
+	bool	m_can_en_passant;
+	bool	m_posible_destination = false;
 public:
 	void			setCheck(bool inCheck);
 	void			setId(int id);
@@ -28,6 +30,10 @@ public:
 	Pieza			getPiece();
 	bool			getCheck();
 	int				getId();
+	bool			getEnPassant();
+	void			setEnPassant(bool c);
+	bool			getPosMove();
+	void			setPosMove(bool c);
 };
 
 #endif
