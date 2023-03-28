@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 01:47:50
+ //  Modified time: 2023-03-28 02:54:51
  //  Description:
  //
 #include "Tablero.h"
@@ -211,7 +211,6 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla cell)
 {
-	posible_king(cell);///bypass
 	if (!cell.getFigure()) return;
 	switch (cell.getFigure())
 	{
@@ -219,19 +218,19 @@ void Tablero::set_possible_moves(Casilla cell)
 			posible_king(cell);
 			break;
 		case Pieza::Reina:
-			posible_king(cell);
+			posible_queen(cell);
 			break;
 		case Pieza::Torre:
-			posible_king(cell);
+			posible_rook(cell);
 			break;
 		case Pieza::Alfil:
-			posible_king(cell);
+			posible_bishop(cell);
 			break;
 		case Pieza::Caballo:
-			posible_king(cell);
+			posible_knight(cell);
 			break;
 		case Pieza::Peon:
-			posible_king(cell);
+			posible_pawn(cell);
 			break;
 		default:
 			break;
@@ -329,7 +328,15 @@ bool Tablero::can_Move_To(Casilla dst, Casilla src)
 	return false;
 }
 
+/// @return true if dst is held by opponent's pieces
+bool Tablero::is_move_wall(Casilla dst, Casilla src)
+{
+	if(dst.getColor() != Pieza::Vacio) return true;
+	return false;
+}
+
 /// @brief set True as posible moves the posible king moves from cell
+/// @todo look if move would be check, that ilegal!
 void Tablero::posible_king(Casilla cell)
 {	
 	for (int x = -1; x < 2; x++)
@@ -343,3 +350,32 @@ void Tablero::posible_king(Casilla cell)
 		}
 	}
 }
+
+void Tablero::posible_bishop(Casilla cell)
+{
+	int reachWall[4] = {0, 0, 0, 0};
+	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
+	
+	for (int x = 1; x < 8; x++)
+	{
+		for(int i = -1; i < 2; i+= 2)
+		{
+			for (int j = -1; j < 2; j+= 2)
+			{
+				dir = (x * j > 0 && i > 0) ? 0 : dir;
+				dir = (x * j < 0 && i > 0) ? 1 : dir;
+				dir = (x * j < 0 && i < 0) ? 2 : dir;
+				dir = (x * j > 0 && i < 0) ? 3 : dir;
+				if (!x) continue;
+				Casilla relative = get_cell(cell, x * j, x * i);
+				if (relative.getId() >= 0)
+				{
+					if (can_Move_To(relative, cell) && !reachWall[dir])
+						m_casilla[relative.getId()].setPosMove(true);
+					if (is_move_wall(relative,cell)) reachWall[dir] = true;
+				}
+			}
+		}
+	}
+}
+
