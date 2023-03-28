@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 03:25:15
+ //  Modified time: 2023-03-28 04:11:56
  //  Description:
  //
 #include "Tablero.h"
@@ -333,6 +333,15 @@ inline bool Tablero::is_empty(Casilla dst)
 {
 	return (dst.getFigure() == Pieza::Vacio ? 1 : 0);
 }
+
+/// @return 1 if dst contains oponents piece, 0 otherwise
+bool Tablero::is_enemy_piece(Casilla dst, Pieza::color myColor)
+{
+	if (!is_empty(dst))
+		return (dst.getColor() != myColor ? 1 : 0);
+	return false;
+}
+
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla dst, Casilla src)
 {
@@ -440,5 +449,36 @@ void Tablero::posible_knight(Casilla cell)
 					m_casilla[relative.getId()].setPosMove(true);
 			}
 		}
+	}
+}
+
+void Tablero::posible_pawn(Casilla cell)
+{
+	int dir = 1;
+	if (cell.getColor() == Pieza::Blanco) dir = 1;
+	if (cell.getColor() == Pieza::Negro) dir = -1;
+	int	en_passant_row = dir > 0 ? 3 : 4; // filas centrales hay que ver si se puede tomar al paso
+	int	jump_row = dir > 0 ? 6 : 1; // penultima fila de cada lado puede dar un salto
+
+	//delante
+	if (is_empty(get_cell(cell, 0, dir))) m_casilla[get_cell(cell, 0, dir).getId()].setPosMove(true);
+	// Y  solo al empezar un salto puede dar !
+	if (cell.getId() / 8 == jump_row && 
+	is_empty(get_cell(cell, 0, dir)) && 
+	is_empty(get_cell(cell, 0, 2 * dir))) 
+		{m_casilla[get_cell(cell, 0, 2 * dir).getId()].setPosMove(true);}
+	//capturas
+	for (int i = -1; i < 2; i+=2)
+	{
+		if (is_enemy_piece(get_cell(cell, i, dir), cell.getColor())) 
+			m_casilla[get_cell(cell, i, dir).getId()].setPosMove(true);
+	}
+	// En passant
+	for (int i = -1; i < 2; i+=2)
+	{
+		if (cell.getId() / 8 == en_passant_row && 
+		is_enemy_piece(get_cell(cell, i, 0), cell.getColor()) && 
+		get_cell(cell, i, 0).getEnPassant()) 
+			m_casilla[get_cell(cell, i, 0).getId()].setPosMove(true);
 	}
 }
