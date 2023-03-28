@@ -369,7 +369,7 @@ void Tablero::posible_king(Casilla cell)
 void Tablero::posible_bishop(Casilla cell)
 {
 	int reachWall[4] = {0, 0, 0, 0};
-	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
+	int dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
 	
 	for (int x = 1; x < 8; x++)
 	{
