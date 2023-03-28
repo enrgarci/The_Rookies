@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 02:54:51
+ //  Modified time: 2023-03-28 03:06:49
  //  Description:
  //
 #include "Tablero.h"
@@ -335,7 +335,7 @@ bool Tablero::is_move_wall(Casilla dst, Casilla src)
 	return false;
 }
 
-/// @brief set True as posible moves the posible king moves from cell
+/// @brief set cell true, if a king on cell could reach them
 /// @todo look if move would be check, that ilegal!
 void Tablero::posible_king(Casilla cell)
 {	
@@ -351,6 +351,7 @@ void Tablero::posible_king(Casilla cell)
 	}
 }
 
+/// @brief set cells true, if a bishop on cell could reach them
 void Tablero::posible_bishop(Casilla cell)
 {
 	int reachWall[4] = {0, 0, 0, 0};
@@ -379,3 +380,32 @@ void Tablero::posible_bishop(Casilla cell)
 	}
 }
 
+void Tablero::posible_rook(Casilla cell)
+{
+	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
+	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
+	
+	for (int x = 1; x < 8; x++)
+	{
+		// i  is for the positive or negative relative coordinates
+		for(int i = -1; i < 2; i+= 2)
+		{
+			// j selects between vertical or horizontal
+			for (int j = 0; j < 2; j++)
+			{
+				dir = (x * i > 0 && j) ? 0 : dir;
+				dir = (x * i < 0 && !j) ? 1 : dir;
+				dir = (x * i < 0 && j) ? 2 : dir;
+				dir = (x * i > 0 && !j) ? 3 : dir;
+				if (!x) continue;
+				Casilla relative = get_cell(cell, x * i * j, x * i * !j);
+				if (relative.getId() >= 0)
+				{
+					if (can_Move_To(relative, cell) && !reachWall[dir])
+						m_casilla[relative.getId()].setPosMove(true);
+					if (is_move_wall(relative,cell)) reachWall[dir] = true;
+				}
+			}
+		}
+	}
+}
