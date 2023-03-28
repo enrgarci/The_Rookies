@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 03:13:47
+ //  Modified time: 2023-03-28 03:25:15
  //  Description:
  //
 #include "Tablero.h"
@@ -211,7 +211,6 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla cell)
 {
-	posible_queen(cell);
 	if (!cell.getFigure()) return;
 	switch (cell.getFigure())
 	{
@@ -418,4 +417,23 @@ void Tablero::posible_queen(Casilla cell)
 	//Oh no my queen!
 	posible_bishop(cell);
 	posible_rook(cell);
+}
+
+/// @brief set cells true, if a knight on cell could reach them
+void Tablero::posible_knight(Casilla cell)
+{
+	for (int x = -2; x < 3; x++)
+	{
+		int y = 3 - abs(x);
+		for (int i = -1; i < 2; i+=2)
+		{
+			if (!x) continue;
+			Casilla relative = get_cell(cell, x, y * i);
+			if (relative.getId() >= 0)
+			{
+				if (can_Move_To(relative, cell))	
+					m_casilla[relative.getId()].setPosMove(true);
+			}
+		}
+	}
 }
