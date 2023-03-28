@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 02:18:12
+ //  Modified time: 2023-03-28 04:13:17
  //  Description:
  //
  
@@ -41,6 +41,8 @@ public:
 	void	reset_possible_moves();
 	bool	can_Move_To(Casilla dst, Casilla src);
 	bool	is_move_wall(Casilla dst, Casilla src);
+	bool	is_empty(Casilla dst);
+	bool	is_enemy_piece(Casilla dst, Pieza::color myColor);
 	void	posible_king(Casilla cell);
 	void	posible_queen(Casilla cell);
 	void	posible_rook(Casilla cell);
