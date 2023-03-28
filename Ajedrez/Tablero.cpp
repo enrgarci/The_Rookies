@@ -2,7 +2,7 @@
  //  Author: enrgarci
  //  Create Time: 2023-03-26 14:12:51
  //  Modified by: enrgarci
- //  Modified time: 2023-03-28 03:06:49
+ //  Modified time: 2023-03-28 03:13:47
  //  Description:
  //
 #include "Tablero.h"
@@ -211,6 +211,7 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla cell)
 {
+	posible_queen(cell);
 	if (!cell.getFigure()) return;
 	switch (cell.getFigure())
 	{
@@ -380,6 +381,7 @@ void Tablero::posible_bishop(Casilla cell)
 	}
 }
 
+/// @brief set cells true, if a rook on cell could reach them
 void Tablero::posible_rook(Casilla cell)
 {
 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
@@ -408,4 +410,12 @@ void Tablero::posible_rook(Casilla cell)
 			}
 		}
 	}
+}
+
+/// @brief set cells true, if a queen on cell could reach them
+void Tablero::posible_queen(Casilla cell)
+{
+	//Oh no my queen!
+	posible_bishop(cell);
+	posible_rook(cell);
 }
