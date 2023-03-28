@@ -328,6 +328,11 @@ bool Tablero::can_Move_To(Casilla dst, Casilla src)
 	return false;
 }
 
+/// @return 1 if dst is empty 0 otherwise
+inline bool Tablero::is_empty(Casilla dst)
+{
+	return (dst.getFigure() == Pieza::Vacio ? 1 : 0);
+}
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla dst, Casilla src)
 {
