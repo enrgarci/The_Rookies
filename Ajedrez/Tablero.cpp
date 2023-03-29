@@ -408,10 +408,10 @@ void Tablero::posible_rook(Casilla cell)
 			// j selects between vertical or horizontal
 			for (int j = 0; j < 2; j++)
 			{
-				dir = (x * i > 0 && j) ? 0 : dir;
-				dir = (x * i < 0 && !j) ? 1 : dir;
-				dir = (x * i < 0 && j) ? 2 : dir;
-				dir = (x * i > 0 && !j) ? 3 : dir;
+				dir = (i > 0 && j) ? 0 : dir;
+				dir = (i < 0 && !j) ? 1 : dir;
+				dir = (i < 0 && j) ? 2 : dir;
+				dir = (i > 0 && !j) ? 3 : dir;
 				if (!x) continue;
 				Casilla relative = get_cell(cell, x * i * j, x * i * !j);
 				if (relative.getId() >= 0)
