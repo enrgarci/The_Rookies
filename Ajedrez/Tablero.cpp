@@ -377,10 +377,10 @@ void Tablero::posible_bishop(Casilla cell)
 		{
 			for (int j = -1; j < 2; j+= 2)
 			{
-				dir = (x * j > 0 && i > 0) ? 0 : dir;
-				dir = (x * j < 0 && i > 0) ? 1 : dir;
-				dir = (x * j < 0 && i < 0) ? 2 : dir;
-				dir = (x * j > 0 && i < 0) ? 3 : dir;
+				dir = (j > 0 && i > 0) ? 0 : dir;
+				dir = (j < 0 && i > 0) ? 1 : dir;
+				dir = (j < 0 && i < 0) ? 2 : dir;
+				dir = (j > 0 && i < 0) ? 3 : dir;
 				if (!x) continue;
 				Casilla relative = get_cell(cell, x * j, x * i);
 				if (relative.getId() >= 0)
@@ -408,10 +408,10 @@ void Tablero::posible_rook(Casilla cell)
 			// j selects between vertical or horizontal
 			for (int j = 0; j < 2; j++)
 			{
-				dir = (x * i > 0 && j) ? 0 : dir;
-				dir = (x * i < 0 && !j) ? 1 : dir;
-				dir = (x * i < 0 && j) ? 2 : dir;
-				dir = (x * i > 0 && !j) ? 3 : dir;
+				dir = (i > 0 && j) ? 0 : dir;
+				dir = (i < 0 && !j) ? 1 : dir;
+				dir = (i < 0 && j) ? 2 : dir;
+				dir = (i > 0 && !j) ? 3 : dir;
 				if (!x) continue;
 				Casilla relative = get_cell(cell, x * i * j, x * i * !j);
 				if (relative.getId() >= 0)
