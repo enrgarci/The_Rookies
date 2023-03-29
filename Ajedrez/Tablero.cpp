@@ -377,10 +377,10 @@ void Tablero::posible_bishop(Casilla cell)
 		{
 			for (int j = -1; j < 2; j+= 2)
 			{
-				dir = (x * j > 0 && i > 0) ? 0 : dir;
-				dir = (x * j < 0 && i > 0) ? 1 : dir;
-				dir = (x * j < 0 && i < 0) ? 2 : dir;
-				dir = (x * j > 0 && i < 0) ? 3 : dir;
+				dir = (j > 0 && i > 0) ? 0 : dir;
+				dir = (j < 0 && i > 0) ? 1 : dir;
+				dir = (j < 0 && i < 0) ? 2 : dir;
+				dir = (j > 0 && i < 0) ? 3 : dir;
 				if (!x) continue;
 				Casilla relative = get_cell(cell, x * j, x * i);
 				if (relative.getId() >= 0)
