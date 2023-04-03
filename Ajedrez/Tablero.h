@@ -1,12 +1,15 @@
 #ifndef TABLERO_H
 #define TABLERO_H
 
+
 #include "header.h"
 #include "Casilla.h"
 
 using std::cout;
 using std::endl;
 using std::string;
+
+const string INITIAL_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
  class Tablero
 {
@@ -22,7 +25,7 @@ private:
 	int		m_repeat_three = 0;			///#TODO
 	friend	class Moves;						///#TODO
 public:
-	Tablero (string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+	Tablero (string fen = INITIAL_POS);
 	void	print();
 	string	get_fen();
 	Casilla get_cell(int x);
