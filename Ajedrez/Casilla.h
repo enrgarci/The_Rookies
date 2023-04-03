@@ -1,10 +1,3 @@
-/// Have a nice day !
- //  Author: enrgarci
- //  Create Time: 2023-03-26 14:15:45
- //  Modified by: enrgarci
- //  Modified time: 2023-03-28 01:43:30
- //  Description:
- //
 #ifndef CASILLA_H
 #define CASILLA_H
 

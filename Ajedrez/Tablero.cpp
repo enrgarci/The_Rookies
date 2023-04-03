@@ -1,10 +1,3 @@
-/// Have a nice day !
- //  Author: enrgarci
- //  Create Time: 2023-03-26 14:12:51
- //  Modified by: enrgarci
- //  Modified time: 2023-03-28 04:11:56
- //  Description:
- //
 #include "Tablero.h"
 #include "Casilla.cpp"
 #include <stdio.h>

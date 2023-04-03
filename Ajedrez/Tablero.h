@@ -1,11 +1,3 @@
-/// Have a nice day !
- //  Author: enrgarci
- //  Create Time: 2023-03-26 14:12:51
- //  Modified by: enrgarci
- //  Modified time: 2023-03-28 04:13:17
- //  Description:
- //
- 
 #ifndef TABLERO_H
 #define TABLERO_H
 

@@ -1,11 +1,3 @@
-/// Have a nice day !
- //  Author: enrgarci
- //  Create Time: 2023-03-26 14:15:45
- //  Modified by: enrgarci
- //  Modified time: 2023-03-28 00:39:48
- //  Description:
- //
- 
 #include "Casilla.h"
 
 inline void				Casilla::setCheck(bool inCheck){m_in_check = inCheck;}
