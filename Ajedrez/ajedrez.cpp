@@ -1,10 +1,12 @@
-#include "Tablero.h"
+#include "Partida.h"
 
 using namespace std;
 
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Tablero mainT("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-	mainT.print();
+	Partida myGame;
+	cout << myGame.getPlayer() + "\n";
+	Tablero &myBoard = myGame.board;
+	myBoard.print();
 }
