@@ -243,11 +243,10 @@ inline Casilla	Tablero::get_cell(int x)
 	//out of borders
 	if(x < 0 || x > 63)
 	{
-		Casilla	invalid;
-		invalid.setId(-1);
+		Casilla	invalid(nullptr, noColor, -1);
 		return (invalid);
 	}
-	return (m_casilla[x]);
+	return (*m_casilla[x]);
 }
 
 /// @brief Gets the cell int the x,y position to the self cell
