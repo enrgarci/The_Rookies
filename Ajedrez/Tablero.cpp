@@ -208,11 +208,10 @@ Casilla	Tablero::get_cell(int x, int y)
 	//out of borders
 	if(x < 0 || x >= size || y < 0 || y >= size )
 	{
-		Casilla	invalid;
-		invalid.setId(-1);
+		Casilla	invalid(nullptr, noColor, -1);
 		return (invalid);
 	}
-	return (m_casilla[x + 8 * y]);
+	return (*m_casilla[x + 8 * y]);
 }
 
 /// @brief Gets the cell int the A,N position,(0,0) = a8. (7,7) = a1
