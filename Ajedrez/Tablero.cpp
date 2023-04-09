@@ -263,8 +263,7 @@ Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 		self.getId() / 8 - relative_y < 0 ||
 		 self.getId() / 8 - relative_y >= size )
 	{
-		Casilla	invalid;
-		invalid.setId(-1);
+		Casilla	invalid(nullptr, noColor, -1);
 		return (invalid);
 	}
 	return (get_cell(self.getId() +  relative_x - 8 * relative_y));
