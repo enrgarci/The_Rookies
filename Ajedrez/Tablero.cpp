@@ -164,7 +164,7 @@ string Tablero::get_fen()
 		//cell with piece
 		if (!empty) fen += cell.getPiece().getSymbol();
 		//end of board row management
-		if (!(++cell_count % 8))
+		if (!(++cell_count % ROW_SIZE))
 		{
 			if (empty_count)
 			{
@@ -190,7 +190,11 @@ void Tablero::set_possible_moves(Casilla cell)
 
 void Tablero::reset_possible_moves()
 {
-	for(auto i: m_casilla) i.setPosMove(false);
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		Casilla &cell = *m_casilla[i];
+		cell.setPosMove(false);
+	}
 }
 
 /// @brief Gets the x,y position of the board (0,0) is upper left
