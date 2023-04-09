@@ -274,7 +274,7 @@ Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 /// @return 1 if cell is a valid destination
 bool Tablero::can_Move_To(Casilla dst, Casilla src)
 {
-	if (dst.getFigure() == Pieza::Vacio || dst.getColor() != src.getColor()) 
+	if (is_empty(dst) || dst.getColor() != src.getColor()) 
 		return true;
 	return false;
 }
