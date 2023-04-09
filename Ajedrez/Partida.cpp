@@ -1,15 +1,21 @@
 #include "Partida.h"
+#include "Tablero.h"
 
 Partida::Partida(string w_player, string b_player, string init_pos)
 {
-	board = Tablero(init_pos);
+	board = new Tablero(init_pos);
 	m_w_player = w_player;
 	m_b_player = b_player;
 }
 
-Tablero Partida::getBoard()
+Partida::~Partida()
 {
-	return board;
+	delete(board);
+}
+
+Tablero &Partida::getBoard()
+{
+	return *board;
 }
 
 string Partida::getPlayer(int col)

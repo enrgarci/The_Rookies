@@ -1,10 +1,11 @@
 #include "Tablero.h"
-#include "Casilla.cpp"
+#include "Casilla.h"
+#include "Pieza.h"
 #include <stdio.h>
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
-// FEN: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+/// FEN @link ://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 /// @todo check if fen is correct read extra informatios as castling rights etc..
 Tablero::Tablero(string fen)
 {	
@@ -14,112 +15,116 @@ Tablero::Tablero(string fen)
 	m_initial_board = fen;
 	for(char c:fen)
 	{
-		if (c == 'w') {this->m_mueve = Pieza::Blanco; break;}
-		if (all_pos && c == 'b') {this->m_mueve = Pieza::Negro; break;}
+		if (c == 'w') {turn = turno::Blanco; break;}
+		if (all_pos && c == 'b') {turn = turno::Negro; break;}
 		if (c == '/') {continue;}
 		if (c == ' ') {all_pos = true;continue;}
 		if (c >= '1' && c <= '8')
 		{
 			for (int i = 0; i < (c - '0'); i++)
 			{
-				this->m_casilla[cell].setFigure(Pieza::figura::Vacio);
-				this->m_casilla[cell].setColor(Pieza::color::noColor);
-				this->m_casilla[cell].setId(cell);
+				m_casilla[cell] = new Casilla(new King(), noColor, cell);
 				cell++;
 			}
 			continue;
 		}
-		switch (c)
-		{
-		//black
-		case 'r':
-			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'n':
-			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'b':
-			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'q':
-			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'k':
-			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'p':
-			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
-			this->m_casilla[cell].setColor(Pieza::color::Negro);
-			this->m_casilla[cell].setId(cell);
-			break;
-		//white
-		case 'R':
-			this->m_casilla[cell].setFigure(Pieza::figura::Torre);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'N':
-			this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'B':
-			this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'Q':
-			this->m_casilla[cell].setFigure(Pieza::figura::Reina);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'K':
-			this->m_casilla[cell].setFigure(Pieza::figura::Rey);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		case 'P':
-			this->m_casilla[cell].setFigure(Pieza::figura::Peon);
-			this->m_casilla[cell].setColor(Pieza::color::Blanco);
-			this->m_casilla[cell].setId(cell);
-			break;
-		default:
-			break;
-		}
+		// switch (c)
+		// {
+		// //black
+		// case 'r':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Torre);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'n':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'b':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'q':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Reina);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'k':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Rey);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'p':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Peon);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// //white
+		// case 'R':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Torre);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'N':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'B':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'Q':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Reina);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'K':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Rey);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// case 'P':
+		// 	this->m_casilla[cell].setFigure(Pieza::figura::Peon);
+		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
+		// 	this->m_casilla[cell].setId(cell);
+		// 	break;
+		// default:
+		// 	break;
+		// }
 		cell++;
 	}
 }
 
+/// @brief Libera la memoria reservada para la clase @ref Tablero
+Tablero::~Tablero()
+{
+	for (int i = 0; i < 64; i++) delete(m_casilla[i]);
+}
 /// @brief Prints a console representation of the board
 void	Tablero::print ()
 {
-	int cell = 0;
+	int cell_count = 0;
 	const int UnicodeVal= 9812;
 	const int NumOfPieces= 6;
 
 	setlocale(LC_ALL, "en_US.UTF-8");
-	for(Casilla casilla: m_casilla) 
+	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		int pieceVal = int(casilla.getFigure());
-		int colorVal = int(casilla.getColor());
+		Casilla &cell = *m_casilla[i];
+		int pieceVal = int(cell.getFigure());
+		int colorVal = int(cell.getColor());
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
 		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
-		if(!(++cell % 8)) cout << endl; 
+		if(!(++cell_count % 8)) cout << endl; 
 	}
-	cout << endl << "Turno de " << (!m_mueve ? "Blancas" : "Negras") << endl;
+	cout << endl << "Turno de " << (!turn ? "Blancas" : "Negras") << endl;
 }
-/// @brief Prints a console representation of the possible moves of a piece
+/// @brief Prints a console representation of the possible moves of the @ref Piece contained on cell
 void	Tablero::printPosibleMoves (Casilla cell)
 {
 	int cell_count = 0;
@@ -128,10 +133,11 @@ void	Tablero::printPosibleMoves (Casilla cell)
 
 	set_possible_moves(cell);
 	setlocale(LC_ALL, "en_US.UTF-8");
-	for(Casilla casilla: m_casilla) 
+	for(int i = 0; i < BOARD_SIZE; i++)
 	{
+		Casilla &cell = *m_casilla[i];
 		int pieceVal;
-		bool b = casilla.getPosMove();
+		bool b = cell.getPosMove();
 		pieceVal = b ? 'x' : ' '; // si es posible moverse marca
 		wprintf(L"%lc", '0' + b);
 		if(!(++cell_count % 8)) cout << endl; 
@@ -140,7 +146,7 @@ void	Tablero::printPosibleMoves (Casilla cell)
 }
 /// @brief Gets the FEN code of the current board state
 /// @return FEN code as string
-// FEN: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+/// FEN: @link https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 string Tablero::get_fen()
 {
 	string	fen = "";
@@ -149,11 +155,12 @@ string Tablero::get_fen()
 	int		empty_count = 0;
 	int		cell_count = 0;
 
-	for(Casilla cell: m_casilla)
+	for(int i = 0; i < BOARD_SIZE; i++)
 	{
+		Casilla &cell = *m_casilla[i];
 		//empty cell management
-		empty = cell.getFigure() == Pieza::Vacio ? true : false;
-		if (empty) empty_count++;
+		empty = is_empty(cell);//cell.getFigure() == figura::Vacio ? true : false;
+		if (is_empty(cell)) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
 		switch (cell.getFigure())
@@ -328,12 +335,12 @@ inline bool Tablero::is_empty(Casilla dst)
 }
 
 /// @return 1 if dst contains oponents piece, 0 otherwise
-bool Tablero::is_enemy_piece(Casilla dst, Pieza::color myColor)
-{
-	if (!is_empty(dst))
-		return (dst.getColor() != myColor ? 1 : 0);
-	return false;
-}
+// bool Tablero::is_enemy_piece(Casilla dst, Pieza::color myColor)
+// {
+// 	if (!is_empty(dst))
+// 		return (dst.getColor() != myColor ? 1 : 0);
+// 	return false;
+// }
 
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla dst, Casilla src)

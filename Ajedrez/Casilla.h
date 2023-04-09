@@ -1,25 +1,28 @@
 #ifndef CASILLA_H
 #define CASILLA_H
 
+class Pieza;
+
 #include "header.h"
 
- class Casilla
+class Casilla
 {
 private:
 	int		m_id;
-	Pieza	m_piece;
-	bool	m_in_check;
-	bool	m_can_en_passant;
+	Pieza	*m_piece;
+	bool	m_in_check = false;
+	bool	m_can_en_passant = false;
 	bool	m_posible_destination = false;
 public:
+	Casilla(Pieza *p, color c, int id);
 	void			setCheck(bool inCheck);
 	void			setId(int id);
-	void			setFigure(Pieza::figura f);
-	void			setColor(Pieza::color c);
-	void			setPiece(Pieza p);
-	void			setPiece(Pieza::figura f, Pieza::color c);
-	Pieza::figura	getFigure();
-	Pieza::color	getColor();
+	void			setFigure(figura f);
+	void			setColor(color c);
+	void			setPiece(Pieza &p);
+	void			setPiece(figura f, color c);
+	figura	getFigure();
+	color	getColor();
 	Pieza			getPiece();
 	bool			getCheck();
 	int				getId();
