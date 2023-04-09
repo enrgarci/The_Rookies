@@ -282,7 +282,7 @@ bool Tablero::can_Move_To(Casilla dst, Casilla src)
 /// @return 1 if dst is empty 0 otherwise
 inline bool Tablero::is_empty(Casilla dst)
 {
-	return (dst.getFigure() == Pieza::Vacio ? 1 : 0);
+	return (dst.getFigure() == figura::Vacio ? 1 : 0);
 }
 
 /// @return 1 if dst contains oponents piece, 0 otherwise
