@@ -150,7 +150,6 @@ void	Tablero::printPosibleMoves (Casilla cell)
 string Tablero::get_fen()
 {
 	string	fen = "";
-	char	new_piece;
 	bool	empty = false;
 	int		empty_count = 0;
 	int		cell_count = 0;
@@ -163,32 +162,7 @@ string Tablero::get_fen()
 		if (is_empty(cell)) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
-		switch (cell.getFigure())
-		{
-		case Pieza::Rey:
-			new_piece = 'K';
-			break;
-		case Pieza::Reina:
-			new_piece = 'Q';
-			break;
-		case Pieza::Torre:
-			new_piece = 'R';
-			break;
-		case Pieza::Alfil:
-			new_piece = 'B';
-			break;
-		case Pieza::Caballo:
-			new_piece = 'N';
-			break;
-		case Pieza::Peon:
-			new_piece = 'P';
-			break;
-		default:
-			break;
-		}
-		//change to lower if color is black
-		if (cell.getColor() == 2) new_piece += ('a' - 'A'); 
-		if (!empty) fen += new_piece;
+		if (!empty) fen += cell.getPiece().getSymbol();
 		//end of board row management
 		if (!(++cell_count % 8))
 		{
@@ -202,7 +176,7 @@ string Tablero::get_fen()
 		}
 	}
 	//add turn
-	fen += m_mueve ? " w" : " b";
+	fen += turn ? " b" : " w";
 	return (fen);
 }
 
