@@ -185,30 +185,7 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla cell)
 {
-	if (!cell.getFigure()) return;
-	switch (cell.getFigure())
-	{
-		case Pieza::Rey:
-			posible_king(cell);
-			break;
-		case Pieza::Reina:
-			posible_queen(cell);
-			break;
-		case Pieza::Torre:
-			posible_rook(cell);
-			break;
-		case Pieza::Alfil:
-			posible_bishop(cell);
-			break;
-		case Pieza::Caballo:
-			posible_knight(cell);
-			break;
-		case Pieza::Peon:
-			posible_pawn(cell);
-			break;
-		default:
-			break;
-	}
+	cell.getPiece().possible_moves(*this, cell);
 }
 
 void Tablero::reset_possible_moves()
