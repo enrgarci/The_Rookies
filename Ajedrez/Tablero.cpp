@@ -227,11 +227,10 @@ Casilla	Tablero::get_cell(char c, int y)
 	  y <= 0 ||
 	   y > size )
 	{
-		Casilla	invalid;
-		invalid.setId(-1);
+		Casilla	invalid(nullptr, noColor, -1);
 		return (invalid);
 	}
-	return (m_casilla[(c - 'a') + 8 * ( size - y)]);
+	return (*m_casilla[(c - 'a') + 8 * ( size - y)]);
 }
 
 /// @brief Gets the x position cell, counting row by row from upper left
