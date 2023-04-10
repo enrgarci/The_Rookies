@@ -44,18 +44,15 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 	int reachWall[4] = {0, 0, 0, 0};
 	int dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
 	
-	for (int x = 1; x < 8; x++)
+	for (int dist = 1; dist < 8; dist++)
 	{
-		for(int i = -1; i < 2; i+= 2)
+		for(int orientation = -1; orientation < 2; orientation+= 2)
 		{
-			for (int j = -1; j < 2; j+= 2)
+			for (int axis = -1; axis < 2; axis+= 2)
 			{
-				if (j > 0 && i > 0) dir = 0;
-				else if (j < 0 && i > 0) dir = 1;
-				else if (j < 0 && i < 0) dir = 2;
-				else if (j > 0 && i < 0) dir = 3;
-				if (reachWall[dir] || !x) continue;
-				Casilla *relative = board.get_cell(cell, x * j, x * i);
+				dir = (orientation + axis + 1); // converts to 0-3 direction, faster than ifs
+				if (reachWall[dir] || !dist) continue;
+				Casilla *relative = board.get_cell(cell, dist * axis, dist * orientation);
 				if (relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
@@ -74,20 +71,17 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
 	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
 	
-	for (int x = 1; x < 8; x++)
+	for (int dist = 1; dist < 8; dist++)
 	{
 		// i  is for the positive or negative relative coordinates
-		for(int i = -1; i < 2; i+= 2)
+		for(int orientation = -1; orientation < 2; orientation+= 2)
 		{
-			// j selects between vertical or horizontal
-			for (int j = 0; j < 2; j++)
+			// j selects between vertical (1) or horizontal (0)
+			for (int axis = 0; axis < 2; axis++)
 			{
-				if (i > 0 && j) dir = 0;
-				else if (i < 0 && !j) dir = 1;
-				else if (i < 0 && j) dir = 2;
-				else if (i > 0 && !j) dir = 3;
-				if (reachWall[dir] || !x) continue;
-				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
+				dir = (orientation + axis + 1); // converts to 0-3 direction, faster than ifs
+				if (reachWall[dir] || !dist) continue;
+				Casilla *relative = board.get_cell(cell, dist * orientation * axis, dist * orientation * !axis);
 				if (relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
