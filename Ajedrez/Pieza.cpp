@@ -56,12 +56,13 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 				dir = (j > 0 && i < 0) ? 3 : dir;
 				if (!x) continue;
 				Casilla *relative = board.get_cell(cell, x * j, x * i);
-				if (relative->getId() >= 0)
+				if (!reachWall[dir] && relative->getId() >= 0)
 				{
-					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
+					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
 					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
 				}
+				else reachWall[dir] = true;
 			}
 		}
 	}
@@ -87,12 +88,13 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 				dir = (i > 0 && !j) ? 3 : dir;
 				if (!x) continue;
 				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
-				if (relative->getId() >= 0)
+				if (!reachWall[dir] && relative->getId() >= 0)
 				{
-					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
+					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
 					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
 				}
+				else reachWall[dir] = true;
 			}
 		}
 	}
