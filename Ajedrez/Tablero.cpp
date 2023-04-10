@@ -19,80 +19,57 @@ Tablero::Tablero(string fen)
 		if (c == ' ') {all_pos = true;continue;}
 		if (c >= '1' && c <= '8')
 		{
-			for (int i = 0; i < (c - '0'); i++)
+			//we have c as char, (c - '0') = c as int
+			for (int i = 0; i < (c - '0'); i++) 
 			{
-				m_casilla[cell] = new Casilla(new King(), noColor, cell);
+				m_casilla[cell] = new Casilla(new Empty(), noColor, cell);
 				cell++;
 			}
 			continue;
 		}
-		// switch (c)
-		// {
-		// //black
-		// case 'r':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Torre);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'n':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'b':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'q':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Reina);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'k':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Rey);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'p':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Peon);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Negro);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// //white
-		// case 'R':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Torre);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'N':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Caballo);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'B':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Alfil);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'Q':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Reina);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'K':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Rey);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// case 'P':
-		// 	this->m_casilla[cell].setFigure(Pieza::figura::Peon);
-		// 	this->m_casilla[cell].setColor(Pieza::color::Blanco);
-		// 	this->m_casilla[cell].setId(cell);
-		// 	break;
-		// default:
-		// 	break;
-		// }
+		switch (c)
+		{
+		//black
+		case 'r':
+			m_casilla[cell] = new Casilla(new Rook(), Negro, cell);
+			break;
+		case 'n':
+			m_casilla[cell] = new Casilla(new Knight(), Negro, cell);
+			break;
+		case 'b':
+			m_casilla[cell] = new Casilla(new Bishop(), Negro, cell);
+			break;
+		case 'q':
+			m_casilla[cell] = new Casilla(new Queen(), Negro, cell);
+			break;
+		case 'k':
+			m_casilla[cell] = new Casilla(new King(), Negro, cell);
+			break;
+		case 'p':
+			m_casilla[cell] = new Casilla(new Pawn(), Negro, cell);
+			break;
+		//white
+		case 'R':
+			m_casilla[cell] = new Casilla(new Rook(), Blanco, cell);
+			break;
+		case 'N':
+			m_casilla[cell] = new Casilla(new Knight(), Blanco, cell);
+			break;
+		case 'B':
+			m_casilla[cell] = new Casilla(new Bishop(), Blanco, cell);
+			break;
+		case 'Q':
+			m_casilla[cell] = new Casilla(new Queen(), Blanco, cell);
+			break;
+		case 'K':
+			m_casilla[cell] = new Casilla(new King(), Blanco, cell);
+			break;
+		case 'P':
+			m_casilla[cell] = new Casilla(new Pawn(), Blanco, cell);
+			break;
+		default:
+			break;
+		}
 		cell++;
 	}
 }
@@ -283,151 +260,17 @@ bool Tablero::is_empty(Casilla dst)
 	return ((*dst.getPiece()).getFig() == figura::Vacio ? 1 : 0);
 }
 
-/// @return 1 if dst contains oponents piece, 0 otherwise
-// bool Tablero::is_enemy_piece(Casilla dst, Pieza::color myColor)
-// {
-// 	if (!is_empty(dst))
-// 		return (dst.getColor() != myColor ? 1 : 0);
-// 	return false;
-// }
+///@return 1 if dst contains oponents piece, 0 otherwise
+bool Tablero::is_enemy_piece(Casilla dst, color myColor)
+{
+	if (!is_empty(dst))
+		return ((*dst.getPiece()).getColor() != myColor ? 1 : 0);
+	return false;
+}
 
-// /// @return true if dst is held by opponent's pieces
-// bool Tablero::is_move_wall(Casilla dst, Casilla src)
-// {
-// 	if(dst.getColor() != Pieza::Vacio) return true;
-// 	return false;
-// }
-
-// /// @brief set cell true, if a king on cell could reach them
-// /// @todo look if move would be check, that ilegal!
-// void Tablero::posible_king(Casilla cell)
-// {	
-// 	for (int x = -1; x < 2; x++)
-// 	{
-// 		for (int y = -1; y < 2; y++)
-// 		{
-// 			if (!x && !y) continue;
-// 			Casilla relative = get_cell(cell, x, y);
-// 			if(relative.getId() >= 0 && can_Move_To(relative, cell)) /*&& !get_cell(cell, x, y).getCheck()*/
-// 				m_casilla[relative.getId()].setPosMove(true);
-// 		}
-// 	}
-// }
-
-// /// @brief set cells true, if a bishop on cell could reach them
-// void Tablero::posible_bishop(Casilla cell)
-// {
-// 	int reachWall[4] = {0, 0, 0, 0};
-// 	int dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
-	
-// 	for (int x = 1; x < 8; x++)
-// 	{
-// 		for(int i = -1; i < 2; i+= 2)
-// 		{
-// 			for (int j = -1; j < 2; j+= 2)
-// 			{
-// 				dir = (j > 0 && i > 0) ? 0 : dir;
-// 				dir = (j < 0 && i > 0) ? 1 : dir;
-// 				dir = (j < 0 && i < 0) ? 2 : dir;
-// 				dir = (j > 0 && i < 0) ? 3 : dir;
-// 				if (!x) continue;
-// 				Casilla relative = get_cell(cell, x * j, x * i);
-// 				if (relative.getId() >= 0)
-// 				{
-// 					if (can_Move_To(relative, cell) && !reachWall[dir])
-// 						m_casilla[relative.getId()].setPosMove(true);
-// 					if (is_move_wall(relative,cell)) reachWall[dir] = true;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
-// /// @brief set cells true, if a rook on cell could reach them
-// void Tablero::posible_rook(Casilla cell)
-// {
-// 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
-// 	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
-	
-// 	for (int x = 1; x < 8; x++)
-// 	{
-// 		// i  is for the positive or negative relative coordinates
-// 		for(int i = -1; i < 2; i+= 2)
-// 		{
-// 			// j selects between vertical or horizontal
-// 			for (int j = 0; j < 2; j++)
-// 			{
-// 				dir = (i > 0 && j) ? 0 : dir;
-// 				dir = (i < 0 && !j) ? 1 : dir;
-// 				dir = (i < 0 && j) ? 2 : dir;
-// 				dir = (i > 0 && !j) ? 3 : dir;
-// 				if (!x) continue;
-// 				Casilla relative = get_cell(cell, x * i * j, x * i * !j);
-// 				if (relative.getId() >= 0)
-// 				{
-// 					if (can_Move_To(relative, cell) && !reachWall[dir])
-// 						m_casilla[relative.getId()].setPosMove(true);
-// 					if (is_move_wall(relative,cell)) reachWall[dir] = true;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
-// /// @brief set cells true, if a queen on cell could reach them
-// void Tablero::posible_queen(Casilla cell)
-// {
-// 	//Oh no my queen!
-// 	posible_bishop(cell);
-// 	posible_rook(cell);
-// }
-
-// /// @brief set cells true, if a knight on cell could reach them
-// void Tablero::posible_knight(Casilla cell)
-// {
-// 	for (int x = -2; x < 3; x++)
-// 	{
-// 		int y = 3 - abs(x);
-// 		for (int i = -1; i < 2; i+=2)
-// 		{
-// 			if (!x) continue;
-// 			Casilla relative = get_cell(cell, x, y * i);
-// 			if (relative.getId() >= 0)
-// 			{
-// 				if (can_Move_To(relative, cell))	
-// 					m_casilla[relative.getId()].setPosMove(true);
-// 			}
-// 		}
-// 	}
-// }
-
-// void Tablero::posible_pawn(Casilla cell)
-// {
-// 	int dir = 1;
-// 	if (cell.getColor() == Pieza::Blanco) dir = 1;
-// 	if (cell.getColor() == Pieza::Negro) dir = -1;
-// 	int	en_passant_row = dir > 0 ? 3 : 4; // filas centrales hay que ver si se puede tomar al paso
-// 	int	jump_row = dir > 0 ? 6 : 1; // penultima fila de cada lado puede dar un salto
-
-// 	//delante
-// 	if (is_empty(get_cell(cell, 0, dir))) m_casilla[get_cell(cell, 0, dir).getId()].setPosMove(true);
-// 	// Y  solo al empezar un salto puede dar !
-// 	if (cell.getId() / 8 == jump_row && 
-// 	is_empty(get_cell(cell, 0, dir)) && 
-// 	is_empty(get_cell(cell, 0, 2 * dir))) 
-// 		{m_casilla[get_cell(cell, 0, 2 * dir).getId()].setPosMove(true);}
-// 	//capturas
-// 	for (int i = -1; i < 2; i+=2)
-// 	{
-// 		if (is_enemy_piece(get_cell(cell, i, dir), cell.getColor())) 
-// 			m_casilla[get_cell(cell, i, dir).getId()].setPosMove(true);
-// 	}
-// 	// En passant
-// 	for (int i = -1; i < 2; i+=2)
-// 	{
-// 		if (cell.getId() / 8 == en_passant_row && 
-// 		is_enemy_piece(get_cell(cell, i, 0), cell.getColor()) && 
-// 		get_cell(cell, i, 0).getEnPassant()) 
-// 			m_casilla[get_cell(cell, i, 0).getId()].setPosMove(true);
-// 	}
-// }
+/// @return true if dst is held by opponent's pieces
+bool Tablero::is_move_wall(Casilla dst, Casilla src)
+{
+	if((*dst.getPiece()).getColor() != figura::Vacio) return true;
+	return false;
+}

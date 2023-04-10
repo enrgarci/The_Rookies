@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","","8/8/8/8/8/8/8/8)");
+	Partida P("","");
 	Tablero T = P.getBoard();
 	(T).print();
 }
