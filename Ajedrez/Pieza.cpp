@@ -1,4 +1,6 @@
 #include "Pieza.h"
+#include "Casilla.h"
+#include "Tablero.h"
 
 color	Pieza::getColor(){return(col);}
 figura	Pieza::getFig(){return(fig);}

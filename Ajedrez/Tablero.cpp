@@ -1,5 +1,6 @@
 #include "Tablero.h"
-
+#include "Casilla.h"
+#include "Pieza.h"
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..

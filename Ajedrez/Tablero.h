@@ -3,10 +3,7 @@
 
 class Casilla;
 class Pieza;
-class King;
 
-#include "Casilla.h"
-#include "Pieza.h"
 #include <stdio.h>
 #include "header.h"
 

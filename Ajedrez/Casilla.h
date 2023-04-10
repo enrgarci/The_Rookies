@@ -4,7 +4,6 @@
 class Pieza;
 
 #include "header.h"
-#include "Pieza.h"
 
 class Casilla
 {

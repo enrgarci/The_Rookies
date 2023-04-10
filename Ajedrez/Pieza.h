@@ -2,8 +2,6 @@
 #define PIEZA_H
 
 #include "header.h"
-#include "Casilla.h"
-#include "Tablero.h"
 
 class Tablero;
 class Casilla;

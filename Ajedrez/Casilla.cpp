@@ -1,4 +1,5 @@
 #include "Casilla.h"
+#include "Pieza.h"
 
 Casilla::Casilla(Pieza *p, color c, int id)
 {
