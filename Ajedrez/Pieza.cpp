@@ -50,17 +50,17 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 		{
 			for (int j = -1; j < 2; j+= 2)
 			{
-				dir = (j > 0 && i > 0) ? 0 : dir;
-				dir = (j < 0 && i > 0) ? 1 : dir;
-				dir = (j < 0 && i < 0) ? 2 : dir;
-				dir = (j > 0 && i < 0) ? 3 : dir;
+				if (j > 0 && i > 0) dir = 0;
+				else if (j < 0 && i > 0) dir = 1;
+				else if (j < 0 && i < 0) dir = 2;
+				else if (j > 0 && i < 0) dir = 3;
 				if (!x) continue;
 				Casilla *relative = board.get_cell(cell, x * j, x * i);
 				if (!reachWall[dir] && relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
-					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
+					if (!board.is_empty(*relative)) reachWall[dir] = true;
 				}
 				else reachWall[dir] = true;
 			}
@@ -82,17 +82,17 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 			// j selects between vertical or horizontal
 			for (int j = 0; j < 2; j++)
 			{
-				dir = (i > 0 && j) ? 0 : dir;
-				dir = (i < 0 && !j) ? 1 : dir;
-				dir = (i < 0 && j) ? 2 : dir;
-				dir = (i > 0 && !j) ? 3 : dir;
+				if (i > 0 && j) dir = 0;
+				else if (i < 0 && !j) dir = 1;
+				else if (i < 0 && j) dir = 2;
+				else if (i > 0 && !j) dir = 3;
 				if (!x) continue;
 				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
 				if (!reachWall[dir] && relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
-					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
+					if (!board.is_empty(*relative)) reachWall[dir] = true;
 				}
 				else reachWall[dir] = true;
 			}
