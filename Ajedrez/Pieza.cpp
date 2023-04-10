@@ -5,8 +5,6 @@ figura	Pieza::getFig(){return(fig);}
 void	Pieza::setFig(figura f){ fig = f;}
 void	Pieza::setColor(color c){ col = c;}
 
-
-
 Empty::Empty()
 {
 	this->fig = figura::Vacio;

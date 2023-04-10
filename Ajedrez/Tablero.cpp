@@ -134,7 +134,7 @@ string Tablero::get_fen()
 		Casilla &cell = *m_casilla[i];
 		//empty cell management
 		empty = is_empty(cell);//cell.getFigure() == figura::Vacio ? true : false;
-		if (is_empty(cell)) empty_count++;
+		if (empty) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
 		if (!empty) fen += (*cell.getPiece()).getSymbol();
@@ -147,11 +147,11 @@ string Tablero::get_fen()
 				empty = false;
 				empty_count = 0;
 			}
-			fen += '/';
+			if (cell_count < BOARD_SIZE) fen += '/';
 		}
 	}
 	//add turn
-	fen += turn ? " b" : " w";
+	fen += turn==Blanco ? " w" : " b";
 	return (fen);
 }
 
