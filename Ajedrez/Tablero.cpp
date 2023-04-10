@@ -77,7 +77,6 @@ Tablero::Tablero(string fen)
 /// @brief Libera la memoria reservada para la clase @ref Tablero
 Tablero::~Tablero()
 {
-	for (int i = 0; i < 64; i++) delete(m_casilla[i]);
 }
 /// @brief Prints a console representation of the board
 void	Tablero::print ()
@@ -177,23 +176,23 @@ void Tablero::reset_possible_moves()
 /// @param x The absolute x coordinate, equivalent to letters on real board
 /// @param y The absolute y coordinate, equivalent to numbers on real board
 /// @return The cell on the (x,y) coordinate
-Casilla	Tablero::get_cell(int x, int y)
+Casilla	*Tablero::get_cell(int x, int y)
 {
 	const	int size = 8;
 	//out of borders
 	if(x < 0 || x >= size || y < 0 || y >= size )
 	{
-		Casilla	invalid(nullptr, noColor, -1);
-		return (invalid);
+		static Casilla	invalid(new Empty(), noColor, -1);
+		return (&invalid);
 	}
-	return (*m_casilla[x + 8 * y]);
+	return (m_casilla[x + 8 * y]);
 }
 
 /// @brief Gets the cell int the A,N position,(0,0) = a8. (7,7) = a1
 /// @param c the column
 /// @param y the row
 /// @return The (c,y) position on the board (Looking as white pieces)
-Casilla	Tablero::get_cell(char c, int y)
+Casilla	*Tablero::get_cell(char c, int y)
 {
 	const	int size = 8;
 	//out of borders
@@ -202,26 +201,26 @@ Casilla	Tablero::get_cell(char c, int y)
 	  y <= 0 ||
 	   y > size )
 	{
-		Casilla	invalid(nullptr, noColor, -1);
-		return (invalid);
+		static Casilla	invalid(new Empty(), noColor, -1);
+		return (&invalid);
 	}
-	return (*m_casilla[(c - 'a') + 8 * ( size - y)]);
+	return (m_casilla[(c - 'a') + 8 * ( size - y)]);
 }
 
 /// @brief Gets the x position cell, counting row by row from upper left
 ///			Expects valid input
 /// @param x The positio on the board 
 /// @return the cell in the x position
-inline Casilla	Tablero::get_cell(int x)
+Casilla	*Tablero::get_cell(int x)
 {
 	// 0 is upper left corner, 63 is opposite one.
 	//out of borders
 	if(x < 0 || x > 63)
 	{
-		Casilla	invalid(nullptr, noColor, -1);
-		return (invalid);
+		static Casilla	invalid(new Empty(), noColor, -1);
+		return (&invalid);
 	}
-	return (*m_casilla[x]);
+	return (m_casilla[x]);
 }
 
 /// @brief Gets the cell int the x,y position to the self cell
@@ -229,7 +228,7 @@ inline Casilla	Tablero::get_cell(int x)
 /// @param relative_x the x relative position from self
 /// @param relative_y the y relative position from self
 /// @return 
-Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
+Casilla *Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 {
 	const	int size = 8;
 	//out of borders
@@ -238,8 +237,8 @@ Casilla Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 		self.getId() / 8 - relative_y < 0 ||
 		 self.getId() / 8 - relative_y >= size )
 	{
-		Casilla	invalid(nullptr, noColor, -1);
-		return (invalid);
+		static Casilla	invalid(new Empty(), noColor, -1);
+		return (&invalid);
 	}
 	return (get_cell(self.getId() +  relative_x - 8 * relative_y));
 }

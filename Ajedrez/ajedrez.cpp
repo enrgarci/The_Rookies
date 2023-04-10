@@ -6,7 +6,12 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","");
+	Partida P("","","8/8/8/2p5/8/8/8/8");
 	Tablero T = P.getBoard();
-	(T).print();
+	Casilla C = *T.get_cell(26);
+
+	C.getPiece()->possible_moves(T, C);
+	T.print();
+	T.printPosibleMoves(*T.get_cell(26));
+
 }

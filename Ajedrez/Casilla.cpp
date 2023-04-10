@@ -8,7 +8,6 @@ Casilla::Casilla(Pieza *p, color c, int id)
 }
 Casilla::~Casilla()
 {
-	delete (m_piece);
 }
 void Casilla::setCheck(bool inCheck) { m_in_check = inCheck; }
 bool Casilla::getCheck() { return m_in_check; }
