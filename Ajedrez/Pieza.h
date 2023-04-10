@@ -42,7 +42,7 @@ public:
 class Rook: public Pieza
 {
 public:
-	Rook(figura=Torre) : Pieza(Torre){};
+	Rook(figura f=Torre) : Pieza(f){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
