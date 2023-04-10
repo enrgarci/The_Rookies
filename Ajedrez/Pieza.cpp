@@ -73,7 +73,7 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 				{
 					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
 						relative->setPosMove(true);
-					//if (board.is_move_wall(relative,cell)) reachWall[dir] = true;
+					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
 				}
 			}
 		}
@@ -104,7 +104,7 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 				{
 					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
 						relative->setPosMove(true);
-					// if (board.is_move_wall(relative,cell)) reachWall[dir] = true;
+					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
 				}
 			}
 		}
@@ -114,8 +114,59 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 /// @brief set cells true, if a queen on cell could reach them
 void Queen::possible_moves(Tablero &board, Casilla &cell)
 {
-	///TODO
+	///Make better, this is temporary rubbish
+	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
+	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
+	
+	for (int x = 1; x < 8; x++)
+	{
+		// i  is for the positive or negative relative coordinates
+		for(int i = -1; i < 2; i+= 2)
+		{
+			// j selects between vertical or horizontal
+			for (int j = 0; j < 2; j++)
+			{
+				dir = (i > 0 && j) ? 0 : dir;
+				dir = (i < 0 && !j) ? 1 : dir;
+				dir = (i < 0 && j) ? 2 : dir;
+				dir = (i > 0 && !j) ? 3 : dir;
+				if (!x) continue;
+				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
+				if (relative->getId() >= 0)
+				{
+					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
+						relative->setPosMove(true);
+					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
+				}
+			}
+		}
+	}
+	for (auto i : reachWall) i = 0;
+	dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
+	
+	for (int x = 1; x < 8; x++)
+	{
+		for(int i = -1; i < 2; i+= 2)
+		{
+			for (int j = -1; j < 2; j+= 2)
+			{
+				dir = (j > 0 && i > 0) ? 0 : dir;
+				dir = (j < 0 && i > 0) ? 1 : dir;
+				dir = (j < 0 && i < 0) ? 2 : dir;
+				dir = (j > 0 && i < 0) ? 3 : dir;
+				if (!x) continue;
+				Casilla *relative = board.get_cell(cell, x * j, x * i);
+				if (relative->getId() >= 0)
+				{
+					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
+						relative->setPosMove(true);
+					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
+				}
+			}
+		}
+	}
 }
+
 
 /// @brief set cells true, if a knight on cell could reach them
 void Knight::possible_moves(Tablero &board, Casilla &cell)
