@@ -7,11 +7,6 @@ figura	Pieza::getFig(){return(fig);}
 void	Pieza::setFig(figura f){ fig = f;}
 void	Pieza::setColor(color c){ col = c;}
 
-Empty::Empty()
-{
-	this->fig = figura::Vacio;
-}
-
 void Empty::possible_moves(Tablero &board, Casilla &cell)
 {	
 	return;
@@ -36,16 +31,8 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 	}
 }
 
-
-King::King() {this->fig = figura::Rey;}
-Queen::Queen() {this->fig = figura::Reina;}
-Rook::Rook() {this->fig = figura::Torre;}
-Bishop::Bishop() {this->fig = figura::Alfil;}
-Knight::Knight() {this->fig = figura::Caballo;}
-Pawn::Pawn() {this->fig = figura::Peon;}
-
 char King::getSymbol() {return (col == Blanco ? W_KING : B_KING);}
-char Queen::getSymbol() {return (col == Blanco ? W_QUEEN : B_QUEEN);}
+char Queen::getSymbol() {return (Rook::col == Blanco ? W_QUEEN : B_QUEEN);}
 char Rook::getSymbol() {return (col == Blanco ? W_ROOK : B_ROOK);}
 char Bishop::getSymbol() {return (col == Blanco ? W_BISHOP : B_BISHOP);}
 char Knight::getSymbol() {return (col == Blanco ? W_KNIGHT : B_KNIGHT);}
@@ -111,63 +98,6 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 	}
 }
 
-/// @brief set cells true, if a queen on cell could reach them
-void Queen::possible_moves(Tablero &board, Casilla &cell)
-{
-	///Make better, this is temporary rubbish
-	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
-	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
-	
-	for (int x = 1; x < 8; x++)
-	{
-		// i  is for the positive or negative relative coordinates
-		for(int i = -1; i < 2; i+= 2)
-		{
-			// j selects between vertical or horizontal
-			for (int j = 0; j < 2; j++)
-			{
-				dir = (i > 0 && j) ? 0 : dir;
-				dir = (i < 0 && !j) ? 1 : dir;
-				dir = (i < 0 && j) ? 2 : dir;
-				dir = (i > 0 && !j) ? 3 : dir;
-				if (!x) continue;
-				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
-				if (relative->getId() >= 0)
-				{
-					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
-						relative->setPosMove(true);
-					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
-				}
-			}
-		}
-	}
-	for (auto i : reachWall) i = 0;
-	dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
-	
-	for (int x = 1; x < 8; x++)
-	{
-		for(int i = -1; i < 2; i+= 2)
-		{
-			for (int j = -1; j < 2; j+= 2)
-			{
-				dir = (j > 0 && i > 0) ? 0 : dir;
-				dir = (j < 0 && i > 0) ? 1 : dir;
-				dir = (j < 0 && i < 0) ? 2 : dir;
-				dir = (j > 0 && i < 0) ? 3 : dir;
-				if (!x) continue;
-				Casilla *relative = board.get_cell(cell, x * j, x * i);
-				if (relative->getId() >= 0)
-				{
-					if (board.can_Move_To(*relative, cell) && !reachWall[dir])
-						relative->setPosMove(true);
-					if (board.is_move_wall(*relative,cell)) reachWall[dir] = true;
-				}
-			}
-		}
-	}
-}
-
-
 /// @brief set cells true, if a knight on cell could reach them
 void Knight::possible_moves(Tablero &board, Casilla &cell)
 {
@@ -217,4 +147,11 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 		board.get_cell(cell, i, 0)->getEnPassant()) 
 			board.get_cell(cell, i, 0)->setPosMove(true);
 	}
+}
+
+/// @brief set cells true, if a queen on cell could reach them
+void Queen::possible_moves(Tablero &board, Casilla &cell)
+{
+	Rook::possible_moves(board, cell);
+	Bishop::possible_moves(board, cell);
 }

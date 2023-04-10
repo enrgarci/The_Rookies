@@ -13,6 +13,7 @@ protected:
 	figura fig;
 	color	col;
 public:
+	Pieza(figura f, color c=noColor): fig(f), col(c){};
 	virtual void	possible_moves(Tablero &board, Casilla &cell)=0;
 	virtual char	getSymbol()=0;
 	figura	getFig();
@@ -24,7 +25,7 @@ public:
 class Empty: public Pieza
 {
 public:
-	Empty();
+	Empty() : Pieza(Vacio, noColor){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
@@ -32,23 +33,16 @@ public:
 class King: public Pieza
 {
 public:
-	King();
+	King() : Pieza(Rey){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
 
-class Queen: public Pieza
-{
-public:
-	Queen();
-	void possible_moves(Tablero &board, Casilla &cell);
-	char	getSymbol();
-};
 
 class Rook: public Pieza
 {
 public:
-	Rook();
+	Rook(figura=Torre) : Pieza(Torre){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
@@ -56,7 +50,7 @@ public:
 class Bishop: public Pieza
 {
 public:
-	Bishop();
+	Bishop() : Pieza(Alfil){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
@@ -64,7 +58,7 @@ public:
 class Knight: public Pieza
 {
 public:
-	Knight();
+	Knight() : Pieza{Caballo}{};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
@@ -72,8 +66,16 @@ public:
 class Pawn: public Pieza
 {
 public:
-	Pawn();
+	Pawn() : Pieza(Peon){};
 	void possible_moves(Tablero &board, Casilla &cell);
 	char	getSymbol();
 };
 #endif
+
+class Queen: public Rook, public Bishop
+{
+public:
+	Queen() : Rook(Reina){};
+	void possible_moves(Tablero &board, Casilla &cell);
+	char	getSymbol();
+};

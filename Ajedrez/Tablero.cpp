@@ -41,7 +41,7 @@ Tablero::Tablero(string fen)
 			m_casilla[cell] = new Casilla(new Bishop(), Negro, cell);
 			break;
 		case 'q':
-			m_casilla[cell] = new Casilla(new Queen(), Negro, cell);
+			m_casilla[cell] = new Casilla(static_cast<Rook*>(new Queen()), Negro, cell);
 			break;
 		case 'k':
 			m_casilla[cell] = new Casilla(new King(), Negro, cell);
@@ -60,7 +60,7 @@ Tablero::Tablero(string fen)
 			m_casilla[cell] = new Casilla(new Bishop(), Blanco, cell);
 			break;
 		case 'Q':
-			m_casilla[cell] = new Casilla(new Queen(), Blanco, cell);
+			m_casilla[cell] = new Casilla(static_cast<Rook*>(new Queen()), Blanco, cell);
 			break;
 		case 'K':
 			m_casilla[cell] = new Casilla(new King(), Blanco, cell);
