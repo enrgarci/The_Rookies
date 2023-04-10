@@ -4,6 +4,7 @@
 class Pieza;
 
 #include "header.h"
+#include "Pieza.h"
 
 class Casilla
 {
@@ -15,15 +16,12 @@ private:
 	bool	m_posible_destination = false;
 public:
 	Casilla(Pieza *p, color c, int id);
+	~Casilla();
 	void			setCheck(bool inCheck);
 	void			setId(int id);
-	void			setFigure(figura f);
-	void			setColor(color c);
 	void			setPiece(Pieza &p);
 	void			setPiece(figura f, color c);
-	figura	getFigure();
-	color	getColor();
-	Pieza			getPiece();
+	Pieza			*getPiece();
 	bool			getCheck();
 	int				getId();
 	bool			getEnPassant();

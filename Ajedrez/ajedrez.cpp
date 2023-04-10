@@ -1,13 +1,12 @@
-#include "Partida.h"
 #include "Tablero.h"
+#include "Partida.h"
 
 using namespace std;
 
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida myGame;
-	cout << myGame.getPlayer() + "\n";
-	Tablero myBoard = myGame.getBoard();
-	myBoard.print();
+	Partida P("","","8/8/8/8/8/8/8/8)");
+	Tablero T = P.getBoard();
+	(T).print();
 }
