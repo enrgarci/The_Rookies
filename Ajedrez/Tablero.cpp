@@ -216,7 +216,7 @@ Casilla	*Tablero::get_cell(int x)
 {
 	// 0 is upper left corner, 63 is opposite one.
 	//out of borders
-	if(x < 0 || x > 63)
+	if (x < 0 || x > 63)
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
 		return (&invalid);
@@ -232,16 +232,17 @@ Casilla	*Tablero::get_cell(int x)
 Casilla *Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 {
 	const	int size = 8;
+	int id = self.getId();
 	//out of borders
-	if(self.getId() % 8 + relative_x < 0 ||
-	 	self.getId() % 8 + relative_x >= size ||
-		self.getId() / 8 - relative_y < 0 ||
-		 self.getId() / 8 - relative_y >= size )
+	if(id % size + relative_x < 0 ||
+	 	id % size + relative_x >= size ||
+		id / size - relative_y < 0 ||
+		id / size - relative_y >= size )
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
 		return (&invalid);
 	}
-	return (get_cell(self.getId() +  relative_x - 8 * relative_y));
+	return (get_cell(id +  relative_x - size * relative_y));
 }
 
 /// @brief Checks if a cell is a valid destination for a move
@@ -274,3 +275,13 @@ bool Tablero::is_move_wall(Casilla dst, Casilla src)
 	if((*dst.getPiece()).getColor() != figura::Vacio) return true;
 	return false;
 }
+
+bool Tablero::can_castle(color c) { return c == Blanco ? m_w_castle_rights : m_b_castle_rights;}
+/// @brief Sets m_castle_rights of c player to state
+/// @param state 
+/// @param c The color of the player to set the state of castle rights
+void Tablero::set_castle(bool state, color c) {c == Blanco ? m_w_castle_rights
+															: m_b_castle_rights = state;}
+/// @brief sets playing side castle right to the oposite state
+void Tablero::set_castle() {turn == Blanco ? m_w_castle_rights = !m_w_castle_rights
+											: m_b_castle_rights = !m_b_castle_rights;}
