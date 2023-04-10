@@ -54,9 +54,9 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 				else if (j < 0 && i > 0) dir = 1;
 				else if (j < 0 && i < 0) dir = 2;
 				else if (j > 0 && i < 0) dir = 3;
-				if (!x) continue;
+				if (reachWall[dir] || !x) continue;
 				Casilla *relative = board.get_cell(cell, x * j, x * i);
-				if (!reachWall[dir] && relative->getId() >= 0)
+				if (relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
@@ -86,9 +86,9 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 				else if (i < 0 && !j) dir = 1;
 				else if (i < 0 && j) dir = 2;
 				else if (i > 0 && !j) dir = 3;
-				if (!x) continue;
+				if (reachWall[dir] || !x) continue;
 				Casilla *relative = board.get_cell(cell, x * i * j, x * i * !j);
-				if (!reachWall[dir] && relative->getId() >= 0)
+				if (relative->getId() >= 0)
 				{
 					if (board.can_Move_To(*relative, cell))
 						relative->setPosMove(true);
