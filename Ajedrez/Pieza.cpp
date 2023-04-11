@@ -41,26 +41,24 @@ char Pawn::getSymbol() {return (col == Blanco ? W_PAWN : B_PAWN);}
 /// @brief set cells true, if a bishop on cell could reach them
 void Bishop::possible_moves(Tablero &board, Casilla &cell)
 {
-	int reachWall[4] = {0, 0, 0, 0};
-	int dir = 0; // seleccionar cuadrante para una vez que choca no pueda atravesar
-	
-	for (int dist = 1; dist < 8; dist++)
+	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
+	int dir = 1;
+	//the 4 directions
+	for (int i = 0; i < 4; i++, dir = -dir)
 	{
-		for(int orientation = -1; orientation < 2; orientation+= 2)
+		//the distance 
+		for(int dist = 1; dist < 8; dist++)
 		{
-			for (int axis = -1; axis < 2; axis+= 2)
+			if (reachWall[i]) break;
+			Casilla *relative = board.get_cell(cell, dist * dir, 
+													dist * (dir * (i < 2) - dir * (i >= 2)));
+			if (relative->getId() >= 0)
 			{
-				dir = (orientation + axis + 1); // converts to 0-3 direction, faster than ifs
-				if (reachWall[dir] || !dist) continue;
-				Casilla *relative = board.get_cell(cell, dist * axis, dist * orientation);
-				if (relative->getId() >= 0)
-				{
-					if (board.can_Move_To(*relative, cell))
-						relative->setPosMove(true);
-					if (!board.is_empty(*relative)) reachWall[dir] = true;
-				}
-				else reachWall[dir] = true;
+				if (board.can_Move_To(*relative, cell))
+					relative->setPosMove(true);
+				if (!board.is_empty(*relative)) reachWall[i] = true;
 			}
+			else {reachWall[i] = true; break;}
 		}
 	}
 }
@@ -69,27 +67,23 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 void Rook::possible_moves(Tablero &board, Casilla &cell)
 {
 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
-	int dir = 0; // seleccionar cuadrante para una vez que choca no puesda atravesar
-	
-	for (int dist = 1; dist < 8; dist++)
+	int dir = 1;
+	//the 4 directions
+	for (int i = 0; i < 4; i++, dir = -dir)
 	{
-		// i  is for the positive or negative relative coordinates
-		for(int orientation = -1; orientation < 2; orientation+= 2)
+		//the distance 
+		for(int dist = 1; dist < 8; dist++)
 		{
-			// j selects between vertical (1) or horizontal (0)
-			for (int axis = 0; axis < 2; axis++)
+			if (reachWall[i]) break;
+			Casilla *relative = board.get_cell(cell, dist * dir * (i < 2), 
+													dist * dir * (i >= 2));
+			if (relative->getId() >= 0)
 			{
-				dir = (orientation + axis + 1); // converts to 0-3 direction, faster than ifs
-				if (reachWall[dir] || !dist) continue;
-				Casilla *relative = board.get_cell(cell, dist * orientation * axis, dist * orientation * !axis);
-				if (relative->getId() >= 0)
-				{
-					if (board.can_Move_To(*relative, cell))
-						relative->setPosMove(true);
-					if (!board.is_empty(*relative)) reachWall[dir] = true;
-				}
-				else reachWall[dir] = true;
+				if (board.can_Move_To(*relative, cell))
+					relative->setPosMove(true);
+				if (!board.is_empty(*relative)) reachWall[i] = true;
 			}
+			else {reachWall[i] = true; break;}
 		}
 	}
 }
