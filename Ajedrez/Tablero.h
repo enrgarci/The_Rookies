@@ -13,6 +13,8 @@ private:
 	Casilla *m_casilla[BOARD_SIZE];
 	color turn = color::Blanco;
 	string	m_initial_board;
+	bool	m_w_castle_rights = true;
+	bool	m_b_castle_rights = true;
 public:
 	Tablero (string fen = INITIAL_POS);
 	~Tablero ();
@@ -29,6 +31,9 @@ public:
 	bool	is_empty(Casilla dst);
 	bool	is_enemy_piece(Casilla dst, color myColor);
 	void	printPosibleMoves (Casilla cell);
+	bool	can_castle(color c);
+	void	set_castle(bool state, color c);
+	void	set_castle();
 };
 
 #endif
