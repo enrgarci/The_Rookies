@@ -26,7 +26,10 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 			if (!x && !y) continue;
 			Casilla *relative = board.get_cell(cell, x, y);
 			if(relative->getId() >= 0 && board.can_Move_To(*relative, cell))
+			{
 				relative->setPosMove(true);
+				cell.getMoveList(board).push_back(relative->getId());
+			}
 		}
 	}
 }
@@ -55,7 +58,10 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 			if (relative->getId() >= 0)
 			{
 				if (board.can_Move_To(*relative, cell))
+				{
 					relative->setPosMove(true);
+					cell.getMoveList(board).push_back(relative->getId());
+				}
 				if (!board.is_empty(*relative)) reachWall[i] = true;
 			}
 			else {reachWall[i] = true; break;}
@@ -80,7 +86,10 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 			if (relative->getId() >= 0)
 			{
 				if (board.can_Move_To(*relative, cell))
+				{
 					relative->setPosMove(true);
+					cell.getMoveList(board).push_back(relative->getId());
+				}
 				if (!board.is_empty(*relative)) reachWall[i] = true;
 			}
 			else {reachWall[i] = true; break;}
@@ -101,7 +110,10 @@ void Knight::possible_moves(Tablero &board, Casilla &cell)
 			if (relative->getId() >= 0)
 			{
 				if (board.can_Move_To(*relative, cell))	
+				{
 					relative->setPosMove(true);
+					cell.getMoveList(board).push_back(relative->getId());
+				}
 			}
 		}
 	}
@@ -117,17 +129,26 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 
 	//delante
 	if (board.is_empty(*board.get_cell(cell, 0, dir))) 
-		board.get_cell(cell, 0, dir)->setPosMove(true);
+	{
+		board.get_cell(cell, 0, dir)->setPosMove(true);			
+		cell.getMoveList(board).push_back(board.get_cell(cell, 0, dir)->getId());
+	}
 	// Y  solo al empezar un salto puede dar !
 	if (cell.getId() / 8 == jump_row && 
 	board.is_empty(*board.get_cell(cell, 0, dir)) && 
 	board.is_empty(*board.get_cell(cell, 0, 2 * dir))) 
-		{board.get_cell(cell, 0, 2 * dir)->setPosMove(true);}
+	{
+		board.get_cell(cell, 0, 2 * dir)->setPosMove(true);
+		cell.getMoveList(board).push_back(board.get_cell(cell, 0, 2 * dir)->getId());
+	}
 	//capturas
 	for (int i = -1; i < 2; i+=2)
 	{
 		if (board.is_enemy_piece(*board.get_cell(cell, i, dir), (*cell.getPiece()).getColor())) 
-		board.get_cell(cell, i, dir)->setPosMove(true);
+		{
+			board.get_cell(cell, i, dir)->setPosMove(true);
+			cell.getMoveList(board).push_back(board.get_cell(cell, i, dir)->getId());
+		}
 	}
 	// En passant
 	for (int i = -1; i < 2; i+=2)
@@ -135,7 +156,10 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 		if (cell.getId() / 8 == en_passant_row && 
 		board.is_enemy_piece(*board.get_cell(cell, i, 0), (*cell.getPiece()).getColor()) && 
 		board.get_cell(cell, i, 0)->getEnPassant()) 
+		{	
 			board.get_cell(cell, i, 0)->setPosMove(true);
+			cell.getMoveList(board).push_back(board.get_cell(cell, i, 0)->getId());
+		}
 	}
 }
 

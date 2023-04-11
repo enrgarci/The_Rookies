@@ -1,5 +1,7 @@
 #include "Casilla.h"
 #include "Pieza.h"
+#include "Tablero.h"
+#include <algorithm>
 
 Casilla::Casilla(Pieza *p, color c, int id)
 {
@@ -25,3 +27,12 @@ bool Casilla::getEnPassant() { return m_can_en_passant; }
 void Casilla::setEnPassant(bool c) { m_can_en_passant = c; }
 bool Casilla::getPosMove() { return m_posible_destination; }
 void Casilla::setPosMove(bool c) { m_posible_destination = c; }
+vector<int>	&Casilla::getMoveList(Tablero &T)
+{
+	if (T.move_count == m_move_calculation) return m_move_lst;
+	m_move_calculation = T.move_count;
+	m_move_lst.clear();
+	this->getPiece()->possible_moves(T, *this);
+	std::sort(m_move_lst.begin(), m_move_lst.end());
+	return m_move_lst;
+}

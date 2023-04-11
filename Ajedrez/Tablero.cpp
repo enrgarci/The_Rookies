@@ -272,7 +272,7 @@ bool Tablero::is_enemy_piece(Casilla dst, color myColor)
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla dst, Casilla src)
 {
-	if((*dst.getPiece()).getColor() != figura::Vacio) return true;
+	if((*dst.getPiece()).getColor() != color::noColor) return true;
 	return false;
 }
 

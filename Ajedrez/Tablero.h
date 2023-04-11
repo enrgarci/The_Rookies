@@ -16,6 +16,7 @@ private:
 	bool	m_w_castle_rights = true;
 	bool	m_b_castle_rights = true;
 public:
+	int	move_count = 0;
 	Tablero (string fen = INITIAL_POS);
 	~Tablero ();
 	void	print();
