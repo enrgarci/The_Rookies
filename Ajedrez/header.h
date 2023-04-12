@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using std::cout;
 using std::endl;
 using std::string;
+using std::vector;
 
 const char W_KING = 'K';
 const char B_KING = 'k';

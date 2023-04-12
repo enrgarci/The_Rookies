@@ -20,7 +20,7 @@ void Casilla::setPiece(figura f, color c)
 	(*m_piece).setFig(f);
 	(*m_piece).setColor(c);
 }
-Pieza *Casilla::getPiece(){return m_piece;}
+Pieza &Casilla::getPiece(){return *m_piece;}
 void Casilla::setId(int id) { m_id = id; }
 int Casilla::getId() { return m_id; }
 bool Casilla::getEnPassant() { return m_can_en_passant; }
@@ -32,7 +32,7 @@ vector<int>	&Casilla::getMoveList(Tablero &T)
 	if (T.move_count == m_move_calculation) return m_move_lst;
 	m_move_calculation = T.move_count;
 	m_move_lst.clear();
-	this->getPiece()->possible_moves(T, *this);
+	getPiece().possible_moves(T, *this);
 	std::sort(m_move_lst.begin(), m_move_lst.end());
 	return m_move_lst;
 }

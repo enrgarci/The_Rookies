@@ -90,8 +90,8 @@ void	Tablero::print ()
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		Casilla &cell = *m_casilla[i];
-		int pieceVal = int(cell.getPiece()->getFig());
-		int colorVal = int(cell.getPiece()->getColor());
+		int pieceVal = int(cell.getPiece().getFig());
+		int colorVal = int(cell.getPiece().getColor());
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
 		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
@@ -100,7 +100,7 @@ void	Tablero::print ()
 	cout << endl << "Turno de " << (turn ? "Blancas" : "Negras") << endl;
 }
 /// @brief Prints a console representation of the possible moves of the @ref Piece contained on cell
-void	Tablero::printPosibleMoves (Casilla cell)
+void	Tablero::printPosibleMoves (Casilla &cell)
 {
 	int cell_count = 0;
 	const int UnicodeBox= 2610;
@@ -137,7 +137,7 @@ string Tablero::get_fen()
 		if (empty) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
-		if (!empty) fen += (*cell.getPiece()).getSymbol();
+		if (!empty) fen += (cell.getPiece()).getSymbol();
 		//end of board row management
 		if (!(++cell_count % ROW_SIZE))
 		{
@@ -158,9 +158,9 @@ string Tablero::get_fen()
 /// @brief Calculates the set of legal moves for the piece in a given cell
 /// @param cell 
 /// @return a pointer to the first element of an array containing legal move cells
-void Tablero::set_possible_moves(Casilla cell)
+void Tablero::set_possible_moves(Casilla &cell)
 {
-	(*cell.getPiece()).possible_moves(*this, cell);
+	(cell.getPiece()).possible_moves(*this, cell);
 }
 
 void Tablero::reset_possible_moves()
@@ -177,23 +177,23 @@ void Tablero::reset_possible_moves()
 /// @param x The absolute x coordinate, equivalent to letters on real board
 /// @param y The absolute y coordinate, equivalent to numbers on real board
 /// @return The cell on the (x,y) coordinate
-Casilla	*Tablero::get_cell(int x, int y)
+Casilla	&Tablero::get_cell(int x, int y)
 {
 	const	int size = 8;
 	//out of borders
 	if(x < 0 || x >= size || y < 0 || y >= size )
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
-		return (&invalid);
+		return (invalid);
 	}
-	return (m_casilla[x + 8 * y]);
+	return (*m_casilla[x + 8 * y]);
 }
 
 /// @brief Gets the cell int the A,N position,(0,0) = a8. (7,7) = a1
 /// @param c the column
 /// @param y the row
 /// @return The (c,y) position on the board (Looking as white pieces)
-Casilla	*Tablero::get_cell(char c, int y)
+Casilla	&Tablero::get_cell(char c, int y)
 {
 	const	int size = 8;
 	//out of borders
@@ -203,25 +203,25 @@ Casilla	*Tablero::get_cell(char c, int y)
 	   y > size )
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
-		return (&invalid);
+		return (invalid);
 	}
-	return (m_casilla[(c - 'a') + 8 * ( size - y)]);
+	return (*m_casilla[(c - 'a') + 8 * ( size - y)]);
 }
 
 /// @brief Gets the x position cell, counting row by row from upper left
 ///			Expects valid input
 /// @param x The positio on the board 
 /// @return the cell in the x position
-Casilla	*Tablero::get_cell(int x)
+Casilla	&Tablero::get_cell(int x)
 {
 	// 0 is upper left corner, 63 is opposite one.
 	//out of borders
 	if (x < 0 || x > 63)
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
-		return (&invalid);
+		return (invalid);
 	}
-	return (m_casilla[x]);
+	return (*m_casilla[x]);
 }
 
 /// @brief Gets the cell int the x,y position to the self cell
@@ -229,7 +229,7 @@ Casilla	*Tablero::get_cell(int x)
 /// @param relative_x the x relative position from self
 /// @param relative_y the y relative position from self
 /// @return 
-Casilla *Tablero::get_cell(Casilla self, int relative_x, int relative_y)
+Casilla &Tablero::get_cell(Casilla &self, int relative_x, int relative_y)
 {
 	const	int size = 8;
 	int id = self.getId();
@@ -240,7 +240,7 @@ Casilla *Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 		id / size - relative_y >= size )
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
-		return (&invalid);
+		return (invalid);
 	}
 	return (get_cell(id +  relative_x - size * relative_y));
 }
@@ -248,31 +248,31 @@ Casilla *Tablero::get_cell(Casilla self, int relative_x, int relative_y)
 /// @brief Checks if a cell is a valid destination for a move
 /// @param cell 
 /// @return 1 if cell is a valid destination
-bool Tablero::can_Move_To(Casilla dst, Casilla src)
+bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 {
-	if (is_empty(dst) || (*dst.getPiece()).getColor() != (*src.getPiece()).getColor()) 
+	if (is_empty(dst) || (dst.getPiece()).getColor() != (src.getPiece()).getColor()) 
 		return true;
 	return false;
 }
 
 /// @return 1 if dst is empty 0 otherwise
-bool Tablero::is_empty(Casilla dst)
+bool Tablero::is_empty(Casilla &dst)
 {
-	return ((*dst.getPiece()).getFig() == figura::Vacio ? 1 : 0);
+	return ((dst.getPiece()).getFig() == figura::Vacio ? 1 : 0);
 }
 
 ///@return 1 if dst contains oponents piece, 0 otherwise
-bool Tablero::is_enemy_piece(Casilla dst, color myColor)
+bool Tablero::is_enemy_piece(Casilla &dst, color myColor)
 {
 	if (!is_empty(dst))
-		return ((*dst.getPiece()).getColor() != myColor ? 1 : 0);
+		return ((dst.getPiece()).getColor() != myColor ? 1 : 0);
 	return false;
 }
 
 /// @return true if dst is held by opponent's pieces
-bool Tablero::is_move_wall(Casilla dst, Casilla src)
+bool Tablero::is_move_wall(Casilla &dst, Casilla &src)
 {
-	if((*dst.getPiece()).getColor() != color::noColor) return true;
+	if((dst.getPiece()).getColor() != color::noColor) return true;
 	return false;
 }
 

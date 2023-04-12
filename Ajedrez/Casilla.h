@@ -5,9 +5,6 @@ class Pieza;
 class Tablero;
 
 #include "header.h"
-#include <vector>
-
-using std::vector;
 
 class Casilla
 {
@@ -17,16 +14,16 @@ private:
 	bool	m_in_check = false;
 	bool	m_can_en_passant = false;
 	bool	m_posible_destination = false;
-	int		m_move_calculation = -1;
 	vector<int> m_move_lst;
 public:
+	int		m_move_calculation = 0;
 	Casilla(Pieza *p, color c, int id);
 	~Casilla();
 	void			setCheck(bool inCheck);
 	void			setId(int id);
 	void			setPiece(Pieza &p);
 	void			setPiece(figura f, color c);
-	Pieza			*getPiece();
+	Pieza			&getPiece();
 	bool			getCheck();
 	int				getId();
 	bool			getEnPassant();
