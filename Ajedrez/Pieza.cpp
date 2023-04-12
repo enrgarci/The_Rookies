@@ -25,7 +25,7 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		{
 			if (!x && !y) continue;
 			Casilla &relative = board.get_cell(cell, x, y);
-			if(relative.getId() >= 0 && board.can_Move_To(relative, cell))
+			if(relative != cell && board.can_Move_To(relative, cell))
 				relative.setPosMove(true);
 		}
 	}
@@ -52,7 +52,7 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 			if (reachWall[i]) break;
 			Casilla &relative = board.get_cell(cell, dist * dir, 
 													dist * (dir * (i < 2) - dir * (i >= 2)));
-			if (relative.getId() >= 0)
+			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
 				if (!board.is_empty(relative)) reachWall[i] = true;
@@ -76,7 +76,7 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 			if (reachWall[i]) break;
 			Casilla &relative = board.get_cell(cell, dist * dir * (i < 2), 
 													dist * dir * (i >= 2));
-			if (relative.getId() >= 0)
+			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
 				if (!board.is_empty(relative)) reachWall[i] = true;
@@ -96,7 +96,7 @@ void Knight::possible_moves(Tablero &board, Casilla &cell)
 		{
 			if (!x) continue;
 			Casilla &relative = board.get_cell(cell, x, y * i);
-			if (relative.getId() >= 0)
+			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell))	
 					relative.setPosMove(true);

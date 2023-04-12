@@ -234,13 +234,12 @@ Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relati
 	const	int size = 8;
 	int id = self.getId();
 	//out of borders
-	if(id % size + relative_x < 0 ||
+	if (id % size + relative_x < 0 ||
 	 	id % size + relative_x >= size ||
-		id / size - relative_y < 0 ||
-		id / size - relative_y >= size )
+		id / size < relative_y ||
+		id / size - relative_y >= size)
 	{
-		static Casilla	invalid(new Empty(), noColor, -1);
-		return (invalid);
+		return (self);
 	}
 	return (*m_casilla[id +  relative_x - size * relative_y]);
 }

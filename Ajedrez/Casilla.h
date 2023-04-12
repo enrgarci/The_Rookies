@@ -31,6 +31,10 @@ public:
 	bool			getPosMove();
 	void			setPosMove(bool c);
 	vector<int>		&getMoveList(Tablero &T);
+	bool operator==(Casilla &a);
+	bool operator!=(Casilla &a);
 };
 
+inline bool Casilla::operator==(Casilla &a){return this->m_id == a.m_id;}
+inline bool Casilla::operator!=(Casilla &a){return this->m_id != a.m_id;}
 #endif
