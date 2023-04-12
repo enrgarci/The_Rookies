@@ -23,10 +23,10 @@ public:
 	~Tablero ();
 	void	print();
 	string	get_fen();
-	Casilla &get_cell(int x);
-	Casilla &get_cell(int x, int y);
-	Casilla &get_cell(char c, int y);
-	Casilla &get_cell(Casilla &self, int relative_x, int relative_y);
+	Casilla &get_cell(const int x);
+	Casilla &get_cell(const int x, const int y);
+	Casilla &get_cell(const char c, const int y);
+	Casilla &get_cell(Casilla &self, const int relative_x, const int relative_y);
 	void	set_possible_moves(Casilla &cell);
 	void	reset_possible_moves();
 	bool	can_Move_To(Casilla &dst, Casilla &src);

@@ -177,7 +177,7 @@ void Tablero::reset_possible_moves()
 /// @param x The absolute x coordinate, equivalent to letters on real board
 /// @param y The absolute y coordinate, equivalent to numbers on real board
 /// @return The cell on the (x,y) coordinate
-Casilla	&Tablero::get_cell(int x, int y)
+Casilla	&Tablero::get_cell(const int x, const int y)
 {
 	const	int size = 8;
 	//out of borders
@@ -193,7 +193,7 @@ Casilla	&Tablero::get_cell(int x, int y)
 /// @param c the column
 /// @param y the row
 /// @return The (c,y) position on the board (Looking as white pieces)
-Casilla	&Tablero::get_cell(char c, int y)
+Casilla	&Tablero::get_cell(const char c, const int y)
 {
 	const	int size = 8;
 	//out of borders
@@ -212,7 +212,7 @@ Casilla	&Tablero::get_cell(char c, int y)
 ///			Expects valid input
 /// @param x The positio on the board 
 /// @return the cell in the x position
-Casilla	&Tablero::get_cell(int x)
+Casilla	&Tablero::get_cell(const int x)
 {
 	// 0 is upper left corner, 63 is opposite one.
 	//out of borders
@@ -229,7 +229,7 @@ Casilla	&Tablero::get_cell(int x)
 /// @param relative_x the x relative position from self
 /// @param relative_y the y relative position from self
 /// @return 
-Casilla &Tablero::get_cell(Casilla &self, int relative_x, int relative_y)
+Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relative_y)
 {
 	const	int size = 8;
 	int id = self.getId();
@@ -242,7 +242,7 @@ Casilla &Tablero::get_cell(Casilla &self, int relative_x, int relative_y)
 		static Casilla	invalid(new Empty(), noColor, -1);
 		return (invalid);
 	}
-	return (get_cell(id +  relative_x - size * relative_y));
+	return (*m_casilla[id +  relative_x - size * relative_y]);
 }
 
 /// @brief Checks if a cell is a valid destination for a move
