@@ -34,6 +34,10 @@ void Interface::init() {
 
 }
 
+Interface::coordinate Interface::getGridCoordinate(int col, int row) { 
+    return grid_coordinates[col][row]; 
+}
+
 void Interface::drawBoard() {
 
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f); // background color

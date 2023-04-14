@@ -18,7 +18,7 @@ class Interface
 
 public:
 	void init();
-	coordinate getGridCoordinate(int col, int row) {return grid_coordinates[col][row];}
+	coordinate getGridCoordinate(int col, int row);
 	void drawBoard();
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
