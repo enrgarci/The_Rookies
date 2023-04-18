@@ -29,10 +29,14 @@ bool Casilla::getPosMove() { return m_posible_destination; }
 void Casilla::setPosMove(bool c) { m_posible_destination = c; }
 vector<int>	&Casilla::getMoveList(Tablero &T)
 {
-	if (T.move_count == m_move_calculation) return m_move_lst;
-	m_move_calculation = T.move_count;
+	static int move_calculation = -1;
+	if (T.move_count == move_calculation) return m_move_lst;
+	move_calculation = T.move_count;
 	m_move_lst.clear();
-	getPiece().possible_moves(T, *this);
-	std::sort(m_move_lst.begin(), m_move_lst.end());
+	T.reset_possible_moves();
+	m_piece->possible_moves(T, *this);
+	for (int i = 0; i < BOARD_SIZE; i++)
+		if (T[i].m_posible_destination)
+			m_move_lst.push_back(i);
 	return m_move_lst;
 }
