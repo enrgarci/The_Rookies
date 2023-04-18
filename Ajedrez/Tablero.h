@@ -40,5 +40,10 @@ public:
 	Casilla &operator[](int c);
 };
 
-inline Casilla &Tablero::operator[](const int c){return *m_casilla[c];}
+/// @brief Access a cell of the board
+/// @param c the 0-63 cell to access
+/// @return The c cell of board
+inline Casilla &Tablero::operator[](const int c)
+{ if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
+
 #endif
