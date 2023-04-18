@@ -37,6 +37,8 @@ public:
 	bool	can_castle(color c);
 	void	set_castle(bool state, color c);
 	void	set_castle();
+	Casilla &operator[](int c);
 };
 
+inline Casilla &Tablero::operator[](const int c){return *m_casilla[c];}
 #endif
