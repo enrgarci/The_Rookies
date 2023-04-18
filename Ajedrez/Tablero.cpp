@@ -112,7 +112,7 @@ void	Tablero::printPosibleMoves (Casilla &cell)
 	{
 		Casilla &cell = *m_casilla[i];
 		int pieceVal;
-		bool b = cell.getPosMove();
+		bool b = cell.m_posible_destination;
 		pieceVal = b ? 'x' : ' '; // si es posible moverse marca
 		wprintf(L"%lc", '0' + b);
 		if(!(++cell_count % 8)) cout << endl; 
@@ -137,7 +137,7 @@ string Tablero::get_fen()
 		if (empty) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
-		if (!empty) fen += (cell.getPiece()).getSymbol();
+		if (!empty) fen += cell.m_piece->getSymbol();
 		//end of board row management
 		if (!(++cell_count % ROW_SIZE))
 		{
@@ -160,7 +160,7 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla &cell)
 {
-	(cell.getPiece()).possible_moves(*this, cell);
+	cell.m_piece->possible_moves(*this, cell);
 }
 
 void Tablero::reset_possible_moves()
@@ -168,7 +168,7 @@ void Tablero::reset_possible_moves()
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		Casilla &cell = *m_casilla[i];
-		cell.setPosMove(false);
+		cell.m_posible_destination = false;
 	}
 }
 
@@ -197,10 +197,10 @@ Casilla	&Tablero::get_cell(const char c, const int y)
 {
 	const	int size = 8;
 	//out of borders
-	if(c < 'a' ||
-	 c > 'h' ||
-	  y <= 0 ||
-	   y > size )
+	if (c < 'a' ||
+		c > 'h' ||
+		y <= 0 ||
+		y > size )
 	{
 		static Casilla	invalid(new Empty(), noColor, -1);
 		return (invalid);
@@ -232,7 +232,7 @@ Casilla	&Tablero::get_cell(const int x)
 Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relative_y)
 {
 	const	int size = 8;
-	int id = self.getId();
+	int id = self.m_id;
 	//out of borders
 	if (id % size + relative_x < 0 ||
 	 	id % size + relative_x >= size ||
@@ -249,7 +249,7 @@ Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relati
 /// @return 1 if cell is a valid destination
 bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 {
-	if (is_empty(dst) || (dst.getPiece()).getColor() != (src.getPiece()).getColor()) 
+	if (is_empty(dst) || dst.m_piece->getColor() != src.m_piece->getColor()) 
 		return true;
 	return false;
 }
@@ -257,21 +257,21 @@ bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 /// @return 1 if dst is empty 0 otherwise
 bool Tablero::is_empty(Casilla &dst)
 {
-	return ((dst.getPiece()).getFig() == figura::Vacio ? 1 : 0);
+	return (dst.m_piece->getFig() == figura::Vacio ? 1 : 0);
 }
 
 ///@return 1 if dst contains oponents piece, 0 otherwise
 bool Tablero::is_enemy_piece(Casilla &dst, color myColor)
 {
 	if (!is_empty(dst))
-		return ((dst.getPiece()).getColor() != myColor ? 1 : 0);
+		return (dst.m_piece->getColor() != myColor ? 1 : 0);
 	return false;
 }
 
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla &dst, Casilla &src)
 {
-	if((dst.getPiece()).getColor() != color::noColor) return true;
+	if(dst.m_piece->getColor() != color::noColor) return true;
 	return false;
 }
 

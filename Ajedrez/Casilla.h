@@ -8,6 +8,7 @@ class Tablero;
 
 class Casilla
 {
+friend Tablero;
 private:
 	int		m_id;
 	Pieza	*m_piece;
@@ -16,7 +17,6 @@ private:
 	bool	m_posible_destination = false;
 	vector<int> m_move_lst;
 public:
-	int		m_move_calculation = 0;
 	Casilla(Pieza *p, color c, int id);
 	~Casilla();
 	void			setCheck(bool inCheck);
