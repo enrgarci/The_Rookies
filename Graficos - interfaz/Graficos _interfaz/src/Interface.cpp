@@ -3,6 +3,16 @@
 #include "ETSIDI.h"
 #include "freeglut.h"
 
+#include "Tablero.h"
+#include "Partida.h"
+#include "Casilla.h"
+#include "Pieza.h"
+
+//Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
+Tablero T = P.getBoard();
+//Casilla C = T.get_cell(56);
+
 void Interface::init() {
 
     // Set screen dimensions

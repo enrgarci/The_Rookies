@@ -7,6 +7,8 @@ Interface interfaz;
 
 void onDraw() {
     interfaz.drawBoard();
+    interfaz.drawPieces();
+    glutSwapBuffers();
 }
 
 void onReshape(int w, int h) {
