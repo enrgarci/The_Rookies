@@ -20,6 +20,7 @@ public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
 	void drawBoard();
+	void drawPieces();
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
 

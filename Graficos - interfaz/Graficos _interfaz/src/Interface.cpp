@@ -38,6 +38,81 @@ Interface::coordinate Interface::getGridCoordinate(int col, int row) {
     return grid_coordinates[col][row]; 
 }
 
+//this function is not working until the logic part is included
+void Interface::drawPieces() {
+
+    std::string skin = "skin_default";
+    std::string figure = "";
+    std::string color = "";
+    std::string direction = "";
+
+    for (int i = 0; i <64; i++) {
+        int col = i % 8;
+        int row = 7-(i / 8);
+
+        switch (T[i].getPiece().getFig()) {
+        case  Vacio:
+            figure = "vacio";
+            break;
+        case Rey:
+            figure = "rey";
+            break;
+        case Reina:
+            figure = "reina";
+            break;
+        case Torre:
+            figure = "torre";
+            break;
+        case Alfil:
+            figure = "alfil";
+            break;
+        case Caballo:
+            figure = "caballo";
+            break;
+        case Peon:
+            figure = "peon";
+            break;
+        }
+
+        switch (T[i].getPiece().getColor()) {
+        case noColor:
+            break;
+        case Blanco:
+            color = "blanco";
+            break;
+        case Negro:
+            color = "negro";
+            break;
+        }
+
+        if (figure == "vacio") continue;
+
+        direction = "imagenes/" + skin + "/" + color + "/" + figure + ".png";
+        const char* texture_path = direction.c_str();
+
+        glEnable(GL_TEXTURE_2D);
+        //  glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/skin_default/blanco/caballo.png").id);
+        glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture(texture_path).id);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthFunc(GL_LESS);   //draws the pieces in a layer over the board
+
+        glBegin(GL_QUADS);
+        glColor3f(1, 1, 1);
+        glTexCoord2d(0, 1);     glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y);
+        glTexCoord2d(1, 1);     glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y);
+        glTexCoord2d(1, 0);     glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y + square_size / screen_height);
+        glTexCoord2d(0, 0);     glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y + square_size / screen_height);
+        glEnd();
+
+        glDepthFunc(GL_LEQUAL);
+        glDisable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        //glutSwapBuffers();
+    }
+
+}
+
 void Interface::drawBoard() {
 
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f); // background color
