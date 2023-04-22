@@ -19,6 +19,10 @@ void onMouse(int button, int state, int x, int y) {
     interfaz.mouseBoard(button, state, x, y);
 }
 
+void onKeyboard(unsigned char key, int x, int y) {
+    interfaz.keyboardFullscreen(key, x, y);
+}
+
 int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
@@ -32,7 +36,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(onDraw);
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouse);
- 
+    glutKeyboardFunc(onKeyboard);
 
     glutMainLoop();
     return 0;

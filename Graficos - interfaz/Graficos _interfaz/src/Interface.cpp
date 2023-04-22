@@ -193,3 +193,16 @@ void Interface::mouseBoard(int button, int state, int x, int y) {
         }
     }
 }
+
+void Interface::keyboardFullscreen(unsigned char key, int x, int y) {
+    if (key == 27) { // escape key
+        if (fullscreen) {
+            glutReshapeWindow(screen_width, screen_height);
+            fullscreen = false;
+        }
+        else {
+            glutFullScreen();
+            fullscreen = true;
+        }
+    }
+}
