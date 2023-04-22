@@ -11,7 +11,6 @@
 //Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 Tablero T = P.getBoard();
-//Casilla C = T.get_cell(56);
 
 void Interface::init() {
 
@@ -118,14 +117,13 @@ void Interface::drawPieces() {
         glDepthFunc(GL_LEQUAL);
         glDisable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
-        //glutSwapBuffers();
     }
 
 }
 
 void Interface::drawBoard() {
 
-    glClearColor(0.5f, 0.5f, 0.5f, 0.5f); // background color
+    glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //draw board border
@@ -146,10 +144,10 @@ void Interface::drawBoard() {
         for (int row = 0; row < gridSize; row++) {
 
             if ((row + col) % 2 == 0) {
-                glColor3f(0.45, 0.3, 0.2); // color for black squares
+                glColor3f(0.71, 0.53, 0.37); // color for black squares
             }
             else {
-                glColor3f(0.9, 0.8, 0.7); // color for white squares
+                glColor3f(0.94, 0.85, 0.71); // color for white squares
             }
 
             glBegin(GL_QUADS);
@@ -161,15 +159,10 @@ void Interface::drawBoard() {
         }
     }
 
-    glutSwapBuffers();
 }
 
 void Interface::reshape(int w, int h)
 {
-    // Update window width and height variables
-    //windowWidth = w;
-    //windowHeight = h;
-
     // Defining the viewport and projection
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
