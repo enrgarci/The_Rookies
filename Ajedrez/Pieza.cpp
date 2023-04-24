@@ -2,6 +2,10 @@
 #include "Casilla.h"
 #include "Tablero.h"
 
+Pieza::~Pieza()
+{
+	delete this;
+}
 color	Pieza::getColor(){return(col);}
 figura	Pieza::getFig(){return(fig);}
 void	Pieza::setFig(figura f){ fig = f;}

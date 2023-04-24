@@ -22,6 +22,8 @@ public:
 	Tablero (string fen = INITIAL_POS);
 	~Tablero ();
 	void	print();
+	void	print_all_moves();
+	int		count_possible_moves();
 	string	get_fen();
 	Casilla &get_cell(const int x);
 	Casilla &get_cell(const int x, const int y);
@@ -37,6 +39,7 @@ public:
 	bool	can_castle(color c);
 	void	set_castle(bool state, color c);
 	void	set_castle();
+	void	do_move(int from, int to);
 	Casilla &operator[](int c);
 };
 

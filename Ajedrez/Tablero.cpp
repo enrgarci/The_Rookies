@@ -1,6 +1,7 @@
 #include "Tablero.h"
 #include "Casilla.h"
 #include "Pieza.h"
+#include <algorithm>
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
@@ -73,6 +74,12 @@ Tablero::Tablero(string fen)
 		}
 		cell++;
 	}
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if ((*this)[i].getPiece().getColor() == Blanco) m_w_pieces.push_back(i);
+		else if ((*this)[i].getPiece().getColor() == Negro) m_b_pieces.push_back(i);
+	}
+	
 }
 
 /// @brief Libera la memoria reservada para la clase @ref Tablero
@@ -110,9 +117,9 @@ void	Tablero::printPosibleMoves (Casilla &cell)
 	setlocale(LC_ALL, "en_US.UTF-8");
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		Casilla &cell = *m_casilla[i];
+		Casilla &c = *m_casilla[i];
 		int pieceVal;
-		bool b = cell.m_posible_destination;
+		bool b = c.m_posible_destination;
 		pieceVal = b ? 'x' : ' '; // si es posible moverse marca
 		wprintf(L"%lc", '0' + b);
 		if(!(++cell_count % 8)) cout << endl; 
@@ -284,3 +291,57 @@ void Tablero::set_castle(bool state, color c) {c == Blanco ? m_w_castle_rights
 /// @brief sets playing side castle right to the oposite state
 void Tablero::set_castle() {turn == Blanco ? m_w_castle_rights = !m_w_castle_rights
 											: m_b_castle_rights = !m_b_castle_rights;}
+/// @brief Performs a move in the board, by swaping the cells if the target is empty,
+/// or deleting the origin and creating a new empty. Increment the move count by 1.
+/// @param from Id of the origin cell to move
+/// @param to Id of the target cell to move
+void Tablero::do_move(int from, int to)
+{
+	this->move_count++;
+	turn = turn == Blanco ? Negro : Blanco;
+	if ((*this)[to].getPiece().getFig() != Vacio)
+	{
+		(*m_casilla)[to].m_piece = (*this)[from].m_piece;
+		delete ((*m_casilla)[from].m_piece);
+		m_casilla[from] = new Casilla(new Empty(), noColor, from);
+		return;
+	}
+	Casilla temp = (*this)[from];
+	(*this)[from] = (*this)[to];
+	(*this)[from].m_id = from;
+	(*this)[to] = temp;
+	(*this)[to].m_id = to;
+
+	//update color pieces list
+
+	/// @todo enroque
+	/// @todo Al paso
+}
+
+/// @brief Prints a list of the possible moves of all the pieces, both colors
+void Tablero::print_all_moves()
+{
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if ((*this)[i].getMoveList(*this).size())
+			cout << i << "//	";
+		for(auto a: (*this)[i].getMoveList(*this)) 
+		{
+			cout << a << ", ";
+		}
+		if ((*this)[i].getMoveList(*this).size())
+			cout << "\n";
+	}
+}
+
+/// @brief gets the number of possible moves of the turn
+int Tablero::count_possible_moves()
+{
+	vector<int> pieces = turn == Blanco ? m_w_pieces : m_b_pieces;
+	int m_count = 0;
+	for (auto a : pieces)
+	{
+		m_count += (*this)[a].getMoveList(*this).size();
+	}
+	return (m_count);
+}

@@ -11,6 +11,7 @@ class Casilla
 friend Tablero;
 private:
 	int		m_id;
+	int		m_move_calculation = -1;
 	Pieza	*m_piece;
 	bool	m_in_check = false;
 	bool	m_can_en_passant = false;

@@ -9,12 +9,15 @@ class Casilla;
 /// @brief hola esto es un resumen
 class Pieza
 {
+friend Tablero;
+friend Casilla;
 protected:
 	figura fig;
 	color	col;
+	virtual void	possible_moves(Tablero &board, Casilla &cell)=0;
 public:
 	Pieza(figura f, color c=noColor): fig(f), col(c){};
-	virtual void	possible_moves(Tablero &board, Casilla &cell)=0;
+	virtual ~Pieza();
 	virtual char	getSymbol()=0;
 	figura	getFig();
 	color	getColor();
