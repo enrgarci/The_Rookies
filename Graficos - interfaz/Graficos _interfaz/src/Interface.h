@@ -25,6 +25,7 @@ public:
 	void drawBoard();
 	void drawPieces();
 	void drawPossibleMoves(std::vector<int>& move_list);
+	void drawMovement();
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
 	void keyboardFullscreen(unsigned char key, int x, int y);	//used to set and exit fullscreen

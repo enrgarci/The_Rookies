@@ -172,6 +172,79 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
     }
 }
 
+// Handles user input and updates the interface based on the game's state
+void Interface::drawMovement() 
+{    
+    static std::vector<int> move_list;
+    static int first_cell;
+    static color first_piece_color;
+
+    switch (click_flag) 
+    {
+    // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
+    case 0:
+        break;
+    // One click has been detected on the board grid
+    case 1: 
+        // Empty cell
+        if (T[cell_number].getPiece().getFig() == Vacio)    
+        {
+            click_flag = 0;
+            break;
+        }
+        // Select piece
+        move_list = T[cell_number].getMoveList(T);
+        first_piece_color = T[cell_number].getPiece().getColor();
+        first_cell = cell_number;
+        drawBoard();
+        drawPossibleMoves(move_list);
+        drawPieces();
+        break;
+    // Two clicks has been detected on the board grid
+    case 2: 
+        // Repeated cell - deselect piece
+        if (first_cell == cell_number) 
+        {
+            click_flag = 0;
+            break;
+        }
+        // Piece of the same color - select new piece
+        if (first_piece_color == T[cell_number].getPiece().getColor()) 
+        {
+            click_flag = 1;
+            move_list = T[cell_number].getMoveList(T);
+            first_cell = cell_number;
+            drawBoard();
+            drawPossibleMoves(move_list);
+            drawPieces();
+            break;
+        }
+        for (int i = 0; i < move_list.size(); i++) 
+        {
+            // Selected possible move - redraw board and pieces
+            if (cell_number == move_list[i]) 
+            {
+                click_flag = 0;
+                isWhiteTurn = (isWhiteTurn == true) ? false : true;
+                //aqui irá la funcion que llame a la logica para modificar la posicion del tablero
+                //
+                T.doMove(first_cell, cell_number);
+                T.move_count++;
+                //board and pieces are drawn again
+                drawBoard();
+                drawPieces();
+                break;
+            }
+        }
+        // Selected move not allowed - deselect cell
+        if (click_flag == 2) 
+        {
+            click_flag = 0;
+        }
+        break;
+    }
+}
+
 void Interface::drawBoard() {
 
     glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
