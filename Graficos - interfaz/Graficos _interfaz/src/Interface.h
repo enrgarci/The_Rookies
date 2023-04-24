@@ -10,12 +10,14 @@ class Interface
 	int screen_width;
 	int screen_height;
 	float board_size;
-	float board_origin_x;	//X coordinate of the bottom left corner of the board grid
-	float board_origin_y;	//Y coordinate of the bottom left ccorner of the board grid
+	float board_origin_x;
+	float board_origin_y;
 	float square_size;
 	bool fullscreen;
-//	coordinate(*grid_coordinates)[gridSize] = new coordinate[gridSize][gridSize];
-	coordinate grid_coordinates[8][8];	//matrix dimension must be equal to gridSize
+	bool isWhiteTurn = true;
+	int click_flag = 0;
+	int cell_number;
+	coordinate grid_coordinates[8][8];
 
 public:
 	void init();
@@ -28,6 +30,6 @@ public:
 	void drawMovement();
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
-	void keyboardFullscreen(unsigned char key, int x, int y);	//used to set and exit fullscreen
+	void keyboardFullscreen(unsigned char key, int x, int y);
 };
 

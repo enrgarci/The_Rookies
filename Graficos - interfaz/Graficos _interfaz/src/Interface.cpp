@@ -83,8 +83,9 @@ void Interface::drawPieces() {
     std::string direction = "";
 
     for (int i = 0; i <64; i++) {
-        int col = i % 8;
-        int row = 7-(i / 8);
+        int col;
+        int row;
+        rotateBoard(i, col, row, isWhiteTurn);
 
         switch (T[i].getPiece().getFig()) {
         case  Vacio:
@@ -312,6 +313,21 @@ void Interface::mouseBoard(int button, int state, int x, int y) {
             int row = (int)(vy * gridSize);
             int col = (int)(vx * gridSize);
 
+            cell_number = row * 8 + col;
+            changeOrigin(cell_number);
+           
+            switch (click_flag)
+            {
+            case 0: //no click has been detected on the board grid
+                click_flag = 1;
+                break;
+            case 1: //one click has been detected on the board grid
+                click_flag = 2;
+                break;
+            case 2: //two clicks has been detected on the board grid
+                break;
+            }
+
             //std::cout << "Casilla seleccionada: (" << col << ", " << row << ")" << std::endl;
             std::cout << "Casilla seleccionada: " << static_cast<char>('a' + col) << row + 1 << std::endl;  //display selected square
         }
@@ -319,7 +335,8 @@ void Interface::mouseBoard(int button, int state, int x, int y) {
 }
 
 void Interface::keyboardFullscreen(unsigned char key, int x, int y) {
-    if (key == 27) { // escape key
+    const char ESCAPE_KEY = 27;
+    if (key == ESCAPE_KEY) {
         if (fullscreen) {
             glutReshapeWindow(screen_width, screen_height);
             fullscreen = false;
