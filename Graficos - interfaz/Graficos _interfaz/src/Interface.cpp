@@ -148,6 +148,30 @@ void Interface::drawPieces() {
 
 }
 
+void Interface::drawPossibleMoves(std::vector<int>& move_list) 
+{
+    for (auto i:move_list) 
+    {
+        int col;
+        int row;
+
+        rotateBoard(i, col, row, isWhiteTurn);
+      
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glColor4f(0, 1, 0, 0.5);
+        glBegin(GL_QUADS);
+        glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y);
+        glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y);
+        glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y + square_size / screen_height);
+        glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y + square_size / screen_height);
+        glEnd();
+       
+        glDisable(GL_BLEND);
+    }
+}
+
 void Interface::drawBoard() {
 
     glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
