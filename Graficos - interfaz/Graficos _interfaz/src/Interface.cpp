@@ -197,7 +197,8 @@ void Interface::drawPieces()
 
 }
 
-//
+// Takes a vector of integers 'move_list' as input, which represent the valid moves in the game for a given cell
+// Draws green transparent squares on the board at the corresponding locations
 void Interface::drawPossibleMoves(std::vector<int>& move_list) 
 {
     for (auto i:move_list) 
@@ -223,6 +224,8 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
 }
 
 // Handles user input and updates the interface based on the game's state
+// Checks the value of a variable called click_flag, which keeps track of the number of clicks made by the user on the chessboard
+// Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
 void Interface::drawMovement() 
 {    
     static std::vector<int> move_list;
