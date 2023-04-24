@@ -20,6 +20,7 @@ public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
 	void changeOrigin(int& value);
+	void rotateBoard(int value, int& col, int& row, bool isWhiteTurn);
 	void drawBoard();
 	void drawPieces();
 	void reshape(int w, int h);

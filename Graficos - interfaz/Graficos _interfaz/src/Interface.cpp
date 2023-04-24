@@ -58,6 +58,22 @@ void Interface::changeOrigin(int& value)
     value = 8 * row + col;
 }
 
+// Rotate the board depending on whether it is black or white's turn
+// Receives the cell number(0 - 63), and the column and row that will be modified
+void Interface::rotateBoard(int value, int& col, int& row, bool isWhiteTurn) 
+{
+    if (isWhiteTurn) 
+    {
+        col = value % 8;
+        row = 7 - (value / 8);
+    }
+    else 
+    {
+        col = 7 - (value % 8);
+        row = (value / 8);
+    }
+}
+
 //this function is not working until the logic part is included
 void Interface::drawPieces() {
 
