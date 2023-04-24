@@ -47,6 +47,17 @@ Interface::coordinate Interface::getGridCoordinate(int col, int row) {
     return grid_coordinates[col][row]; 
 }
 
+// Takes as parameter the cell number from 0 to 63, with origin (0,0) bottom left (a1)
+// Modify the cell number, with origin at the top left (a8)
+// Depends on whether the board should be rotated that turn
+void Interface::changeOrigin(int& value) 
+{
+    int col;
+    int row;
+    rotateBoard(value, col, row, isWhiteTurn);
+    value = 8 * row + col;
+}
+
 //this function is not working until the logic part is included
 void Interface::drawPieces() {
 

@@ -19,6 +19,7 @@ class Interface
 public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
+	void changeOrigin(int& value);
 	void drawBoard();
 	void drawPieces();
 	void reshape(int w, int h);
