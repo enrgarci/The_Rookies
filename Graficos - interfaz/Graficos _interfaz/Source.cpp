@@ -5,26 +5,31 @@
 
 Interface interfaz;
 
-void onDraw() {
+void onDraw() 
+{
     interfaz.drawBoard();
     interfaz.drawPieces();
+    interfaz.drawMovement();
     glutSwapBuffers();
 }
 
-void onReshape(int w, int h) {
+void onReshape(int w, int h) 
+{
     interfaz.reshape(w, h);
 }
 
-void onMouse(int button, int state, int x, int y) {
+void onMouse(int button, int state, int x, int y) 
+{
     interfaz.mouseBoard(button, state, x, y);
 }
 
-void onKeyboard(unsigned char key, int x, int y) {
+void onKeyboard(unsigned char key, int x, int y) 
+{
     interfaz.keyboardFullscreen(key, x, y);
 }
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv) 
+{
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(glutGet(GLUT_SCREEN_WIDTH), glutGet(GLUT_SCREEN_HEIGHT));
@@ -37,7 +42,7 @@ int main(int argc, char** argv) {
     glutReshapeFunc(onReshape);
     glutMouseFunc(onMouse);
     glutKeyboardFunc(onKeyboard);
-
+ 
     glutMainLoop();
     return 0;
 }

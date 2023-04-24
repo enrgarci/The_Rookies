@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 class Interface
 {
 
@@ -31,5 +32,5 @@ public:
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
 	void keyboardFullscreen(unsigned char key, int x, int y);
-};
 
+};
