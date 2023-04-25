@@ -299,21 +299,16 @@ void Tablero::do_move(int from, int to)
 {
 	this->move_count++;
 	turn = turn == Blanco ? Negro : Blanco;
-	if ((*this)[to].getPiece().getFig() != Vacio)
-	{
-		(*m_casilla)[to].m_piece = (*this)[from].m_piece;
-		delete ((*m_casilla)[from].m_piece);
-		m_casilla[from] = new Casilla(new Empty(), noColor, from);
-		return;
-	}
-	Casilla temp = (*this)[from];
-	(*this)[from] = (*this)[to];
-	(*this)[from].m_id = from;
-	(*this)[to] = temp;
+
+	Casilla temp = ((*this)[to].getPiece().getColor() == noColor) ? (*this)[to] : *(new Casilla(new Empty(), noColor, to));
+	(*this)[to] = (*this)[from];
 	(*this)[to].m_id = to;
+	//delete (&(*this)[from]);
+	(*this)[from] = temp;
+	(*this)[from].m_id = from;
 
 	//update color pieces list
-
+	/// @todo free mem
 	/// @todo enroque
 	/// @todo Al paso
 }
