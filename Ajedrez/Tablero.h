@@ -41,6 +41,7 @@ public:
 	void	set_castle();
 	void	do_move(int from, int to);
 	Casilla &operator[](int c);
+	color	get_turn(){return turn;};
 };
 
 /// @brief Access a cell of the board
