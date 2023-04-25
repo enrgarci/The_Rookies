@@ -9,8 +9,8 @@
 #include "Casilla.h"
 #include "Pieza.h"
 
-//Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
+Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+//Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 Tablero T = P.getBoard();
 
 // Initializes interface attributes related to the screen and its coordinates
@@ -57,15 +57,15 @@ void Interface::changeOrigin(int& value)
 {
     int col;
     int row;
-    rotateBoard(value, col, row, isWhiteTurn);
+    rotateBoard(value, col, row);
     value = 8 * row + col;
 }
 
 // Rotate the board depending on whether it is black or white's turn
 // Receives the cell number(0 - 63), and the column and row that will be modified
-void Interface::rotateBoard(int value, int& col, int& row, bool isWhiteTurn) 
+void Interface::rotateBoard(int value, int& col, int& row) 
 {
-    if (isWhiteTurn) 
+    if (T.get_turn() == Blanco) 
     {
         col = value % 8;
         row = 7 - (value / 8);
@@ -132,7 +132,7 @@ void Interface::drawPieces()
     {
         int col;
         int row;
-        rotateBoard(i, col, row, isWhiteTurn);
+        rotateBoard(i, col, row);
 
         switch (T[i].getPiece().getFig()) 
         {
@@ -206,7 +206,7 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
         int col;
         int row;
 
-        rotateBoard(i, col, row, isWhiteTurn);
+        rotateBoard(i, col, row);
       
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -224,7 +224,7 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
 }
 
 // Handles user input and updates the interface based on the game's state
-// Checks the value of a variable called click_flag, which keeps track of the number of clicks made by the user on the chessboard
+// Checks the value of a variable called click_flag, which keeps track of the number of clicks made by the user on the chessboard.
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
 void Interface::drawMovement() 
 {    
@@ -249,6 +249,11 @@ void Interface::drawMovement()
         move_list = T[cell_number].getMoveList(T);
         first_piece_color = T[cell_number].getPiece().getColor();
         first_cell = cell_number;
+        // Only allows to select a piece if the turn is equal to the piece clicked
+        if (T.get_turn() != first_piece_color) {
+            click_flag = 0;
+            break;
+        }
         drawBoard();
         drawPossibleMoves(move_list);
         drawPieces();
@@ -278,10 +283,8 @@ void Interface::drawMovement()
             if (cell_number == move_list[i]) 
             {
                 click_flag = 0;
-                isWhiteTurn = (isWhiteTurn == true) ? false : true;
                 //aqui irá la funcion que llame a la logica para modificar la posicion del tablero
-                //
-                T.doMove(first_cell, cell_number);
+                T.do_move(first_cell, cell_number);
                 T.move_count++;
                 //board and pieces are drawn again
                 drawBoard();

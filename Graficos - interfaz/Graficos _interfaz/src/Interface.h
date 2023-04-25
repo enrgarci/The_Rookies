@@ -15,7 +15,6 @@ class Interface
 	float board_origin_y;
 	float square_size;
 	bool fullscreen;
-	bool isWhiteTurn = true;
 	int click_flag = 0;
 	int cell_number;
 	coordinate grid_coordinates[8][8];
@@ -24,7 +23,7 @@ public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
 	void changeOrigin(int& value);
-	void rotateBoard(int value, int& col, int& row, bool isWhiteTurn);
+	void rotateBoard(int value, int& col, int& row);
 	void drawBoard();
 	void drawPieces();
 	void drawPossibleMoves(std::vector<int>& move_list);
