@@ -8,10 +8,12 @@
 #include "Partida.h"
 #include "Casilla.h"
 #include "Pieza.h"
+#include "SoundController.h"
 
 Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 Tablero T = P.getBoard();
+SoundController S;
 
 // Initializes interface attributes related to the screen and its coordinates
 void Interface::init() 
@@ -43,6 +45,8 @@ void Interface::init()
                                            (board_origin_y + row * square_size) / screen_height };
         }
     }
+    S.playMusica("MainBGM", true);
+    S.play("Board_Start");
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row) 
@@ -289,6 +293,7 @@ void Interface::drawMovement()
                 //board and pieces are drawn again
                 drawBoard();
                 drawPieces();
+                S.play("Move_Piece");
                 break;
             }
         }
