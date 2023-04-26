@@ -8,7 +8,7 @@
 using namespace std;
 
 //the AI makes a move randomly, selecting one of its available pieces only if that piece has moves that it can perform, then moves from its initial square to one selectect from its posible moves at random
-void AI::randommove(Tablero &T)
+void AI::randommove(Tablero &T, color col)
 {
 		int inicell;
 		color piece_color;
@@ -16,11 +16,11 @@ void AI::randommove(Tablero &T)
 		int max, destinationelement;
 		do
 		{
-			inicell = ETSIDI::lanzaDado(64, 1)-1;
+			inicell = ETSIDI::lanzaDado(65, 1)-1;
 			piece_color = T[inicell].getPiece().getColor();
 			ia_move_list = T[inicell].getMoveList(T);
 			max = ia_move_list.size();
-		} while (piece_color != Negro || max == 0);
+		} while (piece_color != col || max == 0);
 		destinationelement = ETSIDI::lanzaDado(max+1, 1) - 1;
 		T.do_move(inicell,ia_move_list[destinationelement]);
 }

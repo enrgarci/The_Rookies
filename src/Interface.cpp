@@ -240,7 +240,7 @@ void Interface::drawMovement()
 
     if (T.get_turn() == Negro)
     {
-        IA.randommove(T);
+        IA.randommove(T, Negro);
         T.move_count++;
         S.play("Move_Piece");
         drawBoard();
