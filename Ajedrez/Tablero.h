@@ -42,6 +42,7 @@ public:
 	void	do_move(int from, int to);
 	Casilla &operator[](int c);
 	color	get_turn(){return turn;};
+	vector<int> &get_Color_Pieces(color c); 
 };
 
 /// @brief Access a cell of the board
@@ -49,5 +50,10 @@ public:
 /// @return The c cell of board, first cell if c not in [0 - 63]
 inline Casilla &Tablero::operator[](const int c)
 { if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
+
+inline vector<int> &Tablero::get_Color_Pieces(color c)
+{
+	return c == Blanco ? m_w_pieces : m_b_pieces;
+}
 
 #endif
