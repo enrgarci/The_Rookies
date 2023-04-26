@@ -15,6 +15,7 @@ class Interface
 	float board_origin_y;
 	float square_size;
 	bool fullscreen;
+	bool doRotate = false;
 	int click_flag = 0;
 	int cell_number;
 	coordinate grid_coordinates[8][8];
@@ -27,6 +28,7 @@ public:
 	void drawBoard();
 	void drawPieces();
 	void drawPossibleMoves(std::vector<int>& move_list);
+	void drawLastMove(int* movement, std::vector<int>& move_list, bool check_list);
 	void drawMovement();
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y);
