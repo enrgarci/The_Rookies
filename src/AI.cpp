@@ -16,7 +16,7 @@ void AI::randommove(Tablero &T)
 		int max, destinationelement;
 		do
 		{
-			inicell = ETSIDI::lanzaDado(64, 1)-1;
+			inicell = ETSIDI::lanzaDado(65, 1)-1;
 			piece_color = T[inicell].getPiece().getColor();
 			ia_move_list = T[inicell].getMoveList(T);
 			max = ia_move_list.size();
