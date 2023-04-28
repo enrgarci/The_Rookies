@@ -1,55 +1,59 @@
-/// Have a nice day !
- //  Author: enrgarci
- //  Create Time: 2023-03-26 14:12:51
- //  Modified by: enrgarci
- //  Modified time: 2023-03-28 04:13:17
- //  Description:
- //
- 
 #ifndef TABLERO_H
 #define TABLERO_H
 
+class Casilla;
+class Pieza;
+
+#include <stdio.h>
 #include "header.h"
-#include "Casilla.h"
 
-using std::cout;
-using std::endl;
-using std::string;
-
- class Tablero
+class Tablero
 {
 private:
-	Casilla m_casilla[64];
-	Casilla	m_last_move[2];				///#TODO
-	Pieza::color	m_mueve;
+	Casilla *m_casilla[BOARD_SIZE];
+	color turn = color::Blanco;
 	string	m_initial_board;
-	string	m_game;						///TODO
-	bool	m_can_castle = true;		///#TODO
-	bool	m_can_en_passant = false;	///#TODO
-	int		m_fifty_move_rule = 0;		///#TODO
-	int		m_repeat_three = 0;			///#TODO
-	friend	class Moves;						///#TODO
+	bool	m_w_castle_rights = true;
+	bool	m_b_castle_rights = true;
+	vector<int> m_w_pieces;
+	vector<int> m_b_pieces;
 public:
-	Tablero (string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+	int	move_count = 0;
+	Tablero (string fen = INITIAL_POS);
+	~Tablero ();
 	void	print();
+	void	print_all_moves();
+	int		count_possible_moves();
 	string	get_fen();
-	Casilla get_cell(int x);
-	Casilla get_cell(int x, int y);
-	Casilla get_cell(char c, int y);
-	Casilla get_cell(Casilla self, int relative_x, int relative_y);
-	void	set_possible_moves(Casilla cell);
+	Casilla &get_cell(const int x);
+	Casilla &get_cell(const int x, const int y);
+	Casilla &get_cell(const char c, const int y);
+	Casilla &get_cell(Casilla &self, const int relative_x, const int relative_y);
+	void	set_possible_moves(Casilla &cell);
 	void	reset_possible_moves();
-	bool	can_Move_To(Casilla dst, Casilla src);
-	bool	is_move_wall(Casilla dst, Casilla src);
-	bool	is_empty(Casilla dst);
-	bool	is_enemy_piece(Casilla dst, Pieza::color myColor);
-	void	posible_king(Casilla cell);
-	void	posible_queen(Casilla cell);
-	void	posible_rook(Casilla cell);
-	void	posible_bishop(Casilla cell);
-	void	posible_knight(Casilla cell);
-	void	posible_pawn(Casilla cell);
-	void	printPosibleMoves (Casilla cell);
+	bool	can_Move_To(Casilla &dst, Casilla &src);
+	bool	is_move_wall(Casilla &dst, Casilla &src);
+	bool	is_empty(Casilla &dst);
+	bool	is_enemy_piece(Casilla &dst, color myColor);
+	void	printPosibleMoves (Casilla &cell);
+	bool	can_castle(color c);
+	void	set_castle(bool state, color c);
+	void	set_castle();
+	void	do_move(int from, int to);
+	Casilla &operator[](int c);
+	color	get_turn(){return turn;};
+	vector<int> &get_Color_Pieces(color c); 
 };
+
+/// @brief Access a cell of the board
+/// @param c the 0-63 cell to access
+/// @return The c cell of board, first cell if c not in [0 - 63]
+inline Casilla &Tablero::operator[](const int c)
+{ if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
+
+inline vector<int> &Tablero::get_Color_Pieces(color c)
+{
+	return c == Blanco ? m_w_pieces : m_b_pieces;
+}
 
 #endif
