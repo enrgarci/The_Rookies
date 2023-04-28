@@ -9,11 +9,13 @@
 #include "Casilla.h"
 #include "Pieza.h"
 #include "SoundController.h"
+#include "AI.h"
 
 Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 Tablero T = P.getBoard();
 SoundController S;
+AI IA;
 
 // Initializes interface attributes related to the screen and its coordinates
 void Interface::init() 
@@ -235,6 +237,15 @@ void Interface::drawMovement()
     static std::vector<int> move_list;
     static int first_cell;
     static color first_piece_color;
+
+    if (T.get_turn() == Negro)
+    {
+        IA.randommove(T, Negro);
+        T.move_count++;
+        S.play("Move_Piece");
+        drawBoard();
+        drawPieces();
+    }
 
     switch (click_flag) 
     {
