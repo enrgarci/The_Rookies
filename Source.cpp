@@ -7,8 +7,6 @@ Interface interfaz;
 
 void onDraw() 
 {
-    interfaz.drawBoard();
-    interfaz.drawPieces();
     interfaz.drawMovement();
     glutSwapBuffers();
 }
