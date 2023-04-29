@@ -306,8 +306,8 @@ void Tablero::do_move(int from, int to)
 	m_b_pieces.clear();
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if ((*this)[i].getPiece().getColor() == Blanco) m_w_pieces.push_back(i);
-		else if ((*this)[i].getPiece().getColor() == Negro) m_b_pieces.push_back(i);
+		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
+		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 	}
 	/// @todo enroque
 	/// @todo Al paso
