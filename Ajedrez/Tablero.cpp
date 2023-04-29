@@ -10,11 +10,21 @@
 Tablero::Tablero(string fen)
 {	
 	int		cell = 0;
-	bool	all_pos = false;
+	bool	all_pos = false; //flag to check if FEN is complete
 
+	//One object per piece type
+	m_king = new King();
+	m_queen = new Queen();
+	m_rook = new Rook();
+	m_knight = new Knight();
+	m_bishop = new Bishop();
+	m_pawn = new Pawn();
+	m_empty = new Empty();
 	m_initial_board = fen;
+	//Read the FEN
 	for(char c:fen)
 	{
+		//Non-Piece FEN characters
 		if (c == 'w') {turn = color::Blanco; break;}
 		if (all_pos && c == 'b') {turn = color::Negro; break;}
 		if (c == '/') {continue;}
@@ -24,62 +34,52 @@ Tablero::Tablero(string fen)
 			//we have c as char, (c - '0') = c as int
 			for (int i = 0; i < (c - '0'); i++) 
 			{
-				m_casilla[cell] = new Casilla(new Empty(), noColor, cell);
+				m_casilla[cell] = new Casilla(*this, m_empty, Vacio, noColor, cell);
 				cell++;
 			}
 			continue;
 		}
+		// minuscula es negro
+		color col = c >= 'a' ? Negro : Blanco;
+		//Set pieces
 		switch (c)
 		{
 		//black
-		case 'r':
-			m_casilla[cell] = new Casilla(new Rook(), Negro, cell);
-			break;
-		case 'n':
-			m_casilla[cell] = new Casilla(new Knight(), Negro, cell);
-			break;
-		case 'b':
-			m_casilla[cell] = new Casilla(new Bishop(), Negro, cell);
-			break;
-		case 'q':
-			m_casilla[cell] = new Casilla(static_cast<Rook*>(new Queen()), Negro, cell);
-			break;
-		case 'k':
-			m_casilla[cell] = new Casilla(new King(), Negro, cell);
-			break;
-		case 'p':
-			m_casilla[cell] = new Casilla(new Pawn(), Negro, cell);
-			break;
-		//white
 		case 'R':
-			m_casilla[cell] = new Casilla(new Rook(), Blanco, cell);
+		case 'r':
+			m_casilla[cell] = new Casilla(*this, m_rook, Torre, col, cell);
 			break;
 		case 'N':
-			m_casilla[cell] = new Casilla(new Knight(), Blanco, cell);
+		case 'n':
+			m_casilla[cell] = new Casilla(*this, m_knight, Caballo, col, cell);
 			break;
 		case 'B':
-			m_casilla[cell] = new Casilla(new Bishop(), Blanco, cell);
+		case 'b':
+			m_casilla[cell] = new Casilla(*this, m_bishop, Alfil, col, cell);
 			break;
 		case 'Q':
-			m_casilla[cell] = new Casilla(static_cast<Rook*>(new Queen()), Blanco, cell);
+		case 'q':
+			m_casilla[cell] = new Casilla(*this, static_cast<Rook*>(m_queen), Reina, col, cell);
 			break;
 		case 'K':
-			m_casilla[cell] = new Casilla(new King(), Blanco, cell);
+		case 'k':
+			m_casilla[cell] = new Casilla(*this, m_king, Rey, col, cell);
 			break;
 		case 'P':
-			m_casilla[cell] = new Casilla(new Pawn(), Blanco, cell);
+		case 'p':
+			m_casilla[cell] = new Casilla(*this, m_pawn, Peon, col, cell);
 			break;
 		default:
 			break;
 		}
 		cell++;
 	}
+	//List of pieces of each colors
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if ((*this)[i].getPiece().getColor() == Blanco) m_w_pieces.push_back(i);
-		else if ((*this)[i].getPiece().getColor() == Negro) m_b_pieces.push_back(i);
+		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
+		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 	}
-	
 }
 
 /// @brief Libera la memoria reservada para la clase @ref Tablero
@@ -89,7 +89,6 @@ Tablero::~Tablero()
 /// @brief Prints a console representation of the board
 void	Tablero::print ()
 {
-	int cell_count = 0;
 	const int UnicodeVal= 9812;
 	const int NumOfPieces= 6;
 
@@ -97,12 +96,12 @@ void	Tablero::print ()
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		Casilla &cell = *m_casilla[i];
-		int pieceVal = int(cell.getPiece().getFig());
-		int colorVal = int(cell.getPiece().getColor());
+		int pieceVal = int(cell.m_figure);
+		int colorVal = int(cell.m_color);
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
 		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
-		if(!(++cell_count % 8)) cout << endl; 
+		if(!((i + 1) % 8)) cout << endl; 
 	}
 	cout << endl << "Turno de " << (turn ? "Blancas" : "Negras") << endl;
 }
@@ -110,8 +109,6 @@ void	Tablero::print ()
 void	Tablero::printPosibleMoves (Casilla &cell)
 {
 	int cell_count = 0;
-	const int UnicodeBox= 2610;
-	const int UnicodeXBox= 2612;
 
 	set_possible_moves(cell);
 	setlocale(LC_ALL, "en_US.UTF-8");
@@ -125,6 +122,7 @@ void	Tablero::printPosibleMoves (Casilla &cell)
 		if(!(++cell_count % 8)) cout << endl; 
 	}
 	cout << endl;
+	this->reset_possible_moves();
 }
 /// @brief Gets the FEN code of the current board state
 /// @return FEN code as string
@@ -144,7 +142,7 @@ string Tablero::get_fen()
 		if (empty) empty_count++;
 		if (!empty && empty_count) fen += '0' + empty_count,empty_count = 0;
 		//cell with piece
-		if (!empty) fen += cell.m_piece->getSymbol();
+		if (!empty) fen += cell.getSymbol();
 		//end of board row management
 		if (!(++cell_count % ROW_SIZE))
 		{
@@ -190,7 +188,7 @@ Casilla	&Tablero::get_cell(const int x, const int y)
 	//out of borders
 	if(x < 0 || x >= size || y < 0 || y >= size )
 	{
-		static Casilla	invalid(new Empty(), noColor, -1);
+		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[x + 8 * y]);
@@ -209,7 +207,7 @@ Casilla	&Tablero::get_cell(const char c, const int y)
 		y <= 0 ||
 		y > size )
 	{
-		static Casilla	invalid(new Empty(), noColor, -1);
+		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[(c - 'a') + 8 * ( size - y)]);
@@ -225,7 +223,7 @@ Casilla	&Tablero::get_cell(const int x)
 	//out of borders
 	if (x < 0 || x > 63)
 	{
-		static Casilla	invalid(new Empty(), noColor, -1);
+		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[x]);
@@ -256,7 +254,7 @@ Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relati
 /// @return 1 if cell is a valid destination
 bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 {
-	if (is_empty(dst) || dst.m_piece->getColor() != src.m_piece->getColor()) 
+	if (is_empty(dst) || dst.getColor() != src.getColor()) 
 		return true;
 	return false;
 }
@@ -264,21 +262,21 @@ bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 /// @return 1 if dst is empty 0 otherwise
 bool Tablero::is_empty(Casilla &dst)
 {
-	return (dst.m_piece->getFig() == figura::Vacio ? 1 : 0);
+	return (dst.getFigura() == figura::Vacio ? 1 : 0);
 }
 
 ///@return 1 if dst contains oponents piece, 0 otherwise
 bool Tablero::is_enemy_piece(Casilla &dst, color myColor)
 {
 	if (!is_empty(dst))
-		return (dst.m_piece->getColor() != myColor ? 1 : 0);
+		return (dst.getColor() != myColor ? 1 : 0);
 	return false;
 }
 
 /// @return true if dst is held by opponent's pieces
 bool Tablero::is_move_wall(Casilla &dst, Casilla &src)
 {
-	if(dst.m_piece->getColor() != color::noColor) return true;
+	if(dst.getColor() != color::noColor) return true;
 	return false;
 }
 
@@ -297,18 +295,13 @@ void Tablero::set_castle() {turn == Blanco ? m_w_castle_rights = !m_w_castle_rig
 /// @param to Id of the target cell to move
 void Tablero::do_move(int from, int to)
 {
-	this->move_count++;
+	(*this).move_count++;
 	turn = turn == Blanco ? Negro : Blanco;
 
-	Casilla temp = ((*this)[to].getPiece().getColor() == noColor) ? (*this)[to] : *(new Casilla(new Empty(), noColor, to));
 	(*this)[to] = (*this)[from];
-	(*this)[to].m_id = to;
-	//delete (&(*this)[from]);
-	(*this)[from] = temp;
-	(*this)[from].m_id = from;
-
+	(*this)[from].clear();
+	
 	//update color pieces list
-	/// @todo free mem
 	/// @todo enroque
 	/// @todo Al paso
 }
@@ -318,13 +311,13 @@ void Tablero::print_all_moves()
 {
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if ((*this)[i].getMoveList(*this).size())
+		if ((*this)[i].getMoveList().size())
 			cout << i << "//	";
-		for(auto a: (*this)[i].getMoveList(*this)) 
+		for(auto a: (*this)[i].getMoveList()) 
 		{
 			cout << a << ", ";
 		}
-		if ((*this)[i].getMoveList(*this).size())
+		if ((*this)[i].getMoveList().size())
 			cout << "\n";
 	}
 }
@@ -336,7 +329,7 @@ int Tablero::count_possible_moves()
 	int m_count = 0;
 	for (auto a : pieces)
 	{
-		m_count += (*this)[a].getMoveList(*this).size();
+		m_count += (*this)[a].getMoveList().size();
 	}
 	return (m_count);
 }

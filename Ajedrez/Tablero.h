@@ -1,12 +1,18 @@
 #ifndef TABLERO_H
 #define TABLERO_H
 
+//Forward declaration of pieces
 class Casilla;
 class Pieza;
-
+class King;
+class Queen;
+class Rook;
+class Bishop;
+class Knight;
+class Pawn;
+class Empty;
 #include <stdio.h>
 #include "header.h"
-
 class Tablero
 {
 private:
@@ -17,6 +23,19 @@ private:
 	bool	m_b_castle_rights = true;
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
+
+	// As the pieces classes only manage the movements, there is
+	//no point in having an instance of them per cell, as the parameters needed
+	// are passed, instead we have one of a type per board and all the cells of the same type
+	// call those, helps less memory management when making moves.
+	King	*m_king;
+	Queen	*m_queen;
+	Rook	*m_rook;
+	Knight	*m_knight;
+	Bishop	*m_bishop;
+	Pawn	*m_pawn;
+	Empty	*m_empty;
+
 public:
 	int	move_count = 0;
 	Tablero (string fen = INITIAL_POS);
@@ -40,6 +59,7 @@ public:
 	void	set_castle(bool state, color c);
 	void	set_castle();
 	void	do_move(int from, int to);
+	Empty	&get_empty_cell();
 	Casilla &operator[](int c);
 	color	get_turn(){return turn;};
 };
@@ -50,4 +70,5 @@ public:
 inline Casilla &Tablero::operator[](const int c)
 { if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
 
+inline Empty	&Tablero::get_empty_cell(){return *m_empty;}
 #endif

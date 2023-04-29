@@ -6,18 +6,11 @@ Pieza::~Pieza()
 {
 	delete this;
 }
-color	Pieza::getColor(){return(col);}
-figura	Pieza::getFig(){return(fig);}
-void	Pieza::setFig(figura f){ fig = f;}
-void	Pieza::setColor(color c){ col = c;}
 
 void Empty::possible_moves(Tablero &board, Casilla &cell)
 {	
 	return;
 }
-
-char Empty::getSymbol() {return 0;}
-
 
 /// @brief set cell true, if a king on cell could reach them
 /// @todo look if move would be check, that ilegal!
@@ -34,13 +27,6 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		}
 	}
 }
-
-char King::getSymbol() {return (col == Blanco ? W_KING : B_KING);}
-char Queen::getSymbol() {return (Rook::col == Blanco ? W_QUEEN : B_QUEEN);}
-char Rook::getSymbol() {return (col == Blanco ? W_ROOK : B_ROOK);}
-char Bishop::getSymbol() {return (col == Blanco ? W_BISHOP : B_BISHOP);}
-char Knight::getSymbol() {return (col == Blanco ? W_KNIGHT : B_KNIGHT);}
-char Pawn::getSymbol() {return (col == Blanco ? W_PAWN : B_PAWN);}
 
 /// @brief set cells true, if a bishop on cell could reach them
 void Bishop::possible_moves(Tablero &board, Casilla &cell)
@@ -112,8 +98,8 @@ void Knight::possible_moves(Tablero &board, Casilla &cell)
 void Pawn::possible_moves(Tablero &board, Casilla &cell)
 {
 	int dir = 1;
-	if ((cell.getPiece()).getColor() == color::Blanco) dir = 1;
-	if ((cell.getPiece()).getColor() == color::Negro) dir = -1;
+	if (cell.getColor() == color::Blanco) dir = 1;
+	if (cell.getColor() == color::Negro) dir = -1;
 	int	en_passant_row = dir > 0 ? 3 : 4; // filas centrales hay que ver si se puede tomar al paso
 	int	jump_row = dir > 0 ? 6 : 1; // penultima fila de cada lado puede dar un salto
 
@@ -128,15 +114,15 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 	//capturas
 	for (int i = -1; i < 2; i+=2)
 	{
-		if (board.is_enemy_piece(board.get_cell(cell, i, dir), cell.getPiece().getColor())) 
+		if (board.is_enemy_piece(board.get_cell(cell, i, dir), cell.getColor())) 
 			board.get_cell(cell, i, dir).setPosMove(true);
 	}
 	// En passant
 	for (int i = -1; i < 2; i+=2)
 	{
 		if (cell.getId() / 8 == en_passant_row && 
-		board.is_enemy_piece(board.get_cell(cell, i, 0), (cell.getPiece()).getColor()) && 
-		board.get_cell(cell, i, 0).getEnPassant()) 
+				board.is_enemy_piece(board.get_cell(cell, i, 0), cell.getColor()) && 
+				board.get_cell(cell, i, 0).getEnPassant())
 			board.get_cell(cell, i, 0).setPosMove(true);
 	}
 }
