@@ -287,10 +287,12 @@ int Tablero::can_castle(color c)
 		if(m_w_castle_rights[0] && m_w_castle_rights[1]) return 2;
 		if(m_w_castle_rights[0]) return 0;
 		if(m_w_castle_rights[1]) return 1;
+		return -1;
 	}
 	if(m_b_castle_rights[0] && m_b_castle_rights[1]) return 2;
 	if(m_b_castle_rights[0]) return 0;
 	if(m_b_castle_rights[1]) return 1;
+	return -1;
 }
 
 /// @brief Performs a move in the board, by swaping the cells if the target is empty,
