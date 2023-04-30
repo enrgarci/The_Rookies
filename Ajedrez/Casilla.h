@@ -12,6 +12,7 @@ friend Tablero;
 private:
 	int		m_id;
 	int		m_move_calculation = -1;
+	int		m_check_calculation = -1;
 	Pieza	*m_piece;
 	bool	m_in_check = false;
 	bool	m_can_en_passant = false;
@@ -34,7 +35,7 @@ public:
 	Pieza			&getPiece();
 	figura			getFigura();
 	color			getColor();
-	bool			getCheck();
+	bool			getCheck(color c);
 	int				getId();
 	bool			getEnPassant();
 	int				getEnPassant_move();
@@ -64,5 +65,4 @@ inline void Casilla::setEnPassant_move(int move) {m_en_passant_move = move; }
 inline bool Casilla::getPosMove(){return m_posible_destination;}
 inline void Casilla::setPosMove(bool c){m_posible_destination = c;}
 inline void Casilla::setCheck(bool inCheck) { m_in_check = inCheck; }
-inline bool Casilla::getCheck() { return m_in_check; }
 #endif

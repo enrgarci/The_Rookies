@@ -374,3 +374,15 @@ int Tablero::count_possible_moves()
 	}
 	return (m_count);
 }
+
+void Tablero::print_checks(color c)
+{
+	cout << endl;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		 if (i > 0 && i % 8 == 0) cout << endl;
+		 cout << (*this)[i].getCheck(c);
+	}
+	cout << endl;
+	(*this).reset_possible_moves();
+}

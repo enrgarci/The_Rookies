@@ -86,3 +86,45 @@ void Casilla::clear()
 	this->m_piece = &m_parent_board->get_empty_cell();
 	this->m_symbol = 0;
 }
+bool Casilla::getCheck(color c)
+{
+	Tablero &T = *m_parent_board;
+	if (T.move_count == m_check_calculation) return m_in_check;
+	m_check_calculation = T.move_count;
+	T.reset_possible_moves();
+	//Check by rook || queen_line
+	T.m_rook->possible_moves(T, *(new Casilla(T,T.m_rook,Torre,c, m_id)));
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_rook) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.m_queen)) return (m_in_check = true);
+	}
+	T.reset_possible_moves();
+	//Check by bishop || queen_diagonal
+	T.m_bishop->possible_moves(T, *(new Casilla(T,T.m_bishop,Alfil,c, m_id)));
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_bishop) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.m_queen)) return (m_in_check = true);
+	}
+	T.reset_possible_moves();
+	//Check by Knight
+	T.m_knight->possible_moves(T, *(new Casilla(T,T.m_knight,Caballo,c, m_id)));
+	for (int i = 0; i < BOARD_SIZE; i++)
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_knight) return (m_in_check = true);
+	T.reset_possible_moves();
+	//Check by king
+	for (int x = -1; x < 2; x++)
+	{
+		for (int y = -1; y < 2; y++)
+		{
+			if (!x && !y) continue;
+			if (T.get_cell((*this), x,y).m_figure == Rey && T.get_cell((*this), x,y).m_color != c) return (m_in_check = true);
+		}
+	}
+	T.reset_possible_moves();
+	//Check by pawn
+	int dir =  (c == Blanco) ? 1 : -1;
+	for (int i = -1; i < 2; i+=2)
+		if (T.get_cell((*this), i,dir).m_figure == Peon && T.get_cell((*this), i,dir).m_color != c) return (m_in_check = true);
+}

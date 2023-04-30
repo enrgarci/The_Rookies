@@ -15,6 +15,7 @@ class Empty;
 #include "header.h"
 class Tablero
 {
+friend class Casilla;
 private:
 	Casilla *m_casilla[BOARD_SIZE];
 	color turn = color::Blanco;
@@ -41,6 +42,7 @@ public:
 	Tablero (string fen = INITIAL_POS);
 	~Tablero ();
 	void	print();
+	void	print_checks(color c);
 	void	print_all_moves();
 	int		count_possible_moves();
 	string	get_fen();

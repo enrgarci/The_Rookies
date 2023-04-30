@@ -11,7 +11,6 @@ void Empty::possible_moves(Tablero &board, Casilla &cell)
 {	
 	return;
 }
-
 /// @brief set cell true, if a king on cell could reach them
 /// @todo look if move would be check, that ilegal!
 void King::possible_moves(Tablero &board, Casilla &cell)
@@ -22,7 +21,8 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		{
 			if (!x && !y) continue;
 			Casilla &relative = board.get_cell(cell, x, y);
-			if(relative != cell && board.can_Move_To(relative, cell))
+			if(relative != cell && board.can_Move_To(relative, cell) &&
+					!relative.getCheck(cell.getColor()))
 				relative.setPosMove(true);
 		}
 	}
@@ -37,7 +37,9 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 	{
 		//vacío entre rey-torre
 		if (board.is_empty(board[c == Blanco ? w_empty[4]: b_empty[4]]) && 
-				board.is_empty(board[c == Blanco ? w_empty[5]: b_empty[5]]))
+				board.is_empty(board[c == Blanco ? w_empty[5]: b_empty[5]]) &&
+				!board[c == Blanco ? w_empty[4]: b_empty[4]].getCheck(c) && 
+				!board[c == Blanco ? w_empty[5]: b_empty[5]].getCheck(c))
 			board[c == Blanco ? w_empty[5]: b_empty[5]].setPosMove(true);
 	}
 	//enroque largo
@@ -47,7 +49,9 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		//vacío entre rey-torre
 		if (board.is_empty(board[c == Blanco ? w_empty[0]: b_empty[0]]) && 
 				board.is_empty(board[c == Blanco ? w_empty[1]: b_empty[1]]) && 
-				board.is_empty(board[c == Blanco ? w_empty[2]: b_empty[2]]))
+				board.is_empty(board[c == Blanco ? w_empty[2]: b_empty[2]]) &&
+				!board[c == Blanco ? w_empty[1]: b_empty[1]].getCheck(c) && 
+				!board[c == Blanco ? w_empty[2]: b_empty[2]].getCheck(c))
 			board[c == Blanco ? w_empty[1]: b_empty[1]].setPosMove(true);
 	}
 }
