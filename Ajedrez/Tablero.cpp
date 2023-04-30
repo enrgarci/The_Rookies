@@ -380,6 +380,9 @@ void Tablero::do_move(int from, int to)
 	if (from == 63 || to == 63) m_w_castle_rights[1] = false;
 	if (from == 60 || to == 60) m_w_castle_rights[0] = false,m_w_castle_rights[1] = false;
 
+	//update 50 move rule
+	//si no hay captura o movimiento de peon se incrementa
+	if (T[from].m_figure != Peon && T[to].m_figure == Vacio) fifty_move_rule++;
 	//Casilla destino = origen y limpio origen
 	T[to] = T[from];
 	T[from].clear();
