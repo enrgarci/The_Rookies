@@ -19,8 +19,8 @@ private:
 	Casilla *m_casilla[BOARD_SIZE];
 	color turn = color::Blanco;
 	string	m_initial_board;
-	bool	m_w_castle_rights = true;
-	bool	m_b_castle_rights = true;
+	bool	m_w_castle_rights[2] = {true, true};
+	bool	m_b_castle_rights[2] = {true, true};
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
 
@@ -56,9 +56,7 @@ public:
 	bool	is_enemy_piece(Casilla &dst, color myColor);
 	void	printPosibleMoves (Casilla &cell);
 	void	printPosibleMoves (int &&cell);
-	bool	can_castle(color c);
-	void	set_castle(bool state, color c);
-	void	set_castle();
+	int		can_castle(color c);
 	void	do_move(int from, int to);
 	Empty	&get_empty_cell();
 	Casilla &operator[](int c);

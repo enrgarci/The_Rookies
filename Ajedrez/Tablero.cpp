@@ -280,15 +280,19 @@ bool Tablero::is_move_wall(Casilla &dst, Casilla &src)
 	return false;
 }
 
-bool Tablero::can_castle(color c) { return c == Blanco ? m_w_castle_rights : m_b_castle_rights;}
-/// @brief Sets m_castle_rights of c player to state
-/// @param state 
-/// @param c The color of the player to set the state of castle rights
-void Tablero::set_castle(bool state, color c) {c == Blanco ? m_w_castle_rights
-															: m_b_castle_rights = state;}
-/// @brief sets playing side castle right to the oposite state
-void Tablero::set_castle() {turn == Blanco ? m_w_castle_rights = !m_w_castle_rights
-											: m_b_castle_rights = !m_b_castle_rights;}
+int Tablero::can_castle(color c) 
+{
+	if (c == Blanco)
+	{
+		if(m_w_castle_rights[0] && m_w_castle_rights[1]) return 2;
+		if(m_w_castle_rights[0]) return 0;
+		if(m_w_castle_rights[1]) return 1;
+	}
+	if(m_b_castle_rights[0] && m_b_castle_rights[1]) return 2;
+	if(m_b_castle_rights[0]) return 0;
+	if(m_b_castle_rights[1]) return 1;
+}
+
 /// @brief Performs a move in the board, by swaping the cells if the target is empty,
 /// or deleting the origin and creating a new empty. Increment the move count by 1.
 /// @param from Id of the origin cell to move
@@ -313,7 +317,17 @@ void Tablero::do_move(int from, int to)
 		if (c_plus != T[to] && c_plus.getFigura() == Peon && c_plus.getColor() != T[to].getColor())
 			T[to + offset].setEnPassant(true), T[to + offset].setEnPassant_move(T.move_count);
 	}
-	/// @todo enroque
+	//Enroque
+	// si movemos una torre no podemos enrocar a ese lado
+	// si movemos el rey no podemos enrocar
+	//si nos comen una torre no podemos por ese lado !!
+	if (from == 0 || to == 0) m_b_castle_rights[0] = false;
+	if (from == 7 || to == 7) m_b_castle_rights[1] = false;
+	if (from == 4 || to == 4) m_b_castle_rights[0] = false,m_b_castle_rights[1] = false;
+	if (from == 56 || to == 56) m_w_castle_rights[0] = false;
+	if (from == 63 || to == 63) m_w_castle_rights[1] = false;
+	if (from == 60 || to == 60) m_w_castle_rights[0] = false,m_w_castle_rights[1] = false;
+
 	//Casilla destino = origen y limpio origen
 	T[to] = T[from];
 	T[from].clear();

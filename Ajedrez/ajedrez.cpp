@@ -8,28 +8,15 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","");
+	Partida P("","","r1B1k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
 	Tablero &T = P.getBoard();
 	Casilla C = T[16];
 
+
 	T.print();
-	T.do_move(55,39);
+	T.reset_possible_moves();
+	T.do_move(63,7);
 	T.print();
-	T.do_move(8,24);
-	T.print();
-	T.do_move(39,31);
-	T.print();
-	T.do_move(24,32);
-	T.print();
-	T.do_move(49,33);
-	T.print();
-	T.do_move(32,41);
-	T.print();
-	T.do_move(54,46);
-	T.print();
-	T.do_move(14,30);
-	T.print();
-	T.do_move(31,22);
-	T.print();
-	T.printPosibleMoves(30);
+	T.printPosibleMoves(4);
+	T.printPosibleMoves(60);
 }
