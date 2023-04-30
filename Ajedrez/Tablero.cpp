@@ -405,6 +405,11 @@ int Tablero::do_move(int from, int to)
 	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
 	if (T[to].m_en_passant_move == move_count - 1) //si el movimiento fue tomar al paso
 		T[to + offset].clear();
+	//en caso de enroque mover también la torre
+	if (from == 60 && to == 62) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
+	else if (from == 60 && to == 58) {T[to + 1] = T[to - 3]; T[to - 3].clear();}
+	else if (from == 4 && to == 2) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
+	else if (from == 4 && to == 6) {T[to + 1] = T[to - 3]; T[to - 3].clear();}
 	//update color pieces list
 	m_w_pieces.clear();
 	m_b_pieces.clear();
@@ -417,9 +422,9 @@ int Tablero::do_move(int from, int to)
 	bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
 	for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
 	{
-		if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
+		if (T[piece].m_figure == Rey && T[piece].getCheck(T, T[piece].m_color))
 		{
-			event == Jaque;
+			event = Jaque;
 			///check mate
 			if (!can_move) event = Jaque_Mate;
 		}
@@ -465,7 +470,7 @@ void Tablero::print_checks(color c)
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		 if (i > 0 && i % 8 == 0) cout << endl;
-		 cout << (*this)[i].getCheck(c);
+		 cout << (*this)[i].getCheck((*this), c);
 	}
 	cout << endl;
 	(*this).reset_possible_moves();
