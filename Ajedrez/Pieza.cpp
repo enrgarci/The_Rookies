@@ -48,7 +48,7 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		if (board.is_empty(board[c == Blanco ? w_empty[0]: b_empty[0]]) && 
 				board.is_empty(board[c == Blanco ? w_empty[1]: b_empty[1]]) && 
 				board.is_empty(board[c == Blanco ? w_empty[2]: b_empty[2]]))
-			board[c == Blanco ? w_empty[0]: b_empty[0]].setPosMove(true);
+			board[c == Blanco ? w_empty[1]: b_empty[1]].setPosMove(true);
 	}
 }
 
