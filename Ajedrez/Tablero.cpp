@@ -345,12 +345,28 @@ int Tablero::can_castle(color c)
 	return -1;
 }
 
+bool Tablero::hasMoves(color c)
+{
+	Tablero &T = (*this);
+ 	bool has_moves = false;
+	for (auto piece_2 : turn == Blanco ? m_b_pieces : m_w_pieces)
+	{
+		if (T[piece_2].getMoveList().size() > 0)
+		{
+			has_moves = true;
+			break;
+		}
+	}
+	return has_moves;
+}
+
 /// @brief Performs a move in the board, by swaping the cells if the target is empty,
 /// or deleting the origin and creating a new empty. Increment the move count by 1.
 /// @param from Id of the origin cell to move
 /// @param to Id of the target cell to move
-void Tablero::do_move(int from, int to)
+int Tablero::do_move(int from, int to)
 {
+	int event = None;
 	Tablero &T = (*this);
 	T.move_count++;
 	//Al paso
@@ -389,7 +405,6 @@ void Tablero::do_move(int from, int to)
 	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
 	if (T[to].m_en_passant_move == move_count - 1) //si el movimiento fue tomar al paso
 		T[to + offset].clear();
-	turn = turn == Blanco ? Negro : Blanco;
 	//update color pieces list
 	m_w_pieces.clear();
 	m_b_pieces.clear();
@@ -398,6 +413,21 @@ void Tablero::do_move(int from, int to)
 		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 	}
+	//ver si se da el evento de jaque, jaque mate o tablas
+	bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
+	for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
+	{
+		if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
+		{
+			event == Jaque;
+			///check mate
+			if (!can_move) event = Jaque_Mate;
+		}
+	}
+	if (!can_move && event == None) event = Tablas;
+	//actualizar turno
+	turn = turn == Blanco ? Negro : Blanco;
+	return event;
 }
 
 /// @brief Prints a list of the possible moves of all the pieces, both colors

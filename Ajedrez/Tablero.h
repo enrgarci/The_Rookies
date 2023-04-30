@@ -60,10 +60,12 @@ public:
 	void	printPosibleMoves (Casilla &cell);
 	void	printPosibleMoves (int &&cell);
 	int		can_castle(color c);
-	void	do_move(int from, int to);
+	int		do_move(int from, int to);
 	Empty	&get_empty_cell();
 	Casilla &operator[](int c);
 	color	get_turn(){return turn;};
+	bool	hasMoves(color c);
+
 };
 
 /// @brief Access a cell of the board
