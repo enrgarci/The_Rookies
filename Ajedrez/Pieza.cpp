@@ -27,32 +27,35 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		}
 	}
 	//Enroque
-	//Color
-	const int w_empty[6] = {57,58,59,60,61,62};
-	const int b_empty[6] = {1,2,3,4,5,6};
-	//enroque corto
-	color c = cell.getColor();
-	if (board.can_castle(c) == 1 ||
-		board.can_castle(c) == 2 ) //no ha perdido los derechos de enroque
+	if (!cell.getCheck(cell.getColor()))
 	{
-		//vacío entre rey-torre
-		if (board.is_empty(board[c == Blanco ? w_empty[4]: b_empty[4]]) && 
-				board.is_empty(board[c == Blanco ? w_empty[5]: b_empty[5]]) &&
-				!board[c == Blanco ? w_empty[4]: b_empty[4]].getCheck(c) && 
-				!board[c == Blanco ? w_empty[5]: b_empty[5]].getCheck(c))
-			board[c == Blanco ? w_empty[5]: b_empty[5]].setPosMove(true);
-	}
-	//enroque largo
-	if (board.can_castle(c) == 0 ||
-		board.can_castle(c) == 2 ) //no ha perdido los derechos de enroque
-	{
-		//vacío entre rey-torre
-		if (board.is_empty(board[c == Blanco ? w_empty[0]: b_empty[0]]) && 
-				board.is_empty(board[c == Blanco ? w_empty[1]: b_empty[1]]) && 
-				board.is_empty(board[c == Blanco ? w_empty[2]: b_empty[2]]) &&
-				!board[c == Blanco ? w_empty[1]: b_empty[1]].getCheck(c) && 
-				!board[c == Blanco ? w_empty[2]: b_empty[2]].getCheck(c))
-			board[c == Blanco ? w_empty[1]: b_empty[1]].setPosMove(true);
+		//Color
+		const int w_empty[6] = {57,58,59,60,61,62};
+		const int b_empty[6] = {1,2,3,4,5,6};
+		//enroque corto
+		color c = cell.getColor();
+		if (board.can_castle(c) == 1 ||
+			board.can_castle(c) == 2 ) //no ha perdido los derechos de enroque
+		{
+			//vacío entre rey-torre
+			if (board.is_empty(board[c == Blanco ? w_empty[4]: b_empty[4]]) && 
+					board.is_empty(board[c == Blanco ? w_empty[5]: b_empty[5]]) &&
+					!board[c == Blanco ? w_empty[4]: b_empty[4]].getCheck(c) && 
+					!board[c == Blanco ? w_empty[5]: b_empty[5]].getCheck(c))
+				board[c == Blanco ? w_empty[5]: b_empty[5]].setPosMove(true);
+		}
+		//enroque largo
+		if (board.can_castle(c) == 0 ||
+			board.can_castle(c) == 2 ) //no ha perdido los derechos de enroque
+		{
+			//vacío entre rey-torre
+			if (board.is_empty(board[c == Blanco ? w_empty[0]: b_empty[0]]) && 
+					board.is_empty(board[c == Blanco ? w_empty[1]: b_empty[1]]) && 
+					board.is_empty(board[c == Blanco ? w_empty[2]: b_empty[2]]) &&
+					!board[c == Blanco ? w_empty[1]: b_empty[1]].getCheck(c) && 
+					!board[c == Blanco ? w_empty[2]: b_empty[2]].getCheck(c))
+				board[c == Blanco ? w_empty[1]: b_empty[1]].setPosMove(true);
+		}
 	}
 }
 
