@@ -76,7 +76,9 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
-				if (!board.is_empty(relative)) reachWall[i] = true;
+				if (!board.is_empty(relative) && relative.getFigura() != Rey &&
+						relative.getColor() != cell.getColor())
+					reachWall[i] = true;
 			}
 			else {reachWall[i] = true; break;}
 		}
@@ -100,7 +102,8 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
-				if (!board.is_empty(relative)) reachWall[i] = true;
+				if (!board.is_empty(relative) && relative.getFigura() != Rey &&
+				relative.getColor() != cell.getColor()) reachWall[i] = true;
 			}
 			else {reachWall[i] = true; break;}
 		}
