@@ -407,9 +407,9 @@ int Tablero::do_move(int from, int to)
 		T[to + offset].clear();
 	//en caso de enroque mover también la torre
 	if (from == 60 && to == 62) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
-	else if (from == 60 && to == 58) {T[to + 1] = T[to - 3]; T[to - 3].clear();}
-	else if (from == 4 && to == 2) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
-	else if (from == 4 && to == 6) {T[to + 1] = T[to - 3]; T[to - 3].clear();}
+	else if (from == 60 && to == 58) {T[to + 1] = T[to - 2]; T[to - 2].clear();}
+	else if (from == 4 && to == 6) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
+	else if (from == 4 && to == 2) {T[to + 1] = T[to - 2]; T[to - 2].clear();}
 	//update color pieces list
 	m_w_pieces.clear();
 	m_b_pieces.clear();
@@ -422,7 +422,7 @@ int Tablero::do_move(int from, int to)
 	bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
 	for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
 	{
-		if (T[piece].m_figure == Rey && T[piece].getCheck(T, T[piece].m_color))
+		if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
 		{
 			event = Jaque;
 			///check mate
@@ -470,7 +470,7 @@ void Tablero::print_checks(color c)
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		 if (i > 0 && i % 8 == 0) cout << endl;
-		 cout << (*this)[i].getCheck((*this), c);
+		 cout << (*this)[i].getCheck(c);
 	}
 	cout << endl;
 	(*this).reset_possible_moves();

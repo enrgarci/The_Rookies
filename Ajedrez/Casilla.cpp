@@ -88,7 +88,7 @@ void Casilla::clear()
 }
 bool Casilla::getCheck(color c)
 {
-	Tablero &T = *m_parent_board;
+	Tablero T = m_parent_board->get_fen();
 	if (T.move_count == m_check_calculation) return m_in_check;
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();
