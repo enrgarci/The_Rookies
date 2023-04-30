@@ -6,7 +6,6 @@
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
 /// FEN @link ://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-/// @todo check if fen is correct read extra informatios as castling rights etc..
 Tablero::Tablero(string fen)
 {	
 	int		cell = 0;
@@ -49,7 +48,6 @@ Tablero::Tablero(string fen)
 		if (all_pos == 3 && complete_move) 
 		{
 			(this->get_cell(column, c - '0')).m_can_en_passant = true;
-			(this->get_cell(column, c - '0')).m_en_passant_move = move_count;
 			continue;
 		}
 		if (c >= '1' && c <= '8')
@@ -102,6 +100,9 @@ Tablero::Tablero(string fen)
 	{
 		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
+		//update if there was enpassant to correct move_count
+		if ((*this)[i].m_can_en_passant == true)
+			(*this)[i].m_en_passant_move = move_count;
 	}
 }
 
@@ -179,7 +180,33 @@ string Tablero::get_fen()
 		}
 	}
 	//add turn
-	fen += turn==Blanco ? " w" : " b";
+	fen += turn==Blanco ? " w " : " b ";
+	//add castleling
+	if(m_w_castle_rights[1]) fen+= "K";
+	else if(m_w_castle_rights[0]) fen+= "Q";
+	else if(m_b_castle_rights[1]) fen+= "k";
+	else if(m_b_castle_rights[0]) fen+= "q";
+	else {fen += '-';}
+	fen += ' ';
+	//add en passant
+	bool can_en_passant = false;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if ((*this)[i].m_can_en_passant == true &&
+			(*this)[i].m_en_passant_move == move_count)
+		{
+			fen += ('a' + i % 8);
+			fen += ('0' + 8 - (i / 8));
+			can_en_passant = true;
+			break;
+		}
+	}
+	if (!can_en_passant) fen+= "-";
+	fen += ' ';
+	//50 move rule
+	fen += std::to_string(fifty_move_rule) + ' ';
+	//move count
+	fen += std::to_string(move_count);
 	return (fen);
 }
 
