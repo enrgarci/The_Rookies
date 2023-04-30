@@ -433,6 +433,7 @@ int Tablero::do_move(int from, int to)
 	if (fifty_move_rule == 100 && event == None) event = Tablas;
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
+	m_event = event;
 	return event;
 }
 

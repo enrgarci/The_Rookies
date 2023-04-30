@@ -25,6 +25,7 @@ private:
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
 	int fifty_move_rule = 0;
+	int m_event = None;
 
 	// As the pieces classes only manage the movements, there is
 	//no point in having an instance of them per cell, as the parameters needed
@@ -65,7 +66,7 @@ public:
 	Casilla &operator[](int c);
 	color	get_turn(){return turn;};
 	bool	hasMoves(color c);
-
+	int		getEvent();
 };
 
 /// @brief Access a cell of the board
@@ -76,4 +77,5 @@ inline Casilla &Tablero::operator[](const int c)
 
 inline Empty	&Tablero::get_empty_cell(){return *m_empty;}
 inline void Tablero::printPosibleMoves(int &&cell){ printPosibleMoves((*this)[cell]);}
+inline int Tablero::getEvent(){return m_event;}
 #endif
