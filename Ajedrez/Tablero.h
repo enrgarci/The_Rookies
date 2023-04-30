@@ -20,8 +20,8 @@ private:
 	Casilla *m_casilla[BOARD_SIZE];
 	color turn = color::Blanco;
 	string	m_initial_board;
-	bool	m_w_castle_rights[2] = {true, true};
-	bool	m_b_castle_rights[2] = {true, true};
+	bool	m_w_castle_rights[2] = {false, false};
+	bool	m_b_castle_rights[2] = {false, false};
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
 

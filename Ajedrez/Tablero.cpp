@@ -10,7 +10,7 @@
 Tablero::Tablero(string fen)
 {	
 	int		cell = 0;
-	bool	all_pos = false; //flag to check if FEN is complete
+	int	all_pos = 0; //flag to check if FEN is complete
 
 	//One object per piece type
 	m_king = new King();
@@ -25,10 +25,16 @@ Tablero::Tablero(string fen)
 	for(char c:fen)
 	{
 		//Non-Piece FEN characters
-		if (c == 'w') {turn = color::Blanco; break;}
-		if (all_pos && c == 'b') {turn = color::Negro; break;}
-		if (c == '/') {continue;}
-		if (c == ' ') {all_pos = true;continue;}
+		if (c == 'w') {turn = color::Blanco;}
+		if (c == 'b') {turn = color::Negro;}
+		if (c == '/' || c == '-') {continue;}
+		if (c == ' ') {all_pos++; continue;}
+		//enroque
+		if (all_pos == 2 && c == 'Q') m_w_castle_rights[0] = true;
+		if (all_pos == 2 && c == 'K') m_w_castle_rights[1] = true;
+		if (all_pos == 2 && c == 'q') m_b_castle_rights[0] = true;
+		if (all_pos == 2 && c == 'k') m_b_castle_rights[1] = true;
+		if(all_pos == 5) break;
 		if (c >= '1' && c <= '8')
 		{
 			//we have c as char, (c - '0') = c as int
