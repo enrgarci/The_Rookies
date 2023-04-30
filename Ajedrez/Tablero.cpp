@@ -103,7 +103,7 @@ void	Tablero::print ()
 		wprintf(L"%lc", UnicodeVal + pieceVal);
 		if(!((i + 1) % 8)) cout << endl; 
 	}
-	cout << endl << "Turno de " << (turn ? "Blancas" : "Negras") << endl;
+	cout << endl << "Turno de " << (turn == Blanco ? "Blancas" : "Negras") << endl << "========"<< endl;
 }
 /// @brief Prints a console representation of the possible moves of the @ref Piece contained on cell
 void	Tablero::printPosibleMoves (Casilla &cell)
