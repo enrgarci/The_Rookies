@@ -295,12 +295,32 @@ void Tablero::set_castle() {turn == Blanco ? m_w_castle_rights = !m_w_castle_rig
 /// @param to Id of the target cell to move
 void Tablero::do_move(int from, int to)
 {
-	(*this).move_count++;
+	Tablero &T = (*this);
+	T.move_count++;
+	//Al paso
+	// condiciones de movimiento
+	int lim1, lim2, offset;
+	if (turn == Blanco) lim1 = 32, lim2 = 40, offset = 8;
+	else lim1 = 24, lim2 = 32, offset = -8;
+	if (T[from].getFigura() == Peon && (to >= lim1 && to < lim2) && 
+		(from >= lim1 + 2 * offset && from < lim2 + 2 * offset))
+	{
+		//si hay peones a derecha o izquierda permitimos flag de tomar al paso.
+		Casilla &c_minus = T.get_cell(T[to],-1,0);
+		if (c_minus != T[to] && c_minus.getFigura() == Peon && c_minus.getColor() != T[to].getColor())
+			T[to + offset].setEnPassant(true), T[to + offset].setEnPassant_move(T.move_count);
+		Casilla &c_plus = T.get_cell(T[to],1,0);
+		if (c_plus != T[to] && c_plus.getFigura() == Peon && c_plus.getColor() != T[to].getColor())
+			T[to + offset].setEnPassant(true), T[to + offset].setEnPassant_move(T.move_count);
+	}
+	/// @todo enroque
+	//Casilla destino = origen y limpio origen
+	T[to] = T[from];
+	T[from].clear();
+	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
+	if (T[to].m_en_passant_move == move_count - 1) //si el movimiento fue tomar al paso
+		T[to + offset].clear();
 	turn = turn == Blanco ? Negro : Blanco;
-
-	(*this)[to] = (*this)[from];
-	(*this)[from].clear();
-	
 	//update color pieces list
 	m_w_pieces.clear();
 	m_b_pieces.clear();
@@ -309,8 +329,6 @@ void Tablero::do_move(int from, int to)
 		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 	}
-	/// @todo enroque
-	/// @todo Al paso
 }
 
 /// @brief Prints a list of the possible moves of all the pieces, both colors

@@ -55,6 +55,7 @@ public:
 	bool	is_empty(Casilla &dst);
 	bool	is_enemy_piece(Casilla &dst, color myColor);
 	void	printPosibleMoves (Casilla &cell);
+	void	printPosibleMoves (int &&cell);
 	bool	can_castle(color c);
 	void	set_castle(bool state, color c);
 	void	set_castle();
@@ -62,7 +63,6 @@ public:
 	Empty	&get_empty_cell();
 	Casilla &operator[](int c);
 	color	get_turn(){return turn;};
-	vector<int> &get_Color_Pieces(color c); 
 };
 
 /// @brief Access a cell of the board
@@ -72,8 +72,5 @@ inline Casilla &Tablero::operator[](const int c)
 { if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
 
 inline Empty	&Tablero::get_empty_cell(){return *m_empty;}
-inline vector<int> &Tablero::get_Color_Pieces(color c)
-{
-	return c == Blanco ? m_w_pieces : m_b_pieces;
-}
+inline void Tablero::printPosibleMoves(int &&cell){ printPosibleMoves((*this)[cell]);}
 #endif

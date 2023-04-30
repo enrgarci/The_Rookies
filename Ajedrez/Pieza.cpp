@@ -99,7 +99,7 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 {
 	int dir = 1;
 	if (cell.getColor() == color::Blanco) dir = 1;
-	if (cell.getColor() == color::Negro) dir = -1;
+	else if (cell.getColor() == color::Negro) dir = -1;
 	int	en_passant_row = dir > 0 ? 3 : 4; // filas centrales hay que ver si se puede tomar al paso
 	int	jump_row = dir > 0 ? 6 : 1; // penultima fila de cada lado puede dar un salto
 
@@ -121,9 +121,9 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 	for (int i = -1; i < 2; i+=2)
 	{
 		if (cell.getId() / 8 == en_passant_row && 
-				board.is_enemy_piece(board.get_cell(cell, i, 0), cell.getColor()) && 
-				board.get_cell(cell, i, 0).getEnPassant())
-			board.get_cell(cell, i, 0).setPosMove(true);
+				board.get_cell(cell, i, dir).getEnPassant_move() == board.move_count &&
+				board.get_cell(cell, i, dir).getEnPassant())
+			board.get_cell(cell, i, dir).setPosMove(true);
 	}
 }
 
