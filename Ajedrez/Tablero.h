@@ -24,6 +24,7 @@ private:
 	bool	m_b_castle_rights[2] = {false, false};
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
+	int fifty_move_rule = 0;
 
 	// As the pieces classes only manage the movements, there is
 	//no point in having an instance of them per cell, as the parameters needed

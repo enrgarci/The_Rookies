@@ -11,7 +11,10 @@ Tablero::Tablero(string fen)
 {	
 	int		cell = 0;
 	int	all_pos = 0; //flag to check if FEN is complete
-
+	bool complete_move = false;
+	bool complete_move_count = false;
+	bool complete_50_rule = false;
+	char column = 0;
 	//One object per piece type
 	m_king = new King();
 	m_queen = new Queen();
@@ -30,11 +33,25 @@ Tablero::Tablero(string fen)
 		if (c == '/' || c == '-') {continue;}
 		if (c == ' ') {all_pos++; continue;}
 		//enroque
-		if (all_pos == 2 && c == 'Q') m_w_castle_rights[0] = true;
-		if (all_pos == 2 && c == 'K') m_w_castle_rights[1] = true;
-		if (all_pos == 2 && c == 'q') m_b_castle_rights[0] = true;
-		if (all_pos == 2 && c == 'k') m_b_castle_rights[1] = true;
-		if(all_pos == 5) break;
+		if (all_pos == 2 && c == 'Q') {m_w_castle_rights[0] = true;continue;}
+		if (all_pos == 2 && c == 'K') {m_w_castle_rights[1] = true;continue;}
+		if (all_pos == 2 && c == 'q') {m_b_castle_rights[0] = true;continue;}
+		if (all_pos == 2 && c == 'k') {m_b_castle_rights[1] = true;continue;}
+		//50 move rule
+		if (all_pos == 4 && !complete_50_rule){fifty_move_rule = c - '0';complete_50_rule = true; continue;}
+		if (all_pos == 4 && complete_50_rule){fifty_move_rule = fifty_move_rule * 10 + c - '0';continue;}
+		//move count
+		if (all_pos == 5 && !complete_move_count){move_count = c - '0';complete_move_count = true; continue;}
+		if (all_pos == 5){move_count = move_count * 10 + c - '0';continue;}
+		//al paso
+		if (all_pos == 3 && !complete_move) {
+			column = c, complete_move = true;continue;}
+		if (all_pos == 3 && complete_move) 
+		{
+			(this->get_cell(column, c - '0')).m_can_en_passant = true;
+			(this->get_cell(column, c - '0')).m_en_passant_move = move_count;
+			continue;
+		}
 		if (c >= '1' && c <= '8')
 		{
 			//we have c as char, (c - '0') = c as int
