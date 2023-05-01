@@ -131,6 +131,7 @@ bool Casilla::getCheck(color c)
 	int dir =  (c == Blanco) ? 1 : -1;
 	for (int i = -1; i < 2; i+=2)
 		if (T.get_cell((*this), i,dir).m_figure == Peon && T.get_cell((*this), i,dir).m_color != c) return (m_in_check = true);
+	return m_in_check = false;
 }
 /// @brief Looks if a Piece is pinned or not
 /// @param target The target square to see if moving there results or not end the check

@@ -187,7 +187,7 @@ string Tablero::get_fen()
 		}
 	}
 	//add turn
-	fen += turn==Blanco ? " b " : " w ";
+	fen += turn == Blanco ? " b " : " w ";
 	//add castleling
 	if(m_w_castle_rights[1]) fen+= "K";
 	if(m_w_castle_rights[0]) fen+= "Q";
@@ -215,7 +215,8 @@ string Tablero::get_fen()
 	//50 move rule
 	fen += std::to_string(m_fifty_move_rule) + ' ';
 	//move count
-	fen += std::to_string(turn == Blanco ? (move_count + 2) / 2 : (move_count + 1) / 2);
+	int test = (int(m_parent_game->positions.size() + 2) / 2);
+	fen += std::to_string(test);
 	return (fen);
 }
 

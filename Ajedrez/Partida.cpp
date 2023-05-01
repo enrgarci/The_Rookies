@@ -1,5 +1,6 @@
 #include "Partida.h"
 #include "Tablero.h"
+#include "Casilla.h"
 
 Partida::Partida(string w_player, string b_player, string init_pos)
 {
@@ -109,4 +110,24 @@ void Partida::save(string directory, string name)
 	saveFile << "[Black \"" << m_b_player << "\"]  " << endl;
 	for (auto s : positions) saveFile << s << endl;
 	saveFile.close();
+}
+
+int	Partida::perf(Partida &p, int depth)
+{
+	if (depth == 0) return 1;
+	int nodes = 0;
+
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (p.T->get_cell(i).getFigura() == Vacio) continue;
+		if (p.T->get_cell(i).getColor() != p.T->get_turn()) continue;
+		for (auto move : p.T->get_cell(i).getMoveList())
+		{
+			p.T->do_move(i, move);
+			//p.T->print();
+			nodes += perf(p, depth - 1);
+			p.undoMove();
+		}
+	}
+	return nodes;
 }

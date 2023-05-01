@@ -34,6 +34,7 @@ public:
 	void	add_pos();
 	void	undoMove();
 	int		getCurrentPos();
+	int		perf(Partida &p, int depth);
 	void	save(string directory = "./",string name = "myGame.txt");
 };
 
