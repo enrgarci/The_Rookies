@@ -47,6 +47,7 @@ Partida::Partida(std::fstream &file)
 
 Partida::~Partida()
 {
+	delete T;
 }
 
 Tablero &Partida::getBoard()

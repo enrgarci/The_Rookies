@@ -28,7 +28,6 @@ public:
 	~Casilla();
 	void			setCheck(bool inCheck);
 	void			setId(int id);
-	void			setPiece(Pieza &p);
 	void			setPiece(figura f, color c);
 	void			setSymbol();
 	char			getSymbol();

@@ -4,7 +4,6 @@
 
 Pieza::~Pieza()
 {
-	delete this;
 }
 
 void Empty::possible_moves(Tablero &board, Casilla &cell, int pin)
