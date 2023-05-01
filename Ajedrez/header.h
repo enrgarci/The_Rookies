@@ -10,6 +10,7 @@ using std::endl;
 using std::string;
 using std::vector;
 
+typedef string FEN;
 const int BOARD_SIZE = 64;
 const int ROW_SIZE = 8;
 const string INITIAL_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";

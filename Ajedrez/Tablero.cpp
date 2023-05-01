@@ -1,12 +1,13 @@
 #include "Tablero.h"
 #include "Casilla.h"
 #include "Pieza.h"
-#include <algorithm>
+#include "Partida.h"
+#include <math.h>
 
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
 /// FEN @link ://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-Tablero::Tablero(string fen)
+Tablero::Tablero(Partida &p, string fen)
 {	
 	int		cell = 0;
 	int	all_pos = 0; //flag to check if FEN is complete
@@ -14,6 +15,8 @@ Tablero::Tablero(string fen)
 	bool complete_move_count = false;
 	bool complete_50_rule = false;
 	char column = 0;
+
+	m_parent_game = &p;
 	//One object per piece type
 	m_king = new King();
 	m_queen = new Queen();
@@ -22,7 +25,6 @@ Tablero::Tablero(string fen)
 	m_bishop = new Bishop();
 	m_pawn = new Pawn();
 	m_empty = new Empty();
-	m_initial_board = fen;
 	//Read the FEN
 	for(char c:fen)
 	{
@@ -371,6 +373,7 @@ bool Tablero::hasMoves(color c)
 /// @param to Id of the target cell to move
 int Tablero::do_move(int from, int to)
 {
+	if (m_event == 2 || m_event == 3) return m_event;//si acabó, no mueve
 	int event = None;
 	Tablero &T = (*this);
 	T.move_count++;
@@ -447,13 +450,12 @@ void Tablero::print_all_moves()
 {
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if ((*this)[i].getMoveList().size())
+		vector<int> &Move_tem = (*this)[i].getMoveList();
+		if (Move_tem.size())
 			cout << i << "//	";
-		for(auto a: (*this)[i].getMoveList()) 
-		{
+		for(auto a: Move_tem) 
 			cout << a << ", ";
-		}
-		if ((*this)[i].getMoveList().size())
+		if (Move_tem.size())
 			cout << "\n";
 	}
 }

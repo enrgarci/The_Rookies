@@ -1,6 +1,7 @@
 #include "Casilla.h"
 #include "Pieza.h"
 #include "Tablero.h"
+#include "Partida.h"
 
 Casilla::Casilla(Tablero &T, Pieza *p, figura f, color c, int id)
 {
@@ -23,6 +24,8 @@ void Casilla::setPiece(figura f, color c)
 }
 vector<int>	&Casilla::getMoveList()
 {
+	//only play on the last position, can't play if reviewing a game :)
+	if (((*(*m_parent_board).m_parent_game).getCurrentPos()) != m_parent_board->move_count) {m_move_lst.clear();return m_move_lst;}
 	Tablero &T = *m_parent_board;
 	if (T.move_count == m_move_calculation) return m_move_lst;
 	m_move_calculation = T.move_count;
@@ -88,7 +91,7 @@ void Casilla::clear()
 }
 bool Casilla::getCheck(color c)
 {
-	Tablero T = m_parent_board->get_fen();
+	Tablero T = Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen());
 	if (T.move_count == m_check_calculation) return m_in_check;
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();

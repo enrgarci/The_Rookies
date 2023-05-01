@@ -11,15 +11,16 @@ class Bishop;
 class Knight;
 class Pawn;
 class Empty;
+class Partida;
 #include <stdio.h>
 #include "header.h"
 class Tablero
 {
 friend class Casilla;
 private:
+	Partida *m_parent_game;
 	Casilla *m_casilla[BOARD_SIZE];
 	color turn = color::Blanco;
-	string	m_initial_board;
 	bool	m_w_castle_rights[2] = {false, false};
 	bool	m_b_castle_rights[2] = {false, false};
 	vector<int> m_w_pieces;
@@ -41,7 +42,7 @@ private:
 
 public:
 	int	move_count = 0;
-	Tablero (string fen = INITIAL_POS);
+	Tablero (Partida &p, string fen = INITIAL_POS);
 	~Tablero ();
 	void	print();
 	void	print_checks(color c);
