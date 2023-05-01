@@ -466,6 +466,7 @@ void Tablero::print_all_moves()
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if ((*this)[i].m_figure == Vacio) continue;
+		if ((*this)[i].m_color != turn) continue;
 		vector<int> &Move_tem = (*this)[i].getMoveList();
 		if (Move_tem.size())
 			cout << i << "//	";

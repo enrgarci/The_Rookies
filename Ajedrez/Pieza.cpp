@@ -141,7 +141,12 @@ void Knight::possible_moves(Tablero &board, Casilla &cell, int pin)
 			if (relative != cell)
 			{
 				if (board.can_Move_To(relative, cell))	
-					relative.setPosMove(true);
+				{
+					if (!pin)
+						relative.setPosMove(true);
+					else if (pin && !cell.isPinned(relative))
+						relative.setPosMove(true);
+				}
 			}
 		}
 	}
@@ -157,17 +162,32 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell, int pin)
 
 	//delante
 	if (board.is_empty(board.get_cell(cell, 0, dir))) 
-		board.get_cell(cell, 0, dir).setPosMove(true);			
+	{
+		if (!pin)
+			board.get_cell(cell, 0, dir).setPosMove(true);
+		else if(pin && !cell.isPinned(board.get_cell(cell, 0, dir)))
+			board.get_cell(cell, 0, dir).setPosMove(true);
+	}
 	// Y  solo al empezar un salto puede dar !
 	if (cell.getId() / 8 == jump_row && 
 	board.is_empty(board.get_cell(cell, 0, dir)) && 
 	board.is_empty(board.get_cell(cell, 0, 2 * dir))) 
-		board.get_cell(cell, 0, 2 * dir).setPosMove(true);
+	{
+		if (!pin)
+			board.get_cell(cell, 0, 2 * dir).setPosMove(true);
+		else if(pin && !cell.isPinned(board.get_cell(cell, 0, 2 * dir)))
+			board.get_cell(cell, 0, 2 * dir).setPosMove(true);
+	}
 	//capturas
 	for (int i = -1; i < 2; i+=2)
 	{
-		if (board.is_enemy_piece(board.get_cell(cell, i, dir), cell.getColor())) 
-			board.get_cell(cell, i, dir).setPosMove(true);
+		if (board.is_enemy_piece(board.get_cell(cell, i, dir), cell.getColor()))
+		{
+			if (!pin)
+				board.get_cell(cell, i, dir).setPosMove(true);
+			else if(pin && !cell.isPinned(board.get_cell(cell, i, dir)))
+				board.get_cell(cell, i, dir).setPosMove(true);
+		}
 	}
 	// En passant
 	for (int i = -1; i < 2; i+=2)
@@ -175,7 +195,12 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell, int pin)
 		if (cell.getId() / 8 == en_passant_row && 
 				board.get_cell(cell, i, dir).getEnPassant_move() == board.move_count &&
 				board.get_cell(cell, i, dir).getEnPassant())
-			board.get_cell(cell, i, dir).setPosMove(true);
+		{
+			if (!pin)
+				board.get_cell(cell, i, dir).setPosMove(true);
+			else if(pin && !cell.isPinned(board.get_cell(cell, i, dir)))
+				board.get_cell(cell, i, dir).setPosMove(true);
+		}
 	}
 }
 
