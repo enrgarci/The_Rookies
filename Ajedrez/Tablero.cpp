@@ -27,8 +27,8 @@ Tablero::Tablero(string fen)
 	for(char c:fen)
 	{
 		//Non-Piece FEN characters
-		if (c == 'w') {turn = color::Blanco;}
-		if (c == 'b') {turn = color::Negro;}
+		if (c == 'w') {turn = color::Blanco;continue;}
+		if (all_pos == 1 && c == 'b') {turn = color::Negro;continue;}
 		if (c == '/' || c == '-') {continue;}
 		if (c == ' ') {all_pos++; continue;}
 		//enroque
@@ -95,6 +95,9 @@ Tablero::Tablero(string fen)
 		}
 		cell++;
 	}
+	//change move_count format to half-moves
+	//11223344.. Is the FEN format, complete moves, we use 01234567...
+	move_count = turn == Blanco ? (2 * move_count - 2) : (2 * move_count - 1);
 	//List of pieces of each colors
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -183,10 +186,12 @@ string Tablero::get_fen()
 	fen += turn==Blanco ? " w " : " b ";
 	//add castleling
 	if(m_w_castle_rights[1]) fen+= "K";
-	else if(m_w_castle_rights[0]) fen+= "Q";
-	else if(m_b_castle_rights[1]) fen+= "k";
-	else if(m_b_castle_rights[0]) fen+= "q";
-	else {fen += '-';}
+	if(m_w_castle_rights[0]) fen+= "Q";
+	if(m_b_castle_rights[1]) fen+= "k";
+	if(m_b_castle_rights[0]) fen+= "q";
+	if(!m_w_castle_rights[1] && !m_w_castle_rights[0] &&
+			!m_b_castle_rights[1] && !m_b_castle_rights[0])
+		fen += '-';
 	fen += ' ';
 	//add en passant
 	bool can_en_passant = false;
@@ -206,7 +211,7 @@ string Tablero::get_fen()
 	//50 move rule
 	fen += std::to_string(fifty_move_rule) + ' ';
 	//move count
-	fen += std::to_string(move_count);
+	fen += std::to_string(turn == Blanco ? (move_count + 2) / 2 : (move_count + 1) / 2);
 	return (fen);
 }
 
