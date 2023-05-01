@@ -17,23 +17,26 @@ Partida::Partida(std::fstream &file)
 	cout << "Reading from file..." << endl;
 	while (getline(file, raw))
 	{
+		bool done = false;
 		if (raw.find("White") != string::npos) 
 		{
-				id_t b, end, len;
-				b = raw.find_first_of("\"") + 1;
-				end = raw.find_last_of("]") - 1;
-				len = end - b;
-				w_p = raw.substr(b, end - b);
+			int b, end, len;
+			b = raw.find_first_of("\"") + 1;
+			end = raw.find_last_of("]") - 1;
+			len = end - b;
+			w_p = raw.substr(b, end - b);
+			done = true;
 		}
-		if (raw.find("Black") != string::npos) 
+		else if (raw.find("Black") != string::npos) 
 		{
-			id_t b, end, len;
+			int b, end, len;
 			b = raw.find_first_of("\"") + 1;
 			end = raw.find_last_of("]") - 1;
 			len = end - b;
 			b_p = raw.substr(b, end - b);
+			done = true;
 		}
-		else my_pos.push_back(raw);
+		else if(!done) my_pos.push_back(raw);
 	}
 	file.close();
 	m_w_player = w_p;
@@ -116,6 +119,7 @@ int	Partida::perf(Partida &p, int depth)
 {
 	if (depth == 0) return 1;
 	int nodes = 0;
+	static int special[4] = {};
 
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -123,11 +127,12 @@ int	Partida::perf(Partida &p, int depth)
 		if (p.T->get_cell(i).getColor() != p.T->get_turn()) continue;
 		for (auto move : p.T->get_cell(i).getMoveList())
 		{
-			p.T->do_move(i, move);
+			special [p.T->do_move(i, move)]++;
 			//p.T->print();
 			nodes += perf(p, depth - 1);
 			p.undoMove();
 		}
 	}
+	cout << special[0] << "/" << special[1] << "/" << special[2] << "/" << special[3] << endl;
 	return nodes;
 }
