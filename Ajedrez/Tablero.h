@@ -39,6 +39,9 @@ private:
 	Bishop	*m_bishop;
 	Pawn	*m_pawn;
 	Empty	*m_empty;
+	//pieza a coronar por defecto Dama
+	Pieza *m_coronacion;
+	figura	m_promocion = Reina;
 
 public:
 	int	move_count = 0;
@@ -68,6 +71,7 @@ public:
 	color	get_turn(){return turn;};
 	bool	hasMoves(color c);
 	int		getEvent();
+	void	setCoronación(figura f=Reina);
 };
 
 /// @brief Access a cell of the board

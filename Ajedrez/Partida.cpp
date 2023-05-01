@@ -6,6 +6,7 @@ Partida::Partida(string w_player, string b_player, string init_pos)
 	T = new Tablero(*this, init_pos);
 	m_w_player = w_player;
 	m_b_player = b_player;
+	positions.push_back(init_pos);
 }
 
 Partida::Partida(std::fstream &file)

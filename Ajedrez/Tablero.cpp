@@ -100,6 +100,8 @@ Tablero::Tablero(Partida &p, string fen)
 	//change move_count format to half-moves
 	//11223344.. Is the FEN format, complete moves, we use 01234567...
 	move_count = turn == Blanco ? (2 * move_count - 2) : (2 * move_count - 1);
+	//Default coronacion
+	setCoronación(Reina);
 	//List of pieces of each colors
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -420,6 +422,16 @@ int Tablero::do_move(int from, int to)
 	else if (from == 60 && to == 58) {T[to + 1] = T[to - 2]; T[to - 2].clear();}
 	else if (from == 4 && to == 6) {T[to - 1] = T[to + 1]; T[to + 1].clear();}
 	else if (from == 4 && to == 2) {T[to + 1] = T[to - 2]; T[to - 2].clear();}
+
+	//Coronación
+	//si un peon llega a la ultima fila promociona
+	if (((to >= 0 && to < 8) || (to >= 56 && to < 64)) && T[to].m_figure == Peon) 
+	{
+		T[to].m_figure = m_promocion;
+		T[to].m_piece = m_coronacion;
+		T[to].setSymbol();
+	}
+
 	//update color pieces list
 	m_w_pieces.clear();
 	m_b_pieces.clear();
@@ -486,4 +498,30 @@ void Tablero::print_checks(color c)
 	}
 	cout << endl;
 	(*this).reset_possible_moves();
+}
+
+/// @brief Sets the figure the pawn will be converted to on promotion
+void Tablero::setCoronación(figura f)
+{
+	m_promocion = f;
+	switch (f)
+	{
+	case Peon:
+	case Rey:
+	case Reina:
+		m_coronacion = static_cast<Rook*>(m_queen);
+		break;
+	case Torre:
+		m_coronacion = m_rook;
+		break;
+	case Alfil:
+		m_coronacion = m_bishop;
+		break;
+	case Caballo:
+		m_coronacion = m_knight;
+		break;
+	default:
+		m_coronacion = static_cast<Rook*>(m_queen);
+		break;
+	}
 }
