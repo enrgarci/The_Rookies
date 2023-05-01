@@ -59,7 +59,7 @@ string Partida::getPlayer(int col)
 
 void Partida::play_back()
 {
-	if(current_pos >= 1) 
+	if (current_pos >= 1) 
 	{
 		current_pos--;
 		T = new Tablero(*this, positions.at(current_pos));
@@ -68,7 +68,7 @@ void Partida::play_back()
 
 void Partida::play_forward()
 {
-	if(current_pos < positions.size() - 1) 
+	if (current_pos < positions.size() - 1) 
 	{
 		current_pos++;
 		T = new Tablero(*this,positions.at(current_pos));
@@ -90,6 +90,7 @@ void Partida::add_pos()
 {
 	if (current_pos == positions.size() - 1)
 		positions.push_back((*T).get_fen());
+	current_pos = positions.size() - 1;
 }
 
 void Partida::save(string directory, string name)

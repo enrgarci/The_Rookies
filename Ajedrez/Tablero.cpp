@@ -224,7 +224,7 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla &cell)
 {
-	cell.m_piece->possible_moves(*this, cell);
+	cell.m_piece->possible_moves(*this, cell, 1);
 }
 
 void Tablero::reset_possible_moves()
@@ -375,8 +375,6 @@ bool Tablero::hasMoves(color c)
 /// @param to Id of the target cell to move
 int Tablero::do_move(int from, int to)
 {
-	//no move if reviewing
-	if (((*(*this).m_parent_game).getCurrentPos()) != this->move_count) {return m_event;}
 	if (m_event == 2 || m_event == 3) return m_event;//si acabó, no mueve
 	int event = None;
 	Tablero &T = (*this);
@@ -456,7 +454,8 @@ int Tablero::do_move(int from, int to)
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
 	//Añadir a las posiciones de Partida
-	m_parent_game->add_pos();
+	if(&T == (*m_parent_game).T)
+		m_parent_game->add_pos();
 	m_event = event;
 	return event;
 }
@@ -466,6 +465,7 @@ void Tablero::print_all_moves()
 {
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
+		if ((*this)[i].m_figure == Vacio) continue;
 		vector<int> &Move_tem = (*this)[i].getMoveList();
 		if (Move_tem.size())
 			cout << i << "//	";

@@ -11,9 +11,9 @@ class Partida
 private:
 	string	m_w_player;
 	string	m_b_player;
-	vector<FEN> positions;
 	int current_pos = 0;
 public:
+	vector<FEN> positions;
 	Tablero *T;
 	Partida(string w_player,
 			string b_player,

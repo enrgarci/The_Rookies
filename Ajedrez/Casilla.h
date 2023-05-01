@@ -44,6 +44,7 @@ public:
 	bool			getPosMove();
 	void			setPosMove(bool c);
 	void			clear();
+	bool			isPinned(const Casilla &target);
 	vector<int>		&getMoveList();
 	bool operator==(Casilla &a);
 	Casilla &operator=(const Casilla &a);

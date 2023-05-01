@@ -25,13 +25,14 @@ void Casilla::setPiece(figura f, color c)
 vector<int>	&Casilla::getMoveList()
 {
 	//only play on the last position, can't play if reviewing a game :)
-	if (((*(*m_parent_board).m_parent_game).getCurrentPos()) != m_parent_board->move_count) {m_move_lst.clear();return m_move_lst;}
+	if ( m_parent_board->get_fen() != ((*m_parent_board).m_parent_game->positions.back()))
+		{m_move_lst.clear();return m_move_lst;}
 	Tablero &T = *m_parent_board;
 	if (T.move_count == m_move_calculation) return m_move_lst;
 	m_move_calculation = T.move_count;
 	m_move_lst.clear();
 	T.reset_possible_moves();
-	m_piece->possible_moves(T, *this);
+	m_piece->possible_moves(T, *this, 1);
 	for (int i = 0; i < BOARD_SIZE; i++)
 		if (T[i].m_posible_destination)
 			m_move_lst.push_back(i);
@@ -96,7 +97,7 @@ bool Casilla::getCheck(color c)
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();
 	//Check by rook || queen_line
-	T.m_rook->possible_moves(T, *(new Casilla(T,T.m_rook,Torre,c, m_id)));
+	T.m_rook->possible_moves(T, *(new Casilla(T,T.m_rook,Torre,c, m_id)),0);
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_rook) return (m_in_check = true);
@@ -104,7 +105,7 @@ bool Casilla::getCheck(color c)
 	}
 	T.reset_possible_moves();
 	//Check by bishop || queen_diagonal
-	T.m_bishop->possible_moves(T, *(new Casilla(T,T.m_bishop,Alfil,c, m_id)));
+	T.m_bishop->possible_moves(T, *(new Casilla(T,T.m_bishop,Alfil,c, m_id)),0);
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_bishop) return (m_in_check = true);
@@ -112,7 +113,7 @@ bool Casilla::getCheck(color c)
 	}
 	T.reset_possible_moves();
 	//Check by Knight
-	T.m_knight->possible_moves(T, *(new Casilla(T,T.m_knight,Caballo,c, m_id)));
+	T.m_knight->possible_moves(T, *(new Casilla(T,T.m_knight,Caballo,c, m_id)),0);
 	for (int i = 0; i < BOARD_SIZE; i++)
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_knight) return (m_in_check = true);
 	T.reset_possible_moves();
@@ -131,3 +132,32 @@ bool Casilla::getCheck(color c)
 	for (int i = -1; i < 2; i+=2)
 		if (T.get_cell((*this), i,dir).m_figure == Peon && T.get_cell((*this), i,dir).m_color != c) return (m_in_check = true);
 }
+/// @brief Looks if a Piece is pinned or not
+/// @param target The target square to see if moving there results or not end the check
+/// @return 1 if movement between this and target results (or keeps) the check, 0 otherwise.
+bool	Casilla::isPinned(const Casilla &target)
+{
+	Tablero &T = *m_parent_board;
+	Tablero temp = Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen());
+	int		king_pos;
+	bool	king_in_check;
+	//find king
+	for (auto piece : T.turn == Blanco ? T.m_w_pieces : T.m_b_pieces)
+		if (T[piece].m_figure == Rey) king_pos = piece;
+	//look if king is in check
+	king_in_check =  T[king_pos].getCheck(T.turn);
+	// if is not in check look if movement would result 
+	if (!king_in_check)
+	{
+		temp.do_move(m_id, target.m_id);
+		if (temp[king_pos].getCheck(T.turn)) return 1;
+		return 0;
+	}
+	else //if king in check look if movement would end the check
+	{
+		temp.do_move(m_id, target.m_id);
+		if (temp[king_pos].getCheck(T.turn)) return 1;
+		return 0;
+	}
+}
+

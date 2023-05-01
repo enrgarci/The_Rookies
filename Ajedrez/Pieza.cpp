@@ -7,13 +7,13 @@ Pieza::~Pieza()
 	delete this;
 }
 
-void Empty::possible_moves(Tablero &board, Casilla &cell)
+void Empty::possible_moves(Tablero &board, Casilla &cell, int pin)
 {	
 	return;
 }
 /// @brief set cell true, if a king on cell could reach them
 /// @todo look if move would be check, that ilegal!
-void King::possible_moves(Tablero &board, Casilla &cell)
+void King::possible_moves(Tablero &board, Casilla &cell, int pin)
 {	
 	for (int x = -1; x < 2; x++)
 	{
@@ -21,7 +21,8 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 		{
 			if (!x && !y) continue;
 			Casilla &relative = board.get_cell(cell, x, y);
-			if(relative != cell && board.can_Move_To(relative, cell) &&
+			if(relative != cell &&
+					board.can_Move_To(relative, cell) &&
 					!relative.getCheck(cell.getColor()))
 				relative.setPosMove(true);
 		}
@@ -60,7 +61,7 @@ void King::possible_moves(Tablero &board, Casilla &cell)
 }
 
 /// @brief set cells true, if a bishop on cell could reach them
-void Bishop::possible_moves(Tablero &board, Casilla &cell)
+void Bishop::possible_moves(Tablero &board, Casilla &cell, int pin)
 {
 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
 	int dir = 1;
@@ -75,10 +76,18 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 													dist * (dir * (i < 2) - dir * (i >= 2)));
 			if (relative != cell)
 			{
-				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
-				if (!board.is_empty(relative) && relative.getFigura() != Rey &&
-						relative.getColor() != cell.getColor())
-					reachWall[i] = true;
+				if (board.can_Move_To(relative, cell))
+				{
+					if (!pin)
+						relative.setPosMove(true);
+					else if (pin && !cell.isPinned(relative))
+						relative.setPosMove(true);
+				}
+				if (!board.is_empty(relative))
+				{
+					if (!(relative.getFigura() == Rey && relative.getColor() != cell.getColor()))
+						reachWall[i] = true;
+				}
 			}
 			else {reachWall[i] = true; break;}
 		}
@@ -86,7 +95,7 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell)
 }
 
 /// @brief set cells true, if a rook on cell could reach them
-void Rook::possible_moves(Tablero &board, Casilla &cell)
+void Rook::possible_moves(Tablero &board, Casilla &cell, int pin)
 {
 	int reachWall[4] = {0, 0, 0, 0}; // antihorario empezando por arriba
 	int dir = 1;
@@ -101,9 +110,18 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 													dist * dir * (i >= 2));
 			if (relative != cell)
 			{
-				if (board.can_Move_To(relative, cell)) relative.setPosMove(true);
-				if (!board.is_empty(relative) && relative.getFigura() != Rey &&
-				relative.getColor() != cell.getColor()) reachWall[i] = true;
+				if (board.can_Move_To(relative, cell))
+				{
+					if (!pin)
+						relative.setPosMove(true);
+					else if (pin && !cell.isPinned(relative))
+						relative.setPosMove(true);
+				}
+				if (!board.is_empty(relative))
+				{
+					if (!(relative.getFigura() == Rey && relative.getColor() != cell.getColor()))
+						reachWall[i] = true;
+				}
 			}
 			else {reachWall[i] = true; break;}
 		}
@@ -111,7 +129,7 @@ void Rook::possible_moves(Tablero &board, Casilla &cell)
 }
 
 /// @brief set cells true, if a knight on cell could reach them
-void Knight::possible_moves(Tablero &board, Casilla &cell)
+void Knight::possible_moves(Tablero &board, Casilla &cell, int pin)
 {
 	for (int x = -2; x < 3; x++)
 	{
@@ -129,7 +147,7 @@ void Knight::possible_moves(Tablero &board, Casilla &cell)
 	}
 }
 
-void Pawn::possible_moves(Tablero &board, Casilla &cell)
+void Pawn::possible_moves(Tablero &board, Casilla &cell, int pin)
 {
 	int dir = 1;
 	if (cell.getColor() == color::Blanco) dir = 1;
@@ -162,8 +180,8 @@ void Pawn::possible_moves(Tablero &board, Casilla &cell)
 }
 
 /// @brief set cells true, if a queen on cell could reach them
-void Queen::possible_moves(Tablero &board, Casilla &cell)
+void Queen::possible_moves(Tablero &board, Casilla &cell, int pin)
 {
-	Rook::possible_moves(board, cell);
-	Bishop::possible_moves(board, cell);
+	Rook::possible_moves(board, cell, pin);
+	Bishop::possible_moves(board, cell, pin);
 }
