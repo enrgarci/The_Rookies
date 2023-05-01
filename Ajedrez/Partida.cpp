@@ -8,6 +8,38 @@ Partida::Partida(string w_player, string b_player, string init_pos)
 	m_b_player = b_player;
 }
 
+Partida::Partida(std::fstream &file)
+{
+	string raw,w_p, b_p;
+	vector<FEN> my_pos;
+	cout << "Reading from file..." << endl;
+	while (getline(file, raw))
+	{
+		if (raw.find("White") != string::npos) 
+		{
+				id_t b, end, len;
+				b = raw.find_first_of("\"") + 1;
+				end = raw.find_last_of("]") - 1;
+				len = end - b;
+				w_p = raw.substr(b, end - b);
+		}
+		if (raw.find("Black") != string::npos) 
+		{
+			id_t b, end, len;
+			b = raw.find_first_of("\"") + 1;
+			end = raw.find_last_of("]") - 1;
+			len = end - b;
+			b_p = raw.substr(b, end - b);
+		}
+		else my_pos.push_back(raw);
+	}
+	file.close();
+	m_w_player = w_p;
+	m_b_player = b_p;
+	positions = my_pos;
+	T = new Tablero((*this), positions.at(0));
+}
+
 Partida::~Partida()
 {
 }
@@ -57,4 +89,14 @@ void Partida::add_pos()
 {
 	if (current_pos == positions.size() - 1)
 		positions.push_back((*T).get_fen());
+}
+
+void Partida::save(string directory, string name)
+{
+	cout << "Saving file..." << directory << name << endl;
+	std::ofstream saveFile(directory + name);
+	saveFile << "[White \"" << m_w_player << "\"]  " << endl;
+	saveFile << "[Black \"" << m_b_player << "\"]  " << endl;
+	for (auto s : positions) saveFile << s << endl;
+	saveFile.close();
 }
