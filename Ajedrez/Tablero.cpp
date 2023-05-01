@@ -373,6 +373,8 @@ bool Tablero::hasMoves(color c)
 /// @param to Id of the target cell to move
 int Tablero::do_move(int from, int to)
 {
+	//no move if reviewing
+	if (((*(*this).m_parent_game).getCurrentPos()) != this->move_count) {return m_event;}
 	if (m_event == 2 || m_event == 3) return m_event;//si acabó, no mueve
 	int event = None;
 	Tablero &T = (*this);
@@ -441,6 +443,8 @@ int Tablero::do_move(int from, int to)
 	if (fifty_move_rule == 100 && event == None) event = Tablas;
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
+	//Añadir a las posiciones de Partida
+	m_parent_game->add_pos();
 	m_event = event;
 	return event;
 }

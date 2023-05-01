@@ -35,5 +35,5 @@ public:
 	int		getCurrentPos();
 };
 
-inline int Partida::getCurrentPos(){return current_pos;};
+inline int Partida::getCurrentPos(){return positions.size() - 1;};
 #endif
