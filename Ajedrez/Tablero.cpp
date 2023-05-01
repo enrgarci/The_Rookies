@@ -359,7 +359,8 @@ bool Tablero::hasMoves(color c)
 {
 	Tablero &T = (*this);
  	bool has_moves = false;
-	for (auto piece : c == Blanco ? m_w_pieces : m_b_pieces)
+	vector<int> &v = c == Blanco ? m_b_pieces : m_w_pieces;
+	for (auto piece : v)
 	{
 		if (T[piece].getMoveList().size() > 0)
 		{
@@ -444,9 +445,11 @@ int Tablero::do_move(int from, int to, bool calculating)
 			if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 			else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 		}
+	//actualizar turno
+	turn = turn == Blanco ? Negro : Blanco;
 		//ver si se da el evento de jaque, jaque mate o tablas
-		bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
-		for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
+		bool can_move = hasMoves(turn == Negro ? Negro : Blanco);
+		for (auto piece : turn == Blanco ? m_w_pieces : m_b_pieces)
 		{
 			if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
 			{
@@ -463,8 +466,6 @@ int Tablero::do_move(int from, int to, bool calculating)
 	if (isThreeFold())
 		event = Tablas;
 	}
-	//actualizar turno
-	turn = turn == Blanco ? Negro : Blanco;
 	m_event = event;
 	return event;
 }
