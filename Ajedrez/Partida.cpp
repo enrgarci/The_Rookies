@@ -93,6 +93,14 @@ void Partida::add_pos()
 	current_pos = positions.size() - 1;
 }
 
+void Partida::undoMove()
+{
+	if (current_pos != positions.size() - 1) return;
+	positions.pop_back();
+	current_pos = positions.size() - 1;
+	T = new Tablero(*this,positions.at(current_pos));
+}
+
 void Partida::save(string directory, string name)
 {
 	cout << "Saving file..." << directory << name << endl;

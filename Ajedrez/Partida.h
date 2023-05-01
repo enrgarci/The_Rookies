@@ -32,6 +32,7 @@ public:
 	void	play_first();
 	void	play_last();
 	void	add_pos();
+	void	undoMove();
 	int		getCurrentPos();
 	void	save(string directory = "./",string name = "myGame.txt");
 };
