@@ -187,7 +187,7 @@ string Tablero::get_fen()
 		}
 	}
 	//add turn
-	fen += turn==Blanco ? " w " : " b ";
+	fen += turn==Blanco ? " b " : " w ";
 	//add castleling
 	if(m_w_castle_rights[1]) fen+= "K";
 	if(m_w_castle_rights[0]) fen+= "Q";
@@ -358,9 +358,9 @@ bool Tablero::hasMoves(color c)
 {
 	Tablero &T = (*this);
  	bool has_moves = false;
-	for (auto piece_2 : turn == Blanco ? m_b_pieces : m_w_pieces)
+	for (auto piece : c == Blanco ? m_w_pieces : m_b_pieces)
 	{
-		if (T[piece_2].getMoveList().size() > 0)
+		if (T[piece].getMoveList().size() > 0)
 		{
 			has_moves = true;
 			break;
@@ -373,7 +373,7 @@ bool Tablero::hasMoves(color c)
 /// or deleting the origin and creating a new empty. Increment the move count by 1.
 /// @param from Id of the origin cell to move
 /// @param to Id of the target cell to move
-int Tablero::do_move(int from, int to)
+int Tablero::do_move(int from, int to, bool calculating)
 {
 	if (m_event == 2 || m_event == 3) return m_event;//si acabó, no mueve
 	int event = None;
@@ -430,34 +430,40 @@ int Tablero::do_move(int from, int to)
 		T[to].setSymbol();
 	}
 
-	//update color pieces list
-	m_w_pieces.clear();
-	m_b_pieces.clear();
-	for (int i = 0; i < BOARD_SIZE; i++)
-	{
-		if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
-		else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
-	}
-	//ver si se da el evento de jaque, jaque mate o tablas
-	bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
-	for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
-	{
-		if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
+	// update color pieces list
+	if (!calculating)
+	{	
+		// Añadir a las posiciones de Partida
+		if(&T == (*m_parent_game).T)
+			m_parent_game->add_pos();
+		m_w_pieces.clear();
+		m_b_pieces.clear();
+		for (int i = 0; i < BOARD_SIZE; i++)
 		{
-			event = Jaque;
-			///check mate
-			if (!can_move) event = Jaque_Mate;
+			if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
+			else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 		}
+		//ver si se da el evento de jaque, jaque mate o tablas
+		bool can_move = hasMoves(turn == Blanco ? Negro : Blanco);
+		for (auto piece : turn == Blanco ? m_b_pieces : m_w_pieces)
+		{
+			if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))
+			{
+				event = Jaque;
+				///check mate
+				if (!can_move) event = Jaque_Mate;
+			}
+		}
+		if (!can_move && event == None) 
+			event = Tablas;
+		if (m_fifty_move_rule == 100 && event == None) 
+			event = Tablas;
+	//comprobar triple repetición
+	if (isThreeFold())
+		event = Tablas;
 	}
-	if (!can_move && event == None) event = Tablas;
-	if (m_fifty_move_rule == 100 && event == None) event = Tablas;
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
-	//Añadir a las posiciones de Partida
-	if(&T == (*m_parent_game).T)
-		m_parent_game->add_pos();
-	//comprobar triple repetición
-	if (isThreeFold()) event = Tablas;
 	m_event = event;
 	return event;
 }
@@ -532,20 +538,25 @@ void Tablero::setCoronación(figura f)
 bool	Tablero::isThreeFold()
 {
 	const vector<FEN> &v = m_parent_game->positions;
-	for (int i = 0; i < v.size() - 1; i++)//cada elemento
+	string a ,b;
+	for (int i = 0; i < v.size() - 2; i++)//cada elemento
 	{
 		int rep_count = 0;
-		for (int j = i + 1; j < v.size(); i++)//emparejo con el resto
+		for (int j = i + 1; j < v.size(); j++)//emparejo con el resto
 		{
 			int white_count = 0;
-			for (int x = 0; x < v.at(i).length(); x++)//comparo si la posicion es igual
+			a = v.at(i);
+			b = v.at(j);
+			for (int x = 0; x < v.at(i).length() - 1; x++)//comparo si la posicion es igual
 			{
 				if(v.at(i)[x] != v.at(j)[x]) break;
 				if(v.at(i)[x] == ' ') white_count++;
 				if(white_count == 4) break;
 			}
-			if (white_count == 4) rep_count++;
-			if (rep_count == 3) return true;
+			if (white_count == 4) 
+				rep_count++;
+			if (rep_count == 2) 
+				return true;
 		}
 	}
 	return false;
