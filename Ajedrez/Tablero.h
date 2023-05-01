@@ -25,7 +25,8 @@ private:
 	bool	m_b_castle_rights[2] = {false, false};
 	vector<int> m_w_pieces;
 	vector<int> m_b_pieces;
-	int fifty_move_rule = 0;
+	int m_fifty_move_rule = 0;
+	bool m_threefold = 0;
 	int m_event = None;
 
 	// As the pieces classes only manage the movements, there is
@@ -72,6 +73,7 @@ public:
 	bool	hasMoves(color c);
 	int		getEvent();
 	void	setCoronación(figura f=Reina);
+	bool	isThreeFold();
 };
 
 /// @brief Access a cell of the board

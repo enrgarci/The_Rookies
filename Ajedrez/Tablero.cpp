@@ -39,8 +39,8 @@ Tablero::Tablero(Partida &p, string fen)
 		if (all_pos == 2 && c == 'q') {m_b_castle_rights[0] = true;continue;}
 		if (all_pos == 2 && c == 'k') {m_b_castle_rights[1] = true;continue;}
 		//50 move rule
-		if (all_pos == 4 && !complete_50_rule){fifty_move_rule = c - '0';complete_50_rule = true; continue;}
-		if (all_pos == 4 && complete_50_rule){fifty_move_rule = fifty_move_rule * 10 + c - '0';continue;}
+		if (all_pos == 4 && !complete_50_rule){m_fifty_move_rule = c - '0';complete_50_rule = true; continue;}
+		if (all_pos == 4 && complete_50_rule){m_fifty_move_rule = m_fifty_move_rule * 10 + c - '0';continue;}
 		//move count
 		if (all_pos == 5 && !complete_move_count){move_count = c - '0';complete_move_count = true; continue;}
 		if (all_pos == 5){move_count = move_count * 10 + c - '0';continue;}
@@ -213,7 +213,7 @@ string Tablero::get_fen()
 	if (!can_en_passant) fen+= "-";
 	fen += ' ';
 	//50 move rule
-	fen += std::to_string(fifty_move_rule) + ' ';
+	fen += std::to_string(m_fifty_move_rule) + ' ';
 	//move count
 	fen += std::to_string(turn == Blanco ? (move_count + 2) / 2 : (move_count + 1) / 2);
 	return (fen);
@@ -408,7 +408,7 @@ int Tablero::do_move(int from, int to)
 
 	//update 50 move rule
 	//si no hay captura o movimiento de peon se incrementa
-	if (T[from].m_figure != Peon && T[to].m_figure == Vacio) fifty_move_rule++;
+	if (T[from].m_figure != Peon && T[to].m_figure == Vacio) m_fifty_move_rule++;
 	//Casilla destino = origen y limpio origen
 	T[to] = T[from];
 	T[from].clear();
@@ -450,12 +450,14 @@ int Tablero::do_move(int from, int to)
 		}
 	}
 	if (!can_move && event == None) event = Tablas;
-	if (fifty_move_rule == 100 && event == None) event = Tablas;
+	if (m_fifty_move_rule == 100 && event == None) event = Tablas;
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
 	//Añadir a las posiciones de Partida
 	if(&T == (*m_parent_game).T)
 		m_parent_game->add_pos();
+	//comprobar triple repetición
+	if (isThreeFold()) event = Tablas;
 	m_event = event;
 	return event;
 }
@@ -525,4 +527,26 @@ void Tablero::setCoronación(figura f)
 		m_coronacion = static_cast<Rook*>(m_queen);
 		break;
 	}
+}
+
+bool	Tablero::isThreeFold()
+{
+	const vector<FEN> &v = m_parent_game->positions;
+	for (int i = 0; i < v.size() - 1; i++)//cada elemento
+	{
+		int rep_count = 0;
+		for (int j = i + 1; j < v.size(); i++)//emparejo con el resto
+		{
+			int white_count = 0;
+			for (int x = 0; x < v.at(i).length(); x++)//comparo si la posicion es igual
+			{
+				if(v.at(i)[x] != v.at(j)[x]) break;
+				if(v.at(i)[x] == ' ') white_count++;
+				if(white_count == 4) break;
+			}
+			if (white_count == 4) rep_count++;
+			if (rep_count == 3) return true;
+		}
+	}
+	return false;
 }

@@ -25,7 +25,8 @@ void Casilla::setPiece(figura f, color c)
 vector<int>	&Casilla::getMoveList()
 {
 	//only play on the last position, can't play if reviewing a game :)
-	if ( m_parent_board->get_fen() != ((*m_parent_board).m_parent_game->positions.back()))
+	if ( m_parent_board->get_fen() != ((*m_parent_board).m_parent_game->positions.back()) ||
+			m_parent_board->m_event > 1)
 		{m_move_lst.clear();return m_move_lst;}
 	Tablero &T = *m_parent_board;
 	if (T.move_count == m_move_calculation) return m_move_lst;
