@@ -137,13 +137,15 @@ void	Tablero::print ()
 	setlocale(LC_ALL, "en_US.UTF-8");
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
+		if(!(i % 8)) cout << (i + 1)/8; 
 		Casilla &cell = *m_casilla[i];
 		int pieceVal = int(cell.m_figure);
 		int colorVal = int(cell.m_color);
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
-		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
+		pieceVal = pieceVal == 0 ? (-UnicodeVal + '_') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
-		if(!((i + 1) % 8)) cout << endl; 
+		if(!((i + 1) % 8)) cout << endl;
+		if (i == 63) cout << " abcdefgh";
 	}
 	cout << endl << "Turno de " << (turn == Blanco ? "Blancas" : "Negras") << endl << "========"<< endl;
 }

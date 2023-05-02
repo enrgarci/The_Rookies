@@ -16,6 +16,7 @@ class Partida;
 #include "header.h"
 class Tablero
 {
+friend class Partida;
 friend class Casilla;
 private:
 	Partida *m_parent_game;
