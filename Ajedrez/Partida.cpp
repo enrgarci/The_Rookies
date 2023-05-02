@@ -67,6 +67,7 @@ void Partida::play_back()
 	if (current_pos >= 1) 
 	{
 		current_pos--;
+		delete T;
 		T = new Tablero(*this, positions.at(current_pos));
 	}
 }
@@ -76,6 +77,7 @@ void Partida::play_forward()
 	if (current_pos < positions.size() - 1) 
 	{
 		current_pos++;
+		delete T;
 		T = new Tablero(*this,positions.at(current_pos));
 	}
 }
@@ -83,27 +85,31 @@ void Partida::play_forward()
 void Partida::play_last()
 {
 	current_pos = positions.size() - 1;
+	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
 }
 void Partida::play_first()
 {
 	current_pos = 0;
+	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
 }
 
 void Partida::add_pos()
 {
-	if (current_pos == positions.size() - 1)
-		positions.push_back((*T).get_fen());
+	if (current_pos != positions.size() - 1) return;
+	positions.push_back((*T).get_fen());
 	current_pos = positions.size() - 1;
 }
 
 void Partida::undoMove()
 {
+	Tablero *p_T = T;
 	if (current_pos != positions.size() - 1) return;
 	positions.pop_back();
 	current_pos = positions.size() - 1;
-	T = new Tablero(*this,positions.at(current_pos));
+	T = new Tablero(*this,positions.back());
+	delete p_T;
 }
 
 void Partida::save(string directory, string name)
@@ -126,14 +132,13 @@ int	Partida::perf(Partida &p, int depth)
 	{
 		if (p.T->get_cell(i).getFigura() == Vacio) continue;
 		if (p.T->get_cell(i).getColor() != p.T->get_turn()) continue;
-		for (auto move : p.T->get_cell(i).getMoveList())
+		vector<int> T_moves = p.T->get_cell(i).getMoveList();
+		for (auto move : T_moves)
 		{
 			special [p.T->do_move(i, move)]++;
-			//p.T->print();
 			nodes += perf(p, depth - 1);
 			p.undoMove();
 		}
 	}
-	// cout << special[0] << "/" << special[1] << "/" << special[2] << "/" << special[3] << endl;
 	return nodes;
 }

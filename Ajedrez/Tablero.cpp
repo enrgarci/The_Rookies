@@ -116,14 +116,17 @@ Tablero::Tablero(Partida &p, string fen)
 /// @brief Libera la memoria reservada para la clase @ref Tablero
 Tablero::~Tablero()
 {
-	delete m_king;
-	delete m_queen;
-	delete m_rook;
-	delete m_bishop;
-	delete m_knight;
-	delete m_pawn;
-	for(int i = 0; i < BOARD_SIZE; i++)
+	delete m_king, m_king = nullptr;
+	delete m_queen, m_queen = nullptr;
+	delete m_knight, m_knight = nullptr;
+	delete m_rook, m_rook = nullptr;
+	delete m_pawn, m_pawn = nullptr;
+	delete m_bishop, m_bishop = nullptr;
+	delete m_empty, m_empty = nullptr;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
 		delete m_casilla[i];
+	}	
 }
 /// @brief Prints a console representation of the board
 void	Tablero::print ()
@@ -134,13 +137,15 @@ void	Tablero::print ()
 	setlocale(LC_ALL, "en_US.UTF-8");
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
+		if(!(i % 8)) cout << (i + 1)/8; 
 		Casilla &cell = *m_casilla[i];
 		int pieceVal = int(cell.m_figure);
 		int colorVal = int(cell.m_color);
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal; // blanco o negro
-		pieceVal = pieceVal == 0 ? (-UnicodeVal + ' ') : pieceVal - 1; // si está vacio -> espacio
+		pieceVal = pieceVal == 0 ? (-UnicodeVal + '_') : pieceVal - 1; // si está vacio -> espacio
 		wprintf(L"%lc", UnicodeVal + pieceVal);
-		if(!((i + 1) % 8)) cout << endl; 
+		if(!((i + 1) % 8)) cout << endl;
+		if (i == 63) cout << " abcdefgh";
 	}
 	cout << endl << "Turno de " << (turn == Blanco ? "Blancas" : "Negras") << endl << "========"<< endl;
 }

@@ -16,6 +16,7 @@ Casilla::Casilla(Tablero &T, Pieza *p, figura f, color c, int id)
 
 Casilla::~Casilla()
 {
+	m_id = -1;
 }
 void Casilla::setPiece(figura f, color c)
 {
@@ -92,12 +93,17 @@ void Casilla::clear()
 }
 bool Casilla::getCheck(color c)
 {
-	Tablero T = Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen());
+	//we use smart pointer just to avoid calling delete on all posible returns, but that should work too,
+	std::unique_ptr<Tablero> p_T(new Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen()));
+	Tablero &T = *p_T;
 	if (T.move_count == m_check_calculation) return m_in_check;
+	Casilla * C;
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();
 	//Check by rook || queen_line
-	T.m_rook->possible_moves(T, *(new Casilla(T,T.m_rook,Torre,c, m_id)),0);
+	C = (new Casilla(T,T.m_rook,Torre,c, m_id));
+	T.m_rook->possible_moves(T, *C, 0);
+	delete C, C = nullptr;
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_rook) return (m_in_check = true);
@@ -105,7 +111,9 @@ bool Casilla::getCheck(color c)
 	}
 	T.reset_possible_moves();
 	//Check by bishop || queen_diagonal
-	T.m_bishop->possible_moves(T, *(new Casilla(T,T.m_bishop,Alfil,c, m_id)),0);
+	C = (new Casilla(T,T.m_bishop,Alfil,c, m_id));
+	T.m_bishop->possible_moves(T, *C, 0);
+	delete C, C = nullptr;
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_bishop) return (m_in_check = true);
@@ -113,7 +121,9 @@ bool Casilla::getCheck(color c)
 	}
 	T.reset_possible_moves();
 	//Check by Knight
-	T.m_knight->possible_moves(T, *(new Casilla(T,T.m_knight,Caballo,c, m_id)),0);
+	C = (new Casilla(T,T.m_knight,Caballo,c, m_id));
+	T.m_knight->possible_moves(T, *C, 0);
+	delete C, C = nullptr;
 	for (int i = 0; i < BOARD_SIZE; i++)
 		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_knight) return (m_in_check = true);
 	T.reset_possible_moves();
