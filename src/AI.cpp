@@ -19,7 +19,7 @@ void AI::randommove(Tablero& T, color col)
 	do
 	{
 		selectpiece = ia_list_pieces[ETSIDI::lanzaDado(numpiece + 1, 1) - 1];
-		ia_move_list = T[selectpiece].getMoveList(T);
+		ia_move_list = T[selectpiece].getMoveList();
 		ia_move_size = ia_move_list.size();
 	} while (ia_move_size == 0);
 	destinationelement = ETSIDI::lanzaDado(ia_move_size + 1, 1) - 1;

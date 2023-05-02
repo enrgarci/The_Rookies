@@ -11,9 +11,8 @@
 #include "SoundController.h"
 #include "AI.h"
 
-Partida P("", "", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
-Tablero T = P.getBoard();
 SoundController S;
 AI IA;
 
@@ -71,7 +70,7 @@ void Interface::changeOrigin(int& value)
 // Receives the cell number(0 - 63), and the column and row that will be modified
 void Interface::rotateBoard(int value, int& col, int& row)
 {
-    if (T.get_turn() == Blanco || doRotate == false)
+    if (P.T->get_turn() == Blanco || doRotate == false)
     {
         col = value % 8;
         row = 7 - (value / 8);
@@ -140,7 +139,7 @@ void Interface::drawPieces()
         int row;
         rotateBoard(i, col, row);
 
-        switch (T[i].getPiece().getFig())
+        switch (P.T->get_cell(i).getFigura())
         {
         case  Vacio:
             figure = "vacio";
@@ -165,7 +164,7 @@ void Interface::drawPieces()
             break;
         }
 
-        switch (T[i].getPiece().getColor())
+        switch (P.T->get_cell(i).getColor())
         {
         case noColor:
             break;
@@ -234,7 +233,7 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
 // Checks if those two cells match any of the valid moves, if they don't match, draws a semi-transparent yellow square in the corresponding locations
 void Interface::drawLastMove(int *movement, std::vector<int>& move_list, bool check_list)
 {
-    if (T.move_count == 0) return;
+    if (P.T->move_count == 0) return;
 
     for (int i = 0; i < 2; i++)
     {
@@ -270,6 +269,7 @@ void Interface::drawLastMove(int *movement, std::vector<int>& move_list, bool ch
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
 void Interface::drawMovement()
 {
+    int eventSound;
     static std::vector<int> move_list;
     static int first_cell;
     static color first_piece_color;
@@ -278,16 +278,15 @@ void Interface::drawMovement()
     drawBoard();
     drawLastMove(movement, move_list, false);
     drawPieces();
-
-    if (T.get_turn() == Negro)
+    // Pending of review, because it doesnt work with the move backwards and forwards
+    /*if (P.T->get_turn() == Negro)
     {
-        IA.randommove(T, Negro);
-        T.move_count++;
+        IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
         drawBoard();
         drawPieces();
-    }
-
+    }*/
+    
     switch (click_flag) 
     {
     // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
@@ -296,17 +295,17 @@ void Interface::drawMovement()
     // One click has been detected on the board grid
     case 1:
         // Empty cell
-        if (T[cell_number].getPiece().getFig() == Vacio)
+        if (P.T->get_cell(cell_number).getColor() == Vacio)
         {
             click_flag = 0;
             break;
         }
         // Select piece
-        move_list = T[cell_number].getMoveList(T);
-        first_piece_color = T[cell_number].getPiece().getColor();
+        move_list = P.T->get_cell(cell_number).getMoveList();
+        first_piece_color = P.T->get_cell(cell_number).getColor();
         first_cell = cell_number;
         // Only allows to select a piece if the turn is equal to the piece clicked
-        if (T.get_turn() != first_piece_color) {
+        if (P.T->get_turn() != first_piece_color) {
             click_flag = 0;
             break;
         }
@@ -324,10 +323,10 @@ void Interface::drawMovement()
             break;
         }
         // Piece of the same color - select new piece
-        if (first_piece_color == T[cell_number].getPiece().getColor())
+        if (first_piece_color == P.T->get_cell(cell_number).getColor())
         {
             click_flag = 1;
-            move_list = T[cell_number].getMoveList(T);
+            move_list = P.T->get_cell(cell_number).getMoveList();
             first_cell = cell_number;
             drawBoard();
             drawLastMove(movement, move_list, true);
@@ -344,8 +343,8 @@ void Interface::drawMovement()
                 movement[0] = first_cell;
                 movement[1] = cell_number;
                 //function to modify the board position
-                T.do_move(first_cell, cell_number);
-                T.move_count++;
+                eventSound = (P.T)->do_move(first_cell, cell_number);
+                S.playevent(eventSound);
                 //board and pieces are drawn again
                 drawBoard();
                 drawLastMove(movement, move_list, false);
@@ -419,6 +418,8 @@ void Interface::mouseBoard(int button, int state, int x, int y)
 // If the program is currently in fullscreen mode, pressing escape will switch to windowed mode, and vice versa.
 void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 {
+    const int PiecesCor[4] = { Reina, Torre, Alfil, Caballo };
+    static int CorIndex = 0;
     const char ESCAPE_KEY = 27;
     if (key == ESCAPE_KEY)
     {
@@ -432,5 +433,17 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
             glutFullScreen();
             fullscreen = true;
         }
+    }
+    //for game review puposes, you can go back and forward
+    if (key == 'a')    P.play_back();
+    if (key == 'd')    P.play_forward();
+    if (key == 'w')    P.play_last();
+    if (key == 's')    P.play_first();
+    if (key == ' ')
+    {
+        CorIndex++;
+        CorIndex = CorIndex % 4;
+        (P.T)->setCoronacion((figura) PiecesCor[CorIndex]);
+        cout << CorIndex << endl;
     }
 }
