@@ -8,16 +8,12 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","","8/k7/R7/8/8/8/8/n7");
+	Partida P("","");
 	Tablero &T = P.getBoard();
 	Casilla C = T[16];
 
 	T.print();
-	T.do_move(8,9);
-	T.print_all_moves();
-	T.print();
-	T.do_move(9,10);
-	T.do_move(16,56);
-	T.do_move(56,57);
+	T.printPosibleMoves(60);
+	T.print_checks(Blanco);
 	T.print_all_moves();
 }
