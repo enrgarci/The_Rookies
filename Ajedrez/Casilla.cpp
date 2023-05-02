@@ -16,6 +16,7 @@ Casilla::Casilla(Tablero &T, Pieza *p, figura f, color c, int id)
 
 Casilla::~Casilla()
 {
+	m_id = -1;
 }
 void Casilla::setPiece(figura f, color c)
 {
@@ -92,7 +93,8 @@ void Casilla::clear()
 }
 bool Casilla::getCheck(color c)
 {
-	Tablero T = Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen());
+	Tablero *p_T = new Tablero(*(m_parent_board->m_parent_game), m_parent_board->get_fen());
+	Tablero T = *p_T;
 	if (T.move_count == m_check_calculation) return m_in_check;
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();

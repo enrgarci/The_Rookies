@@ -2,10 +2,6 @@
 #include "Casilla.h"
 #include "Tablero.h"
 
-Pieza::~Pieza()
-{
-}
-
 void Empty::possible_moves(Tablero &board, Casilla &cell, int pin)
 {	
 	return;

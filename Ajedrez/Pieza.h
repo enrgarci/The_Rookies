@@ -14,7 +14,7 @@ friend Casilla;
 protected:
 	virtual void	possible_moves(Tablero &board, Casilla &cell, int pin)=0;
 public:
-	virtual ~Pieza();
+	virtual ~Pieza() = default;
 };
 
 class Empty: public Pieza

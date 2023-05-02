@@ -116,14 +116,17 @@ Tablero::Tablero(Partida &p, string fen)
 /// @brief Libera la memoria reservada para la clase @ref Tablero
 Tablero::~Tablero()
 {
-	delete m_king;
-	delete m_queen;
-	delete m_rook;
-	delete m_bishop;
-	delete m_knight;
-	delete m_pawn;
-	for(int i = 0; i < BOARD_SIZE; i++)
+	delete m_king, m_king = nullptr;
+	delete m_queen, m_queen = nullptr;
+	delete m_knight, m_knight = nullptr;
+	delete m_rook, m_rook = nullptr;
+	delete m_pawn, m_pawn = nullptr;
+	delete m_bishop, m_bishop = nullptr;
+	delete m_empty, m_empty = nullptr;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
 		delete m_casilla[i];
+	}	
 }
 /// @brief Prints a console representation of the board
 void	Tablero::print ()
