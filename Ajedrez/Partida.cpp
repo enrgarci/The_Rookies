@@ -67,6 +67,7 @@ void Partida::play_back()
 	if (current_pos >= 1) 
 	{
 		current_pos--;
+		delete T;
 		T = new Tablero(*this, positions.at(current_pos));
 	}
 }
@@ -76,6 +77,7 @@ void Partida::play_forward()
 	if (current_pos < positions.size() - 1) 
 	{
 		current_pos++;
+		delete T;
 		T = new Tablero(*this,positions.at(current_pos));
 	}
 }
@@ -83,11 +85,13 @@ void Partida::play_forward()
 void Partida::play_last()
 {
 	current_pos = positions.size() - 1;
+	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
 }
 void Partida::play_first()
 {
 	current_pos = 0;
+	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
 }
 
