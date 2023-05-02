@@ -101,7 +101,7 @@ Tablero::Tablero(Partida &p, string fen)
 	//11223344.. Is the FEN format, complete moves, we use 01234567...
 	move_count = turn == Blanco ? (2 * move_count - 2) : (2 * move_count - 1);
 	//Default coronacion
-	setCoronación(Reina);
+	setCoronacion(Reina);
 	//List of pieces of each colors
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -520,7 +520,7 @@ void Tablero::print_checks(color c)
 }
 
 /// @brief Sets the figure the pawn will be converted to on promotion
-void Tablero::setCoronación(figura f)
+void Tablero::setCoronacion(figura f)
 {
 	m_promocion = f;
 	switch (f)

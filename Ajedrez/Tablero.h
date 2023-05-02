@@ -72,8 +72,9 @@ public:
 	color	get_turn(){return turn;};
 	bool	hasMoves(color c);
 	int		getEvent();
-	void	setCoronación(figura f=Reina);
+	void	setCoronacion(figura f=Reina);
 	bool	isThreeFold();
+	vector<int> get_Color_Pieces(color c);
 };
 
 /// @brief Access a cell of the board
@@ -81,8 +82,8 @@ public:
 /// @return The c cell of board, first cell if c not in [0 - 63]
 inline Casilla &Tablero::operator[](const int c)
 { if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
-
 inline Empty	&Tablero::get_empty_cell(){return *m_empty;}
 inline void Tablero::printPosibleMoves(int &&cell){ printPosibleMoves((*this)[cell]);}
 inline int Tablero::getEvent(){return m_event;}
+inline vector<int> Tablero::get_Color_Pieces(color c) {if (c == Blanco) return m_w_pieces; return m_b_pieces;}
 #endif
