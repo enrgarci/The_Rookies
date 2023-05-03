@@ -80,8 +80,9 @@ void Bishop::possible_moves(Tablero &board, Casilla &cell, int pin)
 				}
 				if (!board.is_empty(relative))
 				{
-					if (!(relative.getFigura() == Rey && relative.getColor() != cell.getColor()))
-						reachWall[i] = true;
+					reachWall[i] = true;
+					if ((relative.getFigura() == Rey && (relative.getColor() != cell.getColor() || !pin)))
+						reachWall[i] = false;
 				}
 			}
 			else {reachWall[i] = true; break;}
@@ -114,8 +115,9 @@ void Rook::possible_moves(Tablero &board, Casilla &cell, int pin)
 				}
 				if (!board.is_empty(relative))
 				{
-					if (!(relative.getFigura() == Rey && relative.getColor() != cell.getColor()))
-						reachWall[i] = true;
+					reachWall[i] = true;
+					if ((relative.getFigura() == Rey && (relative.getColor() != cell.getColor() || !pin)))
+						reachWall[i] = false;
 				}
 			}
 			else {reachWall[i] = true; break;}
