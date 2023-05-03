@@ -3,9 +3,9 @@
 #include "Tablero.h"
 #include "Partida.h"
 
-Casilla::Casilla(Tablero &T, Pieza *p, figura f, color c, int id)
+Casilla::Casilla(Tablero &T, const Pieza *p, figura f, color c, int id)
 {
-	m_piece = p;
+	m_piece = (Pieza *) p;
 	m_color = c;
 	m_id = id;
 	m_color = c;
@@ -101,31 +101,31 @@ bool Casilla::getCheck(color c)
 	m_check_calculation = T.move_count;
 	T.reset_possible_moves();
 	//Check by rook || queen_line
-	C = (new Casilla(T,T.m_rook,Torre,c, m_id));
-	T.m_rook->possible_moves(T, *C, 0);
+	C = (new Casilla(T,T.s_rook,Torre,c, m_id));
+	T.s_rook->possible_moves(T, *C, 0);
 	delete C, C = nullptr;
-	for (int i = 0; i < BOARD_SIZE; i++)
+	for (int i : c == Blanco ? T.m_b_pieces : T.m_w_pieces)
 	{
-		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_rook) return (m_in_check = true);
-		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.m_queen)) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.s_rook) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.s_queen)) return (m_in_check = true);
 	}
 	T.reset_possible_moves();
 	//Check by bishop || queen_diagonal
-	C = (new Casilla(T,T.m_bishop,Alfil,c, m_id));
-	T.m_bishop->possible_moves(T, *C, 0);
+	C = (new Casilla(T,T.s_bishop,Alfil,c, m_id));
+	T.s_bishop->possible_moves(T, *C, 0);
 	delete C, C = nullptr;
-	for (int i = 0; i < BOARD_SIZE; i++)
+	for (int i : c == Blanco ? T.m_b_pieces : T.m_w_pieces)
 	{
-		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_bishop) return (m_in_check = true);
-		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.m_queen)) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.s_bishop) return (m_in_check = true);
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == static_cast<Rook*>(T.s_queen)) return (m_in_check = true);
 	}
 	T.reset_possible_moves();
 	//Check by Knight
-	C = (new Casilla(T,T.m_knight,Caballo,c, m_id));
-	T.m_knight->possible_moves(T, *C, 0);
+	C = (new Casilla(T,T.s_knight,Caballo,c, m_id));
+	T.s_knight->possible_moves(T, *C, 0);
 	delete C, C = nullptr;
-	for (int i = 0; i < BOARD_SIZE; i++)
-		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.m_knight) return (m_in_check = true);
+	for (int i : c == Blanco ? T.m_b_pieces : T.m_w_pieces)
+		if (T[i].m_posible_destination && &(T[i].getPiece()) == T.s_knight) return (m_in_check = true);
 	T.reset_possible_moves();
 	//Check by king
 	for (int x = -1; x < 2; x++)

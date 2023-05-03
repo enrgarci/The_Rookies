@@ -34,13 +34,13 @@ private:
 	//no point in having an instance of them per cell, as the parameters needed
 	// are passed, instead we have one of a type per board and all the cells of the same type
 	// call those, helps less memory management when making moves.
-	King	*m_king;
-	Queen	*m_queen;
-	Rook	*m_rook;
-	Knight	*m_knight;
-	Bishop	*m_bishop;
-	Pawn	*m_pawn;
-	Empty	*m_empty;
+	static King		*s_king;
+	static Queen	*s_queen;
+	static Rook		*s_rook;
+	static Knight	*s_knight;
+	static Bishop	*s_bishop;
+	static Pawn		*s_pawn;
+	static Empty	*s_empty;
 	//pieza a coronar por defecto Dama
 	Pieza *m_coronacion;
 	figura	m_promocion = Reina;
@@ -74,6 +74,7 @@ public:
 	bool	hasMoves(color c);
 	int		getEvent();
 	void	setCoronacion(figura f=Reina);
+	figura	getCoronacion();
 	bool	isThreeFold();
 	vector<int> get_Color_Pieces(color c);
 };
@@ -83,8 +84,9 @@ public:
 /// @return The c cell of board, first cell if c not in [0 - 63]
 inline Casilla &Tablero::operator[](const int c)
 { if (c >= 0 && c < 64) return *m_casilla[c]; return *m_casilla[0];}
-inline Empty	&Tablero::get_empty_cell(){return *m_empty;}
+inline Empty	&Tablero::get_empty_cell(){return *s_empty;}
 inline void Tablero::printPosibleMoves(int &&cell){ printPosibleMoves((*this)[cell]);}
 inline int Tablero::getEvent(){return m_event;}
+inline figura Tablero::getCoronacion(){return m_promocion;}
 inline vector<int> Tablero::get_Color_Pieces(color c) {if (c == Blanco) return m_w_pieces; return m_b_pieces;}
 #endif

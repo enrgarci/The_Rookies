@@ -4,6 +4,14 @@
 #include "Partida.h"
 #include <math.h>
 
+	//One object per piece type
+	King *Tablero::s_king = new King();
+	Queen *Tablero::s_queen = new Queen();
+	Rook *Tablero::s_rook = new Rook();
+	Knight *Tablero::s_knight = new Knight();
+	Bishop *Tablero::s_bishop = new Bishop();
+	Pawn *Tablero::s_pawn = new Pawn();
+	Empty *Tablero::s_empty = new Empty();
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
 /// FEN @link ://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -17,14 +25,6 @@ Tablero::Tablero(Partida &p, string fen)
 	char column = 0;
 
 	m_parent_game = &p;
-	//One object per piece type
-	m_king = new King();
-	m_queen = new Queen();
-	m_rook = new Rook();
-	m_knight = new Knight();
-	m_bishop = new Bishop();
-	m_pawn = new Pawn();
-	m_empty = new Empty();
 	//Read the FEN
 	for(char c:fen)
 	{
@@ -57,7 +57,7 @@ Tablero::Tablero(Partida &p, string fen)
 			//we have c as char, (c - '0') = c as int
 			for (int i = 0; i < (c - '0'); i++) 
 			{
-				m_casilla[cell] = new Casilla(*this, m_empty, Vacio, noColor, cell);
+				m_casilla[cell] = new Casilla(*this, s_empty, Vacio, noColor, cell);
 				cell++;
 			}
 			continue;
@@ -70,27 +70,27 @@ Tablero::Tablero(Partida &p, string fen)
 		//black
 		case 'R':
 		case 'r':
-			m_casilla[cell] = new Casilla(*this, m_rook, Torre, col, cell);
+			m_casilla[cell] = new Casilla(*this, s_rook, Torre, col, cell);
 			break;
 		case 'N':
 		case 'n':
-			m_casilla[cell] = new Casilla(*this, m_knight, Caballo, col, cell);
+			m_casilla[cell] = new Casilla(*this, s_knight, Caballo, col, cell);
 			break;
 		case 'B':
 		case 'b':
-			m_casilla[cell] = new Casilla(*this, m_bishop, Alfil, col, cell);
+			m_casilla[cell] = new Casilla(*this, s_bishop, Alfil, col, cell);
 			break;
 		case 'Q':
 		case 'q':
-			m_casilla[cell] = new Casilla(*this, static_cast<Rook*>(m_queen), Reina, col, cell);
+			m_casilla[cell] = new Casilla(*this, static_cast<Rook*>(s_queen), Reina, col, cell);
 			break;
 		case 'K':
 		case 'k':
-			m_casilla[cell] = new Casilla(*this, m_king, Rey, col, cell);
+			m_casilla[cell] = new Casilla(*this, s_king, Rey, col, cell);
 			break;
 		case 'P':
 		case 'p':
-			m_casilla[cell] = new Casilla(*this, m_pawn, Peon, col, cell);
+			m_casilla[cell] = new Casilla(*this, s_pawn, Peon, col, cell);
 			break;
 		default:
 			break;
@@ -116,13 +116,6 @@ Tablero::Tablero(Partida &p, string fen)
 /// @brief Libera la memoria reservada para la clase @ref Tablero
 Tablero::~Tablero()
 {
-	delete m_king, m_king = nullptr;
-	delete m_queen, m_queen = nullptr;
-	delete m_knight, m_knight = nullptr;
-	delete m_rook, m_rook = nullptr;
-	delete m_pawn, m_pawn = nullptr;
-	delete m_bishop, m_bishop = nullptr;
-	delete m_empty, m_empty = nullptr;
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		delete m_casilla[i];
@@ -261,7 +254,7 @@ Casilla	&Tablero::get_cell(const int x, const int y)
 	//out of borders
 	if(x < 0 || x >= size || y < 0 || y >= size )
 	{
-		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
+		static Casilla	invalid(*this, s_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[x + 8 * y]);
@@ -280,7 +273,7 @@ Casilla	&Tablero::get_cell(const char c, const int y)
 		y <= 0 ||
 		y > size )
 	{
-		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
+		static Casilla	invalid(*this, s_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[(c - 'a') + 8 * ( size - y)]);
@@ -296,7 +289,7 @@ Casilla	&Tablero::get_cell(const int x)
 	//out of borders
 	if (x < 0 || x > 63)
 	{
-		static Casilla	invalid(*this, m_empty, Vacio, noColor, -1);
+		static Casilla	invalid(*this, s_empty, Vacio, noColor, -1);
 		return (invalid);
 	}
 	return (*m_casilla[x]);
@@ -533,19 +526,19 @@ void Tablero::setCoronacion(figura f)
 	case Peon:
 	case Rey:
 	case Reina:
-		m_coronacion = static_cast<Rook*>(m_queen);
+		m_coronacion = static_cast<Rook*>(s_queen);
 		break;
 	case Torre:
-		m_coronacion = m_rook;
+		m_coronacion = s_rook;
 		break;
 	case Alfil:
-		m_coronacion = m_bishop;
+		m_coronacion = s_bishop;
 		break;
 	case Caballo:
-		m_coronacion = m_knight;
+		m_coronacion = s_knight;
 		break;
 	default:
-		m_coronacion = static_cast<Rook*>(m_queen);
+		m_coronacion = static_cast<Rook*>(s_queen);
 		break;
 	}
 }

@@ -47,6 +47,13 @@ Partida::Partida(std::fstream &file)
 
 Partida::~Partida()
 {
+	delete Tablero::s_king, Tablero::s_king = nullptr;
+	delete Tablero::s_queen, Tablero::s_queen = nullptr;
+	delete Tablero::s_knight, Tablero::s_knight = nullptr;
+	delete Tablero::s_rook, Tablero::s_rook = nullptr;
+	delete Tablero::s_pawn, Tablero::s_pawn = nullptr;
+	delete Tablero::s_bishop,Tablero::s_bishop = nullptr;
+	delete Tablero::s_empty, Tablero::s_empty = nullptr;
 	delete T;
 }
 

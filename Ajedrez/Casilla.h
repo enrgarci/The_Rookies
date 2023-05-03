@@ -24,7 +24,7 @@ private:
 	char	m_symbol;
 	Tablero *m_parent_board;
 public:
-	Casilla(Tablero &T,Pieza *p, figura f, color c, int id);
+	Casilla(Tablero &T,const Pieza *p, figura f, color c, int id);
 	~Casilla();
 	void			setCheck(bool inCheck);
 	void			setId(int id);
