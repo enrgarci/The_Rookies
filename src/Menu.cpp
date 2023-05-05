@@ -13,7 +13,7 @@ void Menu::menusIni()
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 5;//play
+	Estado = 1;//play
 	EstadoSkin = 1;//classic
 }
 
