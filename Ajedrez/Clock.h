@@ -13,7 +13,7 @@ private:
 public:
 	/// @brief Created a Chess Clock
 	/// @param initial_time sets the initial time of the clock to initial_time in seconds
-	ChessClock(double initial_time = 600, double increment = 0);
+	ChessClock(double initial_time = -1, double increment = 0);
 	float	updateChessClock();
 	float	getInitialTime();
 	float	getIncremet();
