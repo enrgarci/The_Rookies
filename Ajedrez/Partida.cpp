@@ -180,3 +180,10 @@ int	Partida::perf(Partida &p, int depth)
 	}
 	return nodes;
 }
+
+float Partida::getColorClock(color col)
+{
+	if (!col) return 0;
+	if(col == Blanco) return m_w_clock->updateChessClock();
+	return m_b_clock->updateChessClock();
+}
