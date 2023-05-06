@@ -383,7 +383,7 @@ bool Tablero::hasMoves(color c)
 /// @param to Id of the target cell to move
 int Tablero::do_move(int from, int to, bool calculating)
 {
-	if (m_event == 2 || m_event == 3) return m_event;//si acabó, no mueve
+	if (m_event == Jaque_Mate || m_event == Tablas || m_event == Bandera) return m_event;//si acabó, no mueve
 	int event = None;
 	Tablero &T = (*this);
 	T.move_count++;
@@ -451,6 +451,23 @@ int Tablero::do_move(int from, int to, bool calculating)
 			if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 			else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 		}
+	//Comprobación de tiempo
+	if (m_parent_game->getColorClock(turn) == 0)
+	{
+		color oponent_color = turn == Blanco ? Negro : Blanco;
+		vector<int> &op_pieces = oponent_color == Blanco ? m_w_pieces : m_b_pieces;
+		if (op_pieces.size() > 2) {m_event = Bandera; return Bandera;} //suficiente para mate
+		if (op_pieces.size() == 1) {m_event = Tablas; return Tablas;} //solo rey = tablas
+		bool has_mate_poss = false;
+		for (auto a: op_pieces)
+		{
+			if(T[a].m_figure == Reina || T[a].m_figure == Torre ||
+					T[a].m_figure == Peon) 
+				has_mate_poss = true;
+		}
+		if (!hasMoves) {m_event = Tablas; return Tablas;} //material insuficiente
+		if (hasMoves) {m_event = Bandera; return Bandera;} //Pierdes
+	}
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
 		//ver si se da el evento de jaque, jaque mate o tablas

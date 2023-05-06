@@ -17,5 +17,5 @@ const int ROW_SIZE = 8;
 const string INITIAL_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 enum	figura { Vacio, Rey, Reina, Torre, Alfil, Caballo, Peon };
 enum	color { noColor, Blanco, Negro };
-enum	events { None, Jaque, Jaque_Mate, Tablas };
+enum	events { None, Jaque, Jaque_Mate, Tablas , Bandera};
 #endif
