@@ -33,6 +33,7 @@ public:
 	Tablero	&getBoard();
 	string	getPlayer(int col=0);
 	float	getColorClock(color col);
+	void	startColorClock(color col);
 	void	play_back();
 	void	play_forward();
 	void	play_first();

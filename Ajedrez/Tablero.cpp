@@ -451,6 +451,9 @@ int Tablero::do_move(int from, int to, bool calculating)
 			if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 			else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 		}
+	// Comenzar el otro reloj
+	color oponent_color = turn == Blanco ? Negro : Blanco;
+	m_parent_game->startColorClock(oponent_color);
 	//Comprobación de tiempo
 	if (m_parent_game->getColorClock(turn) == 0)
 	{

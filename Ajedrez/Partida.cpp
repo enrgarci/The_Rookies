@@ -187,3 +187,10 @@ float Partida::getColorClock(color col)
 	if(col == Blanco) return m_w_clock->updateChessClock();
 	return m_b_clock->updateChessClock();
 }
+
+void Partida::startColorClock(color col)
+{
+	if (!col) return;
+	if(col == Blanco) return m_w_clock->setOrigin();
+	return m_b_clock->setOrigin();
+}
