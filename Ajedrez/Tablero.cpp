@@ -468,8 +468,8 @@ int Tablero::do_move(int from, int to, bool calculating)
 					T[a].m_figure == Peon) 
 				has_mate_poss = true;
 		}
-		if (!hasMoves) {m_event = Tablas; return Tablas;} //material insuficiente
-		if (hasMoves) {m_event = Bandera; return Bandera;} //Pierdes
+		if (!has_mate_poss) {m_event = Tablas; return Tablas;} //material insuficiente
+		if (has_mate_poss) {m_event = Bandera; return Bandera;} //Pierdes
 	}
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
