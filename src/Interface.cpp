@@ -441,11 +441,11 @@ void Interface::drawButtons()
 
 }
 
-void Interface::mouseButtons(int button, int state, int x, int y)
+void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
 {
-    system("cls");
+    //system("cls");
     //playBackButton, playForwardButton, playLastButton, playFirstButton;
-    if (pauseMenu.isInside(button, state, x, y)) menuEnable = 1; else menuEnable = 0;
+    if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
     if (playBackButton.isInside(button, state, x, y)) P.play_back();  //1 atras
     if (playForwardButton.isInside(button, state, x, y)) P.play_forward();//1 adelante
     if (playLastButton.isInside(button, state, x, y)) P.play_last(); // actual
@@ -473,9 +473,10 @@ void Interface::reshape(int w, int h)
 }
 
 // Handles mouse clicks on the game board and updates the necessary variables to keep track of the state of the game.
-void Interface::mouseBoard(int button, int state, int x, int y)
+void Interface::mouseBoard(int button, int state, int x, int y, int & Estado)
 {
-    mouseButtons( button, state, x, y);
+ 
+    mouseButtons( button, state, x, y, Estado);
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         // Convert mouse coordinates to window coordinates
@@ -538,4 +539,10 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
         (P.T)->setCoronacion((figura) PiecesCor[CorIndex]);
         cout << CorIndex << endl;
     }
+}
+
+void Interface::submenu(int& Estado)
+{
+    
+    Estado = 11;
 }

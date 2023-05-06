@@ -23,7 +23,6 @@ class Interface
 	coordinate grid_coordinates[8][8];
 
 	Boton pauseMenu, playBackButton, playForwardButton, playLastButton, playFirstButton;
-	int menuEnable;
 
 	//Colors
 	int br, bg, bb, wr, wg, wb;
@@ -42,11 +41,12 @@ public:
 	void drawLastMove(int* movement, std::vector<int>& move_list, bool check_list);
 	void drawMovement(int EstadoSkin);
 	void reshape(int w, int h);
-	void mouseBoard(int button, int state, int x, int y);
+	void mouseBoard(int button, int state, int x, int y, int & Estado);
 	void keyboardFullscreen(unsigned char key, int x, int y);
 
 	void drawButtons();
-	void mouseButtons(int button, int state, int x, int y);
+	void mouseButtons(int button, int state, int x, int y, int& Estado);
+	void submenu(int& Estado);
 
 };
 

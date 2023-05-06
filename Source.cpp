@@ -14,6 +14,8 @@ Menu menus;
 
 void onDraw() 
 {
+	//system("cls");
+	std::cout << "Estado: " << menus.getEstado();
 	switch (menus.getEstado())
 	{
 	case (Menu::INICIO): //1
@@ -49,6 +51,14 @@ void onDraw()
 	case (Menu::TABLAS):
 
 		break;
+	case (Menu::CREDITOS):
+
+
+		break;
+	case (Menu::SUBMENU):
+		menus.drawSubmenu();
+
+		break;
 	default: std::cout << "Ha fallado el source ventana";
 		break;
 	}
@@ -67,8 +77,10 @@ void onReshape(int w, int h)
 
 void onMouse(int button, int state, int x, int y) 
 {
-    interfaz.mouseBoard(button, state, x, y);
-	system("cls");
+	int estado;
+	
+    interfaz.mouseBoard(button, state, x, y, *menus.returnEstado());
+
 	menus.botonVentana(button, state, x, y);
 
 }

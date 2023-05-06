@@ -13,7 +13,7 @@ void Menu::menusIni()
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 1;//play
+	Estado = 11;//play
 	EstadoSkin = 1;//classic
 }
 
@@ -197,7 +197,7 @@ void Menu::keyboardVentana(unsigned char key, int x, int y)
 void Menu::botonVentana(int button, int state, int x, int y)
 {
 	//Change the current window to the one selected by a button
-
+	system("cls");
 	//Main menu
 	if (Estado == 1) {
 		if (depaso.isInside(button, state, x, y)) Estado = 2;
@@ -232,6 +232,39 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 
 		if (homefromBoton.isInside(button, state, x, y)) Estado = 2;
+	}
+	if (Estado == 11)
+	{
+		//std::cout << "Probando"<< BotonGuardar.isInside(button, state, x, y);
+		if (BotonGuardar.isInside(button, state, x, y)) 
+		{
+			std::cout << "GUARDADO";
+		}
+		if (BotonCargar.isInside(button, state, x, y))
+		{
+			std::cout << "CARGADO";
+		}
+		if(Boton3min.isInside(button, state, x, y))
+		{
+			std::cout << "RELOJ A 3 MINUTOS";
+		}
+		if (Boton5min.isInside(button, state, x, y))
+		{
+			std::cout << "RELOJ A 5 MINUTOS";
+		}
+		if (Boton10min.isInside(button, state, x, y))
+		{
+			std::cout << "RELOJ A 10 MINUTOS";
+		}
+		if (BotonReanudar.isInside(button, state, x, y))
+		{
+			Estado = 5;
+		}
+		if (BotonMenuPpal.isInside(button, state, x, y))
+		{
+			Estado = 2;
+		}
+		
 	}
 	//1vs1
 	//if (Estado == 5) {
@@ -387,4 +420,67 @@ void Menu::drawopcionsw(void) {
 	glDisable(GL_BLEND);
 	//End of Main menu button
 
+}
+
+void Menu::drawSubmenu(void)
+{
+	//Boton BotonGuardar, BotonCargar, Boton3min, Boton5min, Boton10min;
+	float w = glutGet(GLUT_WINDOW_WIDTH), h = glutGet(GLUT_WINDOW_HEIGHT);
+	glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	/*
+	//Background picture
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesSW.png").id);
+	poligonoVistaImagen();
+	glDisable(GL_TEXTURE_2D);
+	*/
+
+	//SET POSITION AND COLOR
+	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonMenuPpal.Set(5.5 * w / 16, 8 * h / 16, 5 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonGuardar.Set(4 * w / 16, 5 * h / 16, 3.25 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonCargar.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
+	Boton3min.Set(4 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
+	Boton5min.Set(7 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
+	Boton10min.Set(10 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
+
+	
+	//Drawing
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/Reanudar.png").id);
+	BotonReanudar.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/MenuPpal.png").id);
+	BotonMenuPpal.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/GUARDAR.png").id);
+	BotonGuardar.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/CARGAR.png").id);
+	BotonCargar.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/3min.png").id);
+	Boton3min.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/5min.png").id);
+	Boton5min.Draw();
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/10min.png").id);
+	Boton10min.Draw();
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+
+
+	
+
+	
 }
