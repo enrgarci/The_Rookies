@@ -1,18 +1,25 @@
 #include "Partida.h"
 #include "Tablero.h"
 #include "Casilla.h"
+#include "Clock.h"
 
-Partida::Partida(string w_player, string b_player, string init_pos)
+Partida::Partida(string w_player, string b_player,
+					double initial_time,
+					double increment,
+					 string init_pos)
 {
 	T = new Tablero(*this, init_pos);
 	m_w_player = w_player;
 	m_b_player = b_player;
 	positions.push_back(init_pos);
+	m_w_clock = new ChessClock(initial_time, increment);
+	m_b_clock = new ChessClock(initial_time, increment);
 }
 
 Partida::Partida(std::fstream &file)
 {
 	string raw,w_p, b_p;
+	float start_t, increment;
 	vector<FEN> my_pos;
 	cout << "Reading from file..." << endl;
 	while (getline(file, raw))
@@ -36,12 +43,32 @@ Partida::Partida(std::fstream &file)
 			b_p = raw.substr(b, end - b);
 			done = true;
 		}
+		else if (raw.find("Start_Time") != string::npos) 
+		{
+			int b, end, len;
+			b = raw.find_first_of("\"") + 1;
+			end = raw.find_last_of("]") - 1;
+			len = end - b;
+			start_t = std::stoi(raw.substr(b, end - b));
+			done = true;
+		}
+		else if (raw.find("Increment") != string::npos) 
+		{
+			int b, end, len;
+			b = raw.find_first_of("\"") + 1;
+			end = raw.find_last_of("]") - 1;
+			len = end - b;
+			increment = std::stoi(raw.substr(b, end - b));
+			done = true;
+		}
 		else if(!done) my_pos.push_back(raw);
 	}
 	file.close();
 	m_w_player = w_p;
 	m_b_player = b_p;
 	positions = my_pos;
+	m_w_clock = new ChessClock(start_t, increment);
+	m_b_clock = new ChessClock(start_t, increment);
 	T = new Tablero((*this), positions.at(0));
 }
 
@@ -55,6 +82,8 @@ Partida::~Partida()
 	delete Tablero::s_bishop,Tablero::s_bishop = nullptr;
 	delete Tablero::s_empty, Tablero::s_empty = nullptr;
 	delete T;
+	delete m_w_clock;
+	delete m_b_clock;
 }
 
 Tablero &Partida::getBoard()
@@ -125,6 +154,8 @@ void Partida::save(string directory, string name)
 	std::ofstream saveFile(directory + name);
 	saveFile << "[White \"" << m_w_player << "\"]  " << endl;
 	saveFile << "[Black \"" << m_b_player << "\"]  " << endl;
+	saveFile << "[Start_Time \"" << m_w_clock->getInitialTime() << "\"]  " << endl;
+	saveFile << "[Increment \"" << m_w_clock->getIncremet() << "\"]  " << endl;
 	for (auto s : positions) saveFile << s << endl;
 	saveFile.close();
 }
@@ -148,4 +179,18 @@ int	Partida::perf(Partida &p, int depth)
 		}
 	}
 	return nodes;
+}
+
+float Partida::getColorClock(color col)
+{
+	if (!col) return 0;
+	if(col == Blanco) return m_w_clock->updateChessClock();
+	return m_b_clock->updateChessClock();
+}
+
+void Partida::startColorClock(color col)
+{
+	if (!col) return;
+	if(col == Blanco) return m_w_clock->setOrigin();
+	return m_b_clock->setOrigin();
 }
