@@ -8,7 +8,7 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","",-1,0);
+	Partida P("","",-1,0,"1r6/8/8/8/8/K7/8/R7 w - - 0 1");
 
-	cout << P.perf(P,4);
+	P.T->printPosibleMoves(40);
 }
