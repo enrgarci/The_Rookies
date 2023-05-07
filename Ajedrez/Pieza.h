@@ -12,7 +12,7 @@ class Pieza
 friend Tablero;
 friend Casilla;
 protected:
-	virtual void	possible_moves(Tablero &board, Casilla &cell, int pin)=0;
+	vector<int>	possible_moves(Tablero &board, Casilla &cell, int pin);
 public:
 	virtual vector<int> pseudo_legal(Tablero &board, Casilla &cell) = 0;
 	virtual ~Pieza() = default;
@@ -21,7 +21,6 @@ public:
 class Empty: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell)
 	{vector<int> moves; moves.clear() ;return moves;};
 };
@@ -29,7 +28,6 @@ public:
 class King: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };
 
@@ -37,28 +35,24 @@ public:
 class Rook: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };
 
 class Bishop: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };
 
 class Knight: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };
 
 class Pawn: public Pieza
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };
 #endif
@@ -66,6 +60,5 @@ public:
 class Queen: public Rook, public Bishop
 {
 public:
-	void possible_moves(Tablero &board, Casilla &cell, int pin);
 	vector<int> pseudo_legal(Tablero &board, Casilla &cell);
 };

@@ -32,12 +32,7 @@ vector<int>	&Casilla::getMoveList()
 	if (T.move_count == m_move_calculation) return m_move_lst;
 	m_move_calculation = T.move_count;
 	m_move_lst.clear();
-	T.reset_possible_moves();
-	m_piece->possible_moves(T, *this, 1);
-	for (int i = 0; i < BOARD_SIZE; i++)
-		if (T[i].m_posible_destination)
-			m_move_lst.push_back(i);
-	T.reset_possible_moves();
+	m_move_lst = m_piece->possible_moves(T, *this, 1);
 	return m_move_lst;
 }
 
@@ -98,8 +93,8 @@ bool Casilla::getCheck(color c)
 	{
 		if (T.get_cell(pos).getFigura() == Rey ||
 			T.get_cell(pos).getFigura() == Peon) continue;
-		for (auto c : T.get_pseudo_moves(pos))
-			if (c == (this->m_id)) return 1;
+		for (auto cell : T.get_pseudo_moves(pos))
+			if (cell == (this->m_id)) return 1;
 	}
 	//Check by king
 	for (int x = -1; x < 2; x++)

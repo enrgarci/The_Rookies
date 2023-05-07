@@ -57,7 +57,7 @@ Tablero::Tablero(Partida &p, string fen)
 			//we have c as char, (c - '0') = c as int
 			for (int i = 0; i < (c - '0'); i++) 
 			{
-				m_casilla[cell] = new Casilla(*this, s_empty, Vacio, noColor, cell);
+				m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_empty, Vacio, noColor, cell);
 				cell++;
 			}
 			continue;
@@ -70,27 +70,27 @@ Tablero::Tablero(Partida &p, string fen)
 		//black
 		case 'R':
 		case 'r':
-			m_casilla[cell] = new Casilla(*this, s_rook, Torre, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_rook, Torre, col, cell);
 			break;
 		case 'N':
 		case 'n':
-			m_casilla[cell] = new Casilla(*this, s_knight, Caballo, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_knight, Caballo, col, cell);
 			break;
 		case 'B':
 		case 'b':
-			m_casilla[cell] = new Casilla(*this, s_bishop, Alfil, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_bishop, Alfil, col, cell);
 			break;
 		case 'Q':
 		case 'q':
-			m_casilla[cell] = new Casilla(*this, static_cast<Rook*>(s_queen), Reina, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), static_cast<Rook*>(s_queen), Reina, col, cell);
 			break;
 		case 'K':
 		case 'k':
-			m_casilla[cell] = new Casilla(*this, s_king, Rey, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_king, Rey, col, cell);
 			break;
 		case 'P':
 		case 'p':
-			m_casilla[cell] = new Casilla(*this, s_pawn, Peon, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_pawn, Peon, col, cell);
 			break;
 		default:
 			break;
@@ -363,12 +363,12 @@ int Tablero::can_castle(color c)
 
 bool Tablero::hasMoves(color c)
 {
-	Tablero &T = (*this);
+	Tablero &T = (*this->m_parent_game->T);
  	bool has_moves = false;
-	vector<int> &v = c == Blanco ? m_b_pieces : m_w_pieces;
+	vector<int> v = c == Blanco ? m_b_pieces : m_w_pieces;
 	for (auto piece : v)
 	{
-		if (T[piece].getMoveList().size() > 0)
+		if (T.get_cell(piece).getMoveList().size() > 0)
 		{
 			has_moves = true;
 			break;
@@ -438,12 +438,6 @@ int Tablero::do_move(int from, int to, bool calculating)
 		T[to].setSymbol();
 	}
 
-	// update color pieces list
-	if (!calculating)
-	{	
-		// Añadir a las posiciones de Partida
-		if(&T == (*m_parent_game).T)
-			m_parent_game->add_pos();
 		m_w_pieces.clear();
 		m_b_pieces.clear();
 		for (int i = 0; i < BOARD_SIZE; i++)
@@ -451,6 +445,11 @@ int Tablero::do_move(int from, int to, bool calculating)
 			if ((*this)[i].getColor() == Blanco) m_w_pieces.push_back(i);
 			else if ((*this)[i].getColor() == Negro) m_b_pieces.push_back(i);
 		}
+		// Añadir a las posiciones de Partida
+	// update color pieces list
+	if (!calculating)
+	{	
+			m_parent_game->add_pos();
 	// Comenzar el otro reloj
 	color oponent_color = turn == Blanco ? Negro : Blanco;
 	m_parent_game->startColorClock(oponent_color);
@@ -474,7 +473,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 	//actualizar turno
 	turn = turn == Blanco ? Negro : Blanco;
 		//ver si se da el evento de jaque, jaque mate o tablas
-		bool can_move = hasMoves(turn == Negro ? Negro : Blanco);
+		bool can_move = hasMoves(turn);
 		for (auto piece : turn == Blanco ? m_w_pieces : m_b_pieces)
 		{
 			if (T[piece].m_figure == Rey && T[piece].getCheck(T[piece].m_color))

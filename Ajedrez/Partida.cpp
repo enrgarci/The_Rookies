@@ -14,6 +14,8 @@ Partida::Partida(string w_player, string b_player,
 	positions.push_back(init_pos);
 	m_w_clock = new ChessClock(initial_time, increment);
 	m_b_clock = new ChessClock(initial_time, increment);
+	for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 }
 
 Partida::Partida(std::fstream &file)
@@ -105,6 +107,8 @@ void Partida::play_back()
 		current_pos--;
 		delete T;
 		T = new Tablero(*this, positions.at(current_pos));
+		for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 	}
 }
 
@@ -115,6 +119,8 @@ void Partida::play_forward()
 		current_pos++;
 		delete T;
 		T = new Tablero(*this,positions.at(current_pos));
+		for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 	}
 }
 
@@ -123,12 +129,16 @@ void Partida::play_last()
 	current_pos = positions.size() - 1;
 	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
+	for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 }
 void Partida::play_first()
 {
 	current_pos = 0;
 	delete T;
 	T = new Tablero(*this,positions.at(current_pos));
+	for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 }
 
 void Partida::add_pos()
@@ -145,6 +155,8 @@ void Partida::undoMove()
 	positions.pop_back();
 	current_pos = positions.size() - 1;
 	T = new Tablero(*this,positions.back());
+	for(auto c : T->m_casilla)
+		c->m_parent_board = T;
 	delete p_T;
 }
 
