@@ -25,10 +25,10 @@ class Interface
 	Boton pauseMenu, playBackButton, playForwardButton, playLastButton, playFirstButton;
 
 	//Colors
-	int br, bg, bb, wr, wg, wb;
+	float br, bg, bb, wr, wg, wb;
 
-	Boton aguja;
-	float theta = 45;
+	Boton aguja, marco;
+	float theta;
 
 public:
 	void init();
@@ -47,6 +47,6 @@ public:
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
+	void reloj(float theta);
 
 };
-
