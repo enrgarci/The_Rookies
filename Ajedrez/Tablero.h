@@ -78,6 +78,8 @@ public:
 	figura	getCoronacion();
 	bool	isThreeFold();
 	vector<int> get_Color_Pieces(color c);
+	vector<int> get_pseudo_moves(Casilla cell);
+	vector<int> get_pseudo_moves(int cell);
 };
 
 /// @brief Access a cell of the board

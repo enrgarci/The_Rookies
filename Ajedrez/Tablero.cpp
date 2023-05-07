@@ -589,3 +589,6 @@ bool	Tablero::isThreeFold()
 	}
 	return false;
 }
+
+vector<int> Tablero::get_pseudo_moves(Casilla cell){return ((cell).getPiece().pseudo_legal(*(this), cell));}
+vector<int> Tablero::get_pseudo_moves(int cell){return this->get_pseudo_moves(this->get_cell(cell));}

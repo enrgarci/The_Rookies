@@ -94,12 +94,13 @@ void Casilla::clear()
 bool Casilla::getCheck(color c)
 {
 	Tablero &T = *((m_parent_board)->m_parent_game->T);
-	T.reset_possible_moves();
-	for (auto piece: c == Blanco ? T.m_b_pieces : T.m_w_pieces)
+	for (auto pos: c == Blanco ? T.m_b_pieces : T.m_w_pieces)
 	{
-		T.set_possible_moves(T.get_cell(piece));
+		if (T.get_cell(pos).getFigura() == Rey ||
+			T.get_cell(pos).getFigura() == Peon) continue;
+		for (auto c : T.get_pseudo_moves(pos))
+			if (c == (this->m_id)) return 1;
 	}
-	if ((*this).m_posible_destination == true) return 1;
 	//Check by king
 	for (int x = -1; x < 2; x++)
 	{
@@ -109,12 +110,11 @@ bool Casilla::getCheck(color c)
 			if (T.get_cell((*this), x,y).m_figure == Rey && T.get_cell((*this), x,y).m_color != c) return (m_in_check = true);
 		}
 	}
-	T.reset_possible_moves();
 	//Check by pawn
 	int dir =  (c == Blanco) ? 1 : -1;
 	for (int i = -1; i < 2; i+=2)
 		if (T.get_cell((*this), i,dir).m_figure == Peon && T.get_cell((*this), i,dir).m_color != c) return (m_in_check = true);
-	return m_in_check = false;
+	return m_in_check = false, 0;
 }
 /// @brief Looks if a Piece is pinned or not
 /// @param target The target square to see if moving there results or not end the check
