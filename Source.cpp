@@ -18,44 +18,49 @@ void onDraw()
 	std::cout << "Estado: " << menus.getEstado();
 	switch (menus.getEstado())
 	{
-	case (Menu::INICIO): //1
-		menus.drawinicio();
+	case (Menu::INICIO_MENU): //1
+		menus.drawInicio();
 		break;
 
-	case (Menu::DEPASO):
-		menus.drawdepaso();
+	case (Menu::DEPASO_MENU):
+		menus.drawDepaso();
 		break;
-	case (Menu::INSTRUCIONES):
-		menus.drawinstrucciones();
+	case (Menu::INSTRUCIONES_MENU):
+		menus.drawInstrucciones();
 		break;
-	case (Menu::OPCION):
-		menus.drawopciones();
+	case (Menu::OPCION_MENU):
+		if (menus.getEstadoSkin() == 1) { menus.drawOpcionClassic(); }
+		if (menus.getEstadoSkin() == 2) { menus.drawOpcionPvsz(); }
+		if (menus.getEstadoSkin() == 3) { menus.drawOpcionSW(); }
+
 		break;
 
-	case (Menu::JUEGO1VS1)://5
+	case (Menu::JUEGO1VS1_MENU)://5
 		interfaz.drawBoard(menus.getEstadoSkin());
 		interfaz.drawPieces(menus.getEstadoSkin());
 		interfaz.drawMovement(menus.getEstadoSkin());
+		break;
 
+	case (Menu::CREDITOS_MENU):
+		
 
 		break;
-	case (Menu::JUEGO1VSIA):
+	case (Menu::JUEGO1VSIA_MENU):
 
 		break;
-	case (Menu::FINGANADO):
+	case (Menu::FINGANADO_MENU):
 
 		break;
-	case (Menu::FINPERDIDO):
+	case (Menu::FINPERDIDO_MENU):
 
 		break;
-	case (Menu::TABLAS):
+	case (Menu::TABLAS_MENU):
 
 		break;
-	case (Menu::CREDITOS):
-
-
+	case (Menu::EXIT_MENU):
+		menus.drawExit();
 		break;
-	case (Menu::SUBMENU):
+	case (Menu::SUBMENU_MENU):
 		menus.drawSubmenu();
 
 		break;
