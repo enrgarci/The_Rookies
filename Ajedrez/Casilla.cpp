@@ -276,7 +276,7 @@ bool Casilla::isPinned(const Casilla &target)
 						result = false;
 		}
 	}
-	if (potential_pin.size() == 0)
+	if (potential_pin.size() == 0 && num_checks != 0)
 	{
 		if (m_id == king_pos)
 		{
