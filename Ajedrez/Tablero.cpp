@@ -496,35 +496,28 @@ int Tablero::do_move(int from, int to, bool calculating)
 	// Casilla destino = origen y limpio origen
 	T[to] = T[from];
 	T[from].clear();
-	static int EP;
 	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
 	if (T[from].m_figure == Peon && T[to].m_en_passant_move == move_count - 1) // si el movimiento fue tomar al paso
-		T[to + offset].clear(), cout << "EP " << T.get_fen() << "\n";
 	// en caso de enroque mover también la torre
-	static int RR;
 	if (from == 60 && to == 62)
 	{
 		T[to - 1] = T[to + 1];
 		T[to + 1].clear();
-		cout << "RR " << ++RR <<"\n";
 	}
 	else if (from == 60 && to == 58)
 	{
 		T[to + 1] = T[to - 2];
 		T[to - 2].clear();
-		cout << "RR " << ++RR <<"\n";
 	}
 	else if (from == 4 && to == 6)
 	{
 		T[to - 1] = T[to + 1];
 		T[to + 1].clear();
-		cout << "RR " << ++RR <<"\n";
 	}
 	else if (from == 4 && to == 2)
 	{
 		T[to + 1] = T[to - 2];
 		T[to - 2].clear();
-		cout << "RR " << ++RR <<"\n";
 	}
 
 	// Coronación
