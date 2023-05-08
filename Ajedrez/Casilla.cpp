@@ -2,6 +2,7 @@
 #include "Pieza.h"
 #include "Tablero.h"
 #include "Partida.h"
+#include "math.h"
 
 Casilla::Casilla(Tablero &T, const Pieza *p, figura f, color c, int id)
 {
@@ -162,6 +163,8 @@ bool Casilla::isPinned(const Casilla &target)
 	// piezas enemigas en potencial pin
 	for (int piece : T.turn == Blanco ? T.m_b_pieces : T.m_w_pieces)
 	{
+		if (T[piece].m_figure == Peon || T[piece].m_figure == Caballo || T[piece].m_figure == Rey)
+			continue;
 		if (T[piece].m_figure == Torre)
 		{
 			// misma columna o misma fila
@@ -171,12 +174,12 @@ bool Casilla::isPinned(const Casilla &target)
 		else if (T[piece].m_figure == Alfil)
 		{
 			// misma diagonal
-			if ((int)((piece % 8) - (int)(7 - piece / 8)) == (int)((king_pos % 8) - (int)(7 - king_pos / 8)))
+			if (abs((int)((piece % 8) - (int)(king_pos % 8)) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8))))
 				potential_pin.push_back(piece);
 		}
 		else if (T[piece].m_figure == Reina)
 		{
-			if ((int)((piece % 8) - (int)(7 - piece / 8)) == (int)((king_pos % 8) - (int)(7 - king_pos / 8)) ||
+			if (abs((int)((piece % 8) - (int)(king_pos % 8)) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8))) ||
 				piece / 8 == king_pos / 8 || piece % 8 == king_pos % 8)
 				potential_pin.push_back(piece);
 		}

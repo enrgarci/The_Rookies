@@ -8,12 +8,12 @@ using namespace std;
 int main()
 {
 	cout << "Hello Chess" << endl;
-	Partida P("","",-1,0,"rnbqkbnr/pp1pp1pp/8/2p1Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3");
+	Partida P("","",-1,0);
 
 	P.T->print();
-	// cout << P.perf(P,4);
-	P.T->print_all_moves();
-	P.T->printPosibleMoves(28);
+	cout << P.perf(P,2);
+	// P.T->print_all_moves();
+	// P.T->printPosibleMoves(14);
 	// for (int i = 0; i < BOARD_SIZE; i++)
 	// {
 	// 	if (i % 8 == 0) cout << endl;

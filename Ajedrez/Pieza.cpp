@@ -7,8 +7,8 @@ vector<int> Pieza::possible_moves(Tablero &board, Casilla &cell, int pin)
 	vector<int> pseudo_moves, legal_moves;
 	pseudo_moves = board.get_pseudo_moves(cell);
 	for (int i = 0; i < pseudo_moves.size(); i++)
-		if (!cell.isPinned(board[pseudo_moves.at(i)]) &&
-			board[pseudo_moves.at(i)].getColor() != cell.getColor())
+		if (board[pseudo_moves.at(i)].getColor() != cell.getColor() &&
+			!cell.isPinned(board[pseudo_moves.at(i)]))
 			legal_moves.push_back(pseudo_moves.at(i));
 	return legal_moves;
 }
