@@ -185,7 +185,7 @@ bool Casilla::isPinned(const Casilla &target)
 	// vemos si hay linea de visión al hacer el movimiento o no,
 	// rey en jaque (comprobar si que no es doble)
 	int num_checks = 0;
-	int checking_piece;
+	int checking_piece = -1;
 	for (auto piece : T.turn == Blanco ? T.m_b_pieces : T.m_w_pieces)
 	{
 		for (auto poss_cell : T.get_pseudo_moves(piece))
@@ -206,7 +206,7 @@ bool Casilla::isPinned(const Casilla &target)
 	int to = ((Casilla)target).getId();
 	for (auto pinning_piece : potential_pin)
 	{
-		if(num_checks > 1)//jaque doble, solo puedo mover rey
+		if (num_checks > 1) // jaque doble, solo puedo mover rey
 		{
 			if (m_id == king_pos && !T[to].getCheck(m_color))
 				return false;
@@ -221,34 +221,59 @@ bool Casilla::isPinned(const Casilla &target)
 		}
 		else
 			line = getDiagonal(king_pos, pinning_piece);
-		//no en jaque
+		// no en jaque
 		if (num_checks == 0)
 		{
 			if (m_id == king_pos)
 			{
-				if (!T[to].getCheck(m_color)) return false;
+				if (!T[to].getCheck(m_color))
+					return false;
 				return true;
 			}
 			// pieza que no sea el que está clavando (del otro equipo) no hay pin
 			// o del equipo, pero no la estudiada
 			for (auto cell : line)
 			{
-				if ((T[cell].getColor() == T[king_pos].getColor() && cell != m_id)){result = false;break;}
+				if ((T[cell].getColor() == T[king_pos].getColor() && cell != m_id))
+				{
+					result = false;
+					break;
+				}
 				else if ((T[cell].getColor() != T[king_pos].getColor() && cell != pinning_piece) &&
-						T[cell].getColor() != noColor){result = false;break;}
-				else if (cell == to || to == pinning_piece) {result = false;break;}
-				else result = true;
+						 T[cell].getColor() != noColor)
+				{
+					result = false;
+					break;
+				}
+				else if (cell == to || to == pinning_piece)
+				{
+					result = false;
+					break;
+				}
+				else
+					result = true;
 			}
 		}
 		else if (num_checks == 1)
 		{
-			if (m_id == king_pos && !T[to].getCheck(m_color))
-				return false;
+			if ((m_id == king_pos))
+			{
+				if (!T[to].getCheck(m_color))
+					return false;
+				return true;
+			}
 			result = true;
 			if (checking_piece == pinning_piece)
-			for (auto cell : line)
-				if (cell == to || to == checking_piece) result = false;
+				for (auto cell : line)
+					if (cell == to || to == checking_piece)
+						result = false;
 		}
+	}
+	if (potential_pin.size() == 0 && (m_id == king_pos))
+	{
+		if (!T[to].getCheck(m_color))
+			return false;
+		return true;
 	}
 	return result;
 }

@@ -7,7 +7,8 @@ vector<int> Pieza::possible_moves(Tablero &board, Casilla &cell, int pin)
 	vector<int> pseudo_moves, legal_moves;
 	pseudo_moves = board.get_pseudo_moves(cell);
 	for (int i = 0; i < pseudo_moves.size(); i++)
-		if (!cell.isPinned(board[pseudo_moves.at(i)]))
+		if (!cell.isPinned(board[pseudo_moves.at(i)]) &&
+			board[pseudo_moves.at(i)].getColor() != cell.getColor())
 			legal_moves.push_back(pseudo_moves.at(i));
 	return legal_moves;
 }
@@ -32,7 +33,7 @@ vector<int> Rook::pseudo_legal(Tablero &board, Casilla &cell)
 				else
 				{
 					reachWall[i] = true;
-					if (!found_king && relative.getColor() != cell.getColor())
+					if (!found_king)
 						moves.push_back(relative.getId());
 					if ((relative.getFigura() == Rey && (relative.getColor() != cell.getColor())))
 						found_king = true, reachWall[i] = false;
@@ -80,7 +81,7 @@ vector<int> Pawn::pseudo_legal(Tablero &board, Casilla &cell)
 	// En passant && capturas
 	for (int i = -1; i < 2; i += 2)
 	{
-		if (board.is_enemy_piece(board.get_cell(cell, i, dir), cell.getColor()) ||
+		if (!board.is_empty(board.get_cell(cell, i, dir)) ||
 			cell.getId() / 8 == en_passant_row &&
 				board.get_cell(cell, i, dir).getEnPassant_move() == board.move_count &&
 				board.get_cell(cell, i, dir).getEnPassant())
@@ -101,8 +102,7 @@ vector<int> Knight::pseudo_legal(Tablero &board, Casilla &cell)
 				continue;
 			Casilla &relative = board.get_cell(cell, x, y * i);
 			if (relative != cell)
-				if (board.can_Move_To(relative, cell))
-					moves.push_back(relative.getId());
+				moves.push_back(relative.getId());
 		}
 	}
 	return moves;
@@ -129,7 +129,7 @@ vector<int> Bishop::pseudo_legal(Tablero &board, Casilla &cell)
 				else
 				{
 					reachWall[i] = true;
-					if (!found_king && relative.getColor() != cell.getColor())
+					if (!found_king)
 						moves.push_back(relative.getId());
 					if ((relative.getFigura() == Rey && (relative.getColor() != cell.getColor())))
 						found_king = true, reachWall[i] = false;

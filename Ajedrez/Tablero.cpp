@@ -100,6 +100,7 @@ Tablero::Tablero(Partida &p, string fen)
 	//change move_count format to half-moves
 	//11223344.. Is the FEN format, complete moves, we use 01234567...
 	move_count = turn == Blanco ? (2 * move_count - 2) : (2 * move_count - 1);
+	m_parent_game->setCurrentPos(move_count);
 	//Default coronacion
 	setCoronacion(Reina);
 	//List of pieces of each colors

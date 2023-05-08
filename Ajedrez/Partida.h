@@ -41,9 +41,11 @@ public:
 	void	add_pos();
 	void	undoMove();
 	int		getCurrentPos();
+	void	setCurrentPos(int i);
 	int		perf(Partida &p, int depth);
 	void	save(string directory = "./",string name = "myGame.txt");
 };
 
-inline int Partida::getCurrentPos(){return positions.size() - 1;};
+inline int Partida::getCurrentPos(){return current_pos;};
+inline void Partida::setCurrentPos(int i){current_pos = i;};
 #endif
