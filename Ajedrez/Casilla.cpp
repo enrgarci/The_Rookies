@@ -271,11 +271,20 @@ bool Casilla::isPinned(const Casilla &target)
 			}
 			result = true;
 			if (checking_piece == pinning_piece)
+			{
 				for (auto cell : line)
 					if (cell == to || to == checking_piece)
 						return false;
 				if (to == checking_piece)
-						return false;
+					return false;
+			}
+			else
+			{
+				bool other_piece = false;
+				for (auto cell : line)
+					if(cell != m_id && T[cell].m_figure != Vacio) other_piece = true;
+				if (other_piece && to == checking_piece) return false;
+			}
 		}
 	}
 	if (potential_pin.size() == 0)

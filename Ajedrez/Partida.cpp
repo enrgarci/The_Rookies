@@ -188,11 +188,12 @@ int Partida::perf(Partida &p, int depth)
 		for (auto move : T_moves)
 		{
 			special[p.T->do_move(i, move)]++;
+			// p.T->print();
 			nodes += perf(p, depth - 1);
 			p.undoMove();
 		}
 	}
-	cout << special[1] << " " << special[2]<< "\n";
+	// cout << special[1] << " " << special[2]<< "\n";
 	return nodes;
 }
 
