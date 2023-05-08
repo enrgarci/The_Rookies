@@ -431,7 +431,7 @@ bool Tablero::hasMoves(color c)
 {
 	Tablero &T = (*this->m_parent_game->T);
 	bool has_moves = false;
-	vector<int> v = c == Blanco ? m_b_pieces : m_w_pieces;
+	vector<int> v = c == Blanco ? m_w_pieces : m_b_pieces;
 	for (auto piece : v)
 	{
 		if (T.get_cell(piece).getMoveList().size() > 0)
