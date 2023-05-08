@@ -174,12 +174,12 @@ bool Casilla::isPinned(const Casilla &target)
 		else if (T[piece].m_figure == Alfil)
 		{
 			// misma diagonal
-			if (abs((int)((piece % 8) - (int)(king_pos % 8)) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8))))
+			if (abs((int)((piece % 8) - (int)(king_pos % 8))) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8)))
 				potential_pin.push_back(piece);
 		}
 		else if (T[piece].m_figure == Reina)
 		{
-			if (abs((int)((piece % 8) - (int)(king_pos % 8)) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8))) ||
+			if (abs((int)((piece % 8) - (int)(king_pos % 8))) == abs((int)(7 - piece / 8) - (int)(7 - king_pos / 8)) ||
 				piece / 8 == king_pos / 8 || piece % 8 == king_pos % 8)
 				potential_pin.push_back(piece);
 		}
