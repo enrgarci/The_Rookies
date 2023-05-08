@@ -247,7 +247,8 @@ bool Casilla::isPinned(const Casilla &target)
 				{
 					int dir = T.turn == Blanco ? 8 : -8;
 					if (m_figure == Peon && target.m_en_passant_move == T.move_count) // si el movimiento fue tomar al paso
-						if (cell == to + dir) continue;
+						if (cell == to + dir)
+							continue;
 					result = false;
 					break;
 				}
@@ -275,11 +276,17 @@ bool Casilla::isPinned(const Casilla &target)
 						result = false;
 		}
 	}
-	if (potential_pin.size() == 0 && (m_id == king_pos))
+	if (potential_pin.size() == 0)
 	{
-		if (!T[to].getCheck(m_color))
-			return false;
-		return true;
+		if (m_id == king_pos)
+		{
+			if (!T[to].getCheck(m_color))
+				return false;
+			return true;
+		}
+		result = true;
+		if (to == checking_piece)
+			result = false;
 	}
 	return result;
 }
