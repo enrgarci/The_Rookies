@@ -276,17 +276,32 @@ bool Casilla::isPinned(const Casilla &target)
 						result = false;
 		}
 	}
-	if (potential_pin.size() == 0 && num_checks != 0)
+	if (potential_pin.size() == 0)
 	{
-		if (m_id == king_pos)
+		if (num_checks != 0)
 		{
-			if (!T[to].getCheck(m_color))
-				return false;
-			return true;
+			if (m_id == king_pos)
+			{
+				if (!T[to].getCheck(m_color))
+					return false;
+				return true;
+			}
+			if (num_checks > 1)
+				return true;
+			result = true;
+			if (to == checking_piece)
+				result = false;
 		}
-		result = true;
-		if (to == checking_piece)
+		else
+		{
+			if (m_id == king_pos)
+			{
+				if (!T[to].getCheck(m_color))
+					return false;
+				return true;
+			}
 			result = false;
+		}
 	}
 	return result;
 }
