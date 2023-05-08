@@ -146,14 +146,14 @@ void	Tablero::print ()
 void	Tablero::printPosibleMoves (Casilla &cell)
 {
 	int cell_count = 0;
-
-	set_possible_moves(cell);
+	vector<int> moves;
+	moves = cell.getMoveList();
 	setlocale(LC_ALL, "en_US.UTF-8");
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		Casilla &c = *m_casilla[i];
 		int pieceVal;
-		bool b = c.m_posible_destination;
+		bool b = false;
+		for (auto a : moves) if (a == i) {b = true; break;}
 		pieceVal = b ? 'x' : ' '; // si es posible moverse marca
 		wprintf(L"%lc", '0' + b);
 		if(!(++cell_count % 8)) cout << endl; 
