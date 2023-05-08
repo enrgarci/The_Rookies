@@ -30,37 +30,37 @@ Partida::Partida(std::fstream &file)
 		if (raw.find("White") != string::npos)
 		{
 			int b, end, len;
-			b = raw.find_first_of("\"") + 1;
-			end = raw.find_last_of("]") - 1;
+			b = (int)raw.find_first_of("\"") + 1;
+			end = (int)raw.find_last_of("]") - 1;
 			len = end - b;
-			w_p = raw.substr(b, end - b);
+			w_p = raw.substr((unsigned long)b, (unsigned long)(end - b));
 			done = true;
 		}
 		else if (raw.find("Black") != string::npos)
 		{
 			int b, end, len;
-			b = raw.find_first_of("\"") + 1;
-			end = raw.find_last_of("]") - 1;
+			b = (int)raw.find_first_of("\"") + 1;
+			end = (int)raw.find_last_of("]") - 1;
 			len = end - b;
-			b_p = raw.substr(b, end - b);
+			b_p = raw.substr((unsigned long)b, (unsigned long)(end - b));
 			done = true;
 		}
 		else if (raw.find("Start_Time") != string::npos)
 		{
 			int b, end, len;
-			b = raw.find_first_of("\"") + 1;
-			end = raw.find_last_of("]") - 1;
+			b = (int)raw.find_first_of("\"") + 1;
+			end = (int)raw.find_last_of("]") - 1;
 			len = end - b;
-			start_t = std::stoi(raw.substr(b, end - b));
+			start_t = std::stoi(raw.substr((unsigned long)b, (unsigned long)(end - b)));
 			done = true;
 		}
 		else if (raw.find("Increment") != string::npos)
 		{
 			int b, end, len;
-			b = raw.find_first_of("\"") + 1;
-			end = raw.find_last_of("]") - 1;
+			b = (int)raw.find_first_of("\"") + 1;
+			end = (int)raw.find_last_of("]") - 1;
 			len = end - b;
-			increment = std::stoi(raw.substr(b, end - b));
+			increment = std::stoi(raw.substr((unsigned long)b, (unsigned long)(end - b)));
 			done = true;
 		}
 		else if (!done)
@@ -77,13 +77,6 @@ Partida::Partida(std::fstream &file)
 
 Partida::~Partida()
 {
-	delete Tablero::s_king, Tablero::s_king = nullptr;
-	delete Tablero::s_queen, Tablero::s_queen = nullptr;
-	delete Tablero::s_knight, Tablero::s_knight = nullptr;
-	delete Tablero::s_rook, Tablero::s_rook = nullptr;
-	delete Tablero::s_pawn, Tablero::s_pawn = nullptr;
-	delete Tablero::s_bishop, Tablero::s_bishop = nullptr;
-	delete Tablero::s_empty, Tablero::s_empty = nullptr;
 	delete T;
 	delete m_w_clock;
 	delete m_b_clock;
@@ -109,7 +102,7 @@ void Partida::play_back()
 	{
 		current_pos--;
 		delete T;
-		T = new Tablero(*this, positions.at(current_pos));
+		T = new Tablero(*this, positions.at((unsigned long)current_pos));
 		for (auto c : T->m_casilla)
 			c->m_parent_board = T;
 	}
@@ -117,11 +110,11 @@ void Partida::play_back()
 
 void Partida::play_forward()
 {
-	if (current_pos < positions.size() - 1)
+	if (current_pos < (int)positions.size() - 1)
 	{
 		current_pos++;
 		delete T;
-		T = new Tablero(*this, positions.at(current_pos));
+		T = new Tablero(*this, positions.at((unsigned long)current_pos));
 		for (auto c : T->m_casilla)
 			c->m_parent_board = T;
 	}
@@ -129,9 +122,9 @@ void Partida::play_forward()
 
 void Partida::play_last()
 {
-	current_pos = positions.size() - 1;
+	current_pos = (int)positions.size() - 1;
 	delete T;
-	T = new Tablero(*this, positions.at(current_pos));
+	T = new Tablero(*this, positions.at((unsigned long)current_pos));
 	for (auto c : T->m_casilla)
 		c->m_parent_board = T;
 }
@@ -139,26 +132,26 @@ void Partida::play_first()
 {
 	current_pos = 0;
 	delete T;
-	T = new Tablero(*this, positions.at(current_pos));
+	T = new Tablero(*this, positions.at((unsigned long)current_pos));
 	for (auto c : T->m_casilla)
 		c->m_parent_board = T;
 }
 
 void Partida::add_pos()
 {
-	if (current_pos != positions.size() - 1)
+	if (current_pos != (int)positions.size() - 1)
 		return;
 	positions.push_back((*T).get_fen());
-	current_pos = positions.size() - 1;
+	current_pos = (int)positions.size() - 1;
 }
 
 void Partida::undoMove()
 {
 	Tablero *p_T = T;
-	if (current_pos != positions.size() - 1)
+	if (current_pos != (int)positions.size() - 1)
 		return;
 	positions.pop_back();
-	current_pos = positions.size() - 1;
+	current_pos = (int)positions.size() - 1;
 	T = new Tablero(*this, positions.back());
 	for (auto c : T->m_casilla)
 		c->m_parent_board = T;

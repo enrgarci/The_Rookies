@@ -12,7 +12,7 @@ class Pieza
 friend Tablero;
 friend Casilla;
 protected:
-	vector<int>	possible_moves(Tablero &board, Casilla &cell, int pin);
+	vector<int>	possible_moves(Tablero &board, Casilla &cell);
 public:
 	virtual vector<int> pseudo_legal(Tablero &board, Casilla &cell) = 0;
 	virtual ~Pieza() = default;

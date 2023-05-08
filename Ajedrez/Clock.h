@@ -20,7 +20,7 @@ public:
 	void	setOrigin();
 };
 
-inline float ChessClock::getInitialTime(){return m_total_time;}
-inline float ChessClock::getIncremet(){return m_increment;}
+inline float ChessClock::getInitialTime(){return (float)m_total_time;}
+inline float ChessClock::getIncremet(){return (float)m_increment;}
 inline void ChessClock::setOrigin(){m_origin = clock();}
 #endif // CLOCK_H

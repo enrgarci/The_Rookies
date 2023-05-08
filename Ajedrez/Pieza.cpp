@@ -2,14 +2,14 @@
 #include "Casilla.h"
 #include "Tablero.h"
 
-vector<int> Pieza::possible_moves(Tablero &board, Casilla &cell, int pin)
+vector<int> Pieza::possible_moves(Tablero &board, Casilla &cell)
 {
 	vector<int> pseudo_moves, legal_moves;
 	pseudo_moves = board.get_pseudo_moves(cell);
-	for (int i = 0; i < pseudo_moves.size(); i++)
-		if (board[pseudo_moves.at(i)].getColor() != cell.getColor() &&
-			!cell.isPinned(board[pseudo_moves.at(i)]))
-			legal_moves.push_back(pseudo_moves.at(i));
+	for (int i = 0; i < (int)pseudo_moves.size(); i++)
+		if (board[pseudo_moves.at((unsigned long)i)].getColor() != cell.getColor() &&
+			!cell.isPinned(board[pseudo_moves.at((unsigned long)i)]))
+			legal_moves.push_back(pseudo_moves.at((unsigned long)i));
 	return legal_moves;
 }
 vector<int> Rook::pseudo_legal(Tablero &board, Casilla &cell)
@@ -82,9 +82,9 @@ vector<int> Pawn::pseudo_legal(Tablero &board, Casilla &cell)
 	for (int i = -1; i < 2; i += 2)
 	{
 		if (!board.is_empty(board.get_cell(cell, i, dir)) ||
-			cell.getId() / 8 == en_passant_row &&
+			(cell.getId() / 8 == en_passant_row &&
 				board.get_cell(cell, i, dir).getEnPassant_move() == board.move_count &&
-				board.get_cell(cell, i, dir).getEnPassant())
+				board.get_cell(cell, i, dir).getEnPassant()))
 			moves.push_back(board.get_cell(cell, i, dir).getId());
 	}
 	return moves;

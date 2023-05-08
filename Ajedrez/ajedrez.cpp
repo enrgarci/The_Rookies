@@ -11,7 +11,7 @@ int main()
 	Partida P("","",-1,0);
 
 	P.T->print();
-	cout << P.perf(P,2);
+	cout << P.perf(P,4);
 	// P.T->print_all_moves();
 	// P.T->printPosibleMoves(14);
 	// for (int i = 0; i < BOARD_SIZE; i++)

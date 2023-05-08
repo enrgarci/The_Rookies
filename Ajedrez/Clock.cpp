@@ -23,5 +23,5 @@ float ChessClock::updateChessClock()
 	m_origin = clock();
 	if (m_remaining <= 0)
 		return 0;
-	return (m_remaining / m_total_time);
+	return (float)(m_remaining / m_total_time);
 }

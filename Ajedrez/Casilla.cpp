@@ -35,7 +35,7 @@ vector<int> &Casilla::getMoveList()
 	Tablero &T = *m_parent_board;
 	m_move_calculation = T.move_count;
 	m_move_lst.clear();
-	m_move_lst = m_piece->possible_moves(T, *this, 1);
+	m_move_lst = m_piece->possible_moves(T, *this);
 	return m_move_lst;
 }
 
@@ -259,7 +259,7 @@ bool Casilla::isPinned(const Casilla &target)
 		}
 		else if (num_checks == 1)
 		{
-			if ((m_id == king_pos))
+			if (m_id == king_pos)
 			{
 				if (!T[to].getCheck(m_color))
 					return false;

@@ -245,7 +245,7 @@ string Tablero::get_fen()
 		if (empty)
 			empty_count++;
 		if (!empty && empty_count)
-			fen += '0' + empty_count, empty_count = 0;
+			fen += (char)('0' + empty_count), empty_count = 0;
 		// cell with piece
 		if (!empty)
 			fen += cell.getSymbol();
@@ -254,7 +254,7 @@ string Tablero::get_fen()
 		{
 			if (empty_count)
 			{
-				fen += '0' + empty_count;
+				fen += (char)('0' + empty_count);
 				empty = false;
 				empty_count = 0;
 			}
@@ -285,7 +285,7 @@ string Tablero::get_fen()
 			(*this)[i].m_en_passant_move == move_count)
 		{
 			fen += ('a' + i % 8);
-			fen += ('0' + 8 - (i / 8));
+			fen += (char)('0' + 8 - (i / 8));
 			can_en_passant = true;
 			break;
 		}
@@ -306,7 +306,7 @@ string Tablero::get_fen()
 /// @return a pointer to the first element of an array containing legal move cells
 void Tablero::set_possible_moves(Casilla &cell)
 {
-	cell.m_piece->possible_moves(*this, cell, 1);
+	cell.m_piece->possible_moves(*this, cell);
 }
 
 void Tablero::reset_possible_moves()
@@ -404,22 +404,6 @@ bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 bool Tablero::is_empty(Casilla &dst)
 {
 	return (dst.getFigura() == figura::Vacio ? 1 : 0);
-}
-
-///@return 1 if dst contains oponents piece, 0 otherwise
-bool Tablero::is_enemy_piece(Casilla &dst, color myColor)
-{
-	if (!is_empty(dst))
-		return (dst.getColor() != myColor ? 1 : 0);
-	return false;
-}
-
-/// @return true if dst is held by opponent's pieces
-bool Tablero::is_move_wall(Casilla &dst, Casilla &src)
-{
-	if (dst.getColor() != color::noColor)
-		return true;
-	return false;
 }
 
 int Tablero::can_castle(color c)
@@ -566,7 +550,6 @@ int Tablero::do_move(int from, int to, bool calculating)
 		// Comprobación de tiempo
 		if (m_parent_game->getColorClock(turn) == 0)
 		{
-			color oponent_color = turn == Blanco ? Negro : Blanco;
 			vector<int> &op_pieces = oponent_color == Blanco ? m_w_pieces : m_b_pieces;
 			if (op_pieces.size() > 2)
 			{
@@ -663,7 +646,6 @@ void Tablero::print_checks(color c)
 		cout << (*this)[i].getCheck(c);
 	}
 	cout << endl;
-	(*this).reset_possible_moves();
 }
 
 /// @brief Sets the figure the pawn will be converted to on promotion
@@ -696,19 +678,19 @@ bool Tablero::isThreeFold()
 {
 	const vector<FEN> &v = m_parent_game->positions;
 	string a, b;
-	for (int i = 0; i < v.size() - 2; i++) // cada elemento
+	for (int i = 0; i < (int)v.size() - 2; i++) // cada elemento
 	{
 		int rep_count = 0;
-		for (int j = i + 1; j < v.size(); j++) // emparejo con el resto
+		for (int j = i + 1; j < (int)v.size(); j++) // emparejo con el resto
 		{
 			int white_count = 0;
-			a = v.at(i);
-			b = v.at(j);
-			for (int x = 0; x < v.at(i).length() - 1; x++) // comparo si la posicion es igual
+			a = v.at((unsigned long)i);
+			b = v.at((unsigned long)j);
+			for (int x = 0; x < (int)v.at((unsigned long)i).length() - 1; x++) // comparo si la posicion es igual
 			{
-				if (v.at(i)[x] != v.at(j)[x])
+				if (v.at((unsigned long)i)[(unsigned long)x] != v.at((unsigned long)j)[(unsigned long)x])
 					break;
-				if (v.at(i)[x] == ' ')
+				if (v.at((unsigned long)i)[(unsigned long)x] == ' ')
 					white_count++;
 				if (white_count == 4)
 					break;
