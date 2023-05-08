@@ -498,6 +498,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 	T[from].clear();
 	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
 	if (T[from].m_figure == Peon && T[to].m_en_passant_move == move_count - 1) // si el movimiento fue tomar al paso
+			T[to + offset].clear();
 	// en caso de enroque mover también la torre
 	if (from == 60 && to == 62)
 	{
