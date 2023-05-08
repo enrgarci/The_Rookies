@@ -273,7 +273,7 @@ bool Casilla::isPinned(const Casilla &target)
 			if (checking_piece == pinning_piece)
 				for (auto cell : line)
 					if (cell == to || to == checking_piece)
-						result = false;
+						return false;
 		}
 	}
 	if (potential_pin.size() == 0)

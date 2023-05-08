@@ -139,10 +139,10 @@ void Partida::play_first()
 
 void Partida::add_pos()
 {
-	if (current_pos != (int)positions.size() - 1)
+	if (current_pos != T->move_count - 1)
 		return;
 	positions.push_back((*T).get_fen());
-	current_pos = (int)positions.size() - 1;
+	current_pos++;
 }
 
 void Partida::undoMove()
