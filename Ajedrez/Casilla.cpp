@@ -245,6 +245,9 @@ bool Casilla::isPinned(const Casilla &target)
 				else if ((T[cell].getColor() != T[king_pos].getColor() && cell != pinning_piece) &&
 						 T[cell].getColor() != noColor)
 				{
+					int dir = T.turn == Blanco ? 8 : -8;
+					if (m_figure == Peon && target.m_en_passant_move == T.move_count) // si el movimiento fue tomar al paso
+						if (cell == to + dir) continue;
 					result = false;
 					break;
 				}

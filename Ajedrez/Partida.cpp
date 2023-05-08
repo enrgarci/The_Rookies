@@ -192,6 +192,7 @@ int Partida::perf(Partida &p, int depth)
 			p.undoMove();
 		}
 	}
+	cout << special[1] << " " << special[2]<< "\n";
 	return nodes;
 }
 
