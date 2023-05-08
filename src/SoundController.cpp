@@ -23,9 +23,9 @@ void SoundController::playevent(int e)
 {
 	switch (e)
 	{
-	case Jaque: play("Check"); break;
-	case None: break;
 	case Jaque_Mate: play("Checkmate"); break;
-	case Tablas: break;
+	case Jaque: play("Check"); break;
+	case Tablas: play("Draw"); break;
+	case None: break;
 	}
 }

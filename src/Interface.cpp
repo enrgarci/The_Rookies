@@ -83,7 +83,7 @@ void Interface::rotateBoard(int value, int& col, int& row)
 }
 
 // Draws the border and grid of the board
-void Interface::drawBoard()
+void Interface::drawBoard(int EstadoSkin)
 {
     glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -100,6 +100,14 @@ void Interface::drawBoard()
     glVertex2f(x_border + border_size / screen_height, y_border + border_size / screen_height);
     glVertex2f(x_border, y_border + border_size / screen_height);
     glEnd();
+
+    switch (EstadoSkin)
+    {
+    case 1: br = 0.71; bg = 0.53; bb = 0.37; wr = 0.94; wg = 0.85; wb = 0.71; break; //Default
+    case 2: br = 0.1; bg = 0.275; bb = 0.1; wr = 0.4; wg = 0.9; wb = 0.4; break;    //Pvs>Z
+    case 3: br = 0.71; bg = 0.53; bb = 0.37; wr = 0.94; wg = 0.85; wb = 0.71; break;      //SW
+    }
+    
 
     //draw board grid
     for (int col = 0; col < gridSize; col++)
@@ -126,12 +134,19 @@ void Interface::drawBoard()
 }
 
 // Draws the pieces on the board
-void Interface::drawPieces()
+void Interface::drawPieces(int EstadoSkin)
 {
     std::string skin = "skin_default";
     std::string figure = "";
     std::string color = "";
     std::string direction = "";
+
+    switch (EstadoSkin)
+    {
+    case 1: skin = "skin_default"; break;
+    case 2: skin = "skin_pvsz"; break;
+    case 3: skin = "skin_sw"; break;
+    }
 
     for (int i = 0; i < 64; i++)
     {
@@ -267,7 +282,7 @@ void Interface::drawLastMove(int *movement, std::vector<int>& move_list, bool ch
 // Handles user input and updates the interface based on the game's state
 // Checks the value of a variable called click_flag, which keeps track of the number of clicks made by the user on the chessboard.
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
-void Interface::drawMovement()
+void Interface::drawMovement(int EstadoSkin)
 {
     int eventSound;
     static std::vector<int> move_list;
@@ -275,9 +290,10 @@ void Interface::drawMovement()
     static color first_piece_color;
     static int movement[2];
 
-    drawBoard();
+    drawBoard(EstadoSkin);
     drawLastMove(movement, move_list, false);
-    drawPieces();
+    drawPieces(EstadoSkin);
+    drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
     /*if (P.T->get_turn() == Negro)
     {
@@ -309,10 +325,11 @@ void Interface::drawMovement()
             click_flag = 0;
             break;
         }
-        drawBoard();
+        drawBoard(EstadoSkin);
         drawLastMove(movement, move_list, true);
         drawPossibleMoves(move_list);
-        drawPieces();
+        drawPieces(EstadoSkin);
+        drawButtons();
         break;
     // Two clicks has been detected on the board grid
     case 2:
@@ -328,10 +345,11 @@ void Interface::drawMovement()
             click_flag = 1;
             move_list = P.T->get_cell(cell_number).getMoveList();
             first_cell = cell_number;
-            drawBoard();
+            drawBoard(EstadoSkin);
             drawLastMove(movement, move_list, true);
             drawPossibleMoves(move_list);
-            drawPieces();
+            drawPieces(EstadoSkin);
+            drawButtons();
             break;
         }
         for (int i = 0; i < move_list.size(); i++)
@@ -346,9 +364,10 @@ void Interface::drawMovement()
                 eventSound = (P.T)->do_move(first_cell, cell_number);
                 S.playevent(eventSound);
                 //board and pieces are drawn again
-                drawBoard();
+                drawBoard(EstadoSkin);
                 drawLastMove(movement, move_list, false);
-                drawPieces();
+                drawPieces(EstadoSkin);
+                drawButtons();
                 S.play("Move_Piece");
                 break;
             }
@@ -360,6 +379,78 @@ void Interface::drawMovement()
         }
         break;
     }
+}
+
+void Interface::drawButtons()
+{
+  
+    //(1150, 10, 100, 100, 200, 100, 150); (1350, 10, 100, 100, 200, 100, 150);  (600, 10, 100, 100, 200, 100, 150);  (800, 10, 100, 100, 200, 100, 150);
+    pauseMenu.Set(10, 750, 100, 100, 200, 100, 150);
+    playBackButton.Set(638, 10, 100, 100, 200, 100, 150);
+    playForwardButton.Set(798, 10, 100, 100, 200, 100, 150);
+    playFirstButton.Set(485, 10, 100, 100, 200, 100, 150);
+    playLastButton.Set(950, 10, 100, 100, 200, 100, 150);
+
+
+
+    glEnable(GL_TEXTURE_2D);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.5f);
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Pause.png").id);
+    pauseMenu.Draw();
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Left-Arrow.png").id);
+    playBackButton.Draw();//1 atras
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Right-Arrow.png").id);
+    playForwardButton.Draw();//1 adelante
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Right-Double-Arrow.png").id);
+    playLastButton.Draw();// actual
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Left-Double-Arrow.png").id);
+    playFirstButton.Draw();// inicio
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
+
+    //AGUJA EN PROCESO
+    
+    aguja.Set(-14, -14, 30, 80, 200, 100, 150);
+    float x = 1.5, y = 0.7, a=10;
+
+    glTranslatef(x, y, 0);
+    for (int i = 0; i < a; i++)
+    {
+        glRotatef(theta, 0.0f, 0.0f, 1.0f);
+        aguja.Draw();// inicio
+
+    }
+    for (int i = 0; i < a; i++)
+    {
+        glRotatef(-theta, 0.0f, 0.0f, 1.0f);
+    }
+    glTranslatef(-x, -y, 0);
+
+    
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+    
+
+}
+
+void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
+{
+    //system("cls");
+    //playBackButton, playForwardButton, playLastButton, playFirstButton;
+    if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
+    if (playBackButton.isInside(button, state, x, y)) P.play_back();  //1 atras
+    if (playForwardButton.isInside(button, state, x, y)) P.play_forward();//1 adelante
+    if (playLastButton.isInside(button, state, x, y)) P.play_last(); // actual
+    if (playFirstButton.isInside(button, state, x, y)) P.play_first();// inicio
+
 }
 
 // Ensures that the OpenGL scene is adjusted to the new size of the window, maintaining the aspect ratio
@@ -382,8 +473,10 @@ void Interface::reshape(int w, int h)
 }
 
 // Handles mouse clicks on the game board and updates the necessary variables to keep track of the state of the game.
-void Interface::mouseBoard(int button, int state, int x, int y)
+void Interface::mouseBoard(int button, int state, int x, int y, int & Estado)
 {
+ 
+    mouseButtons( button, state, x, y, Estado);
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         // Convert mouse coordinates to window coordinates
@@ -446,4 +539,10 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
         (P.T)->setCoronacion((figura) PiecesCor[CorIndex]);
         cout << CorIndex << endl;
     }
+}
+
+void Interface::submenu(int& Estado)
+{
+    
+    Estado = 11;
 }

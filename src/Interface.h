@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "Boton.h"
+
 
 class Interface
 {
@@ -20,19 +22,31 @@ class Interface
 	int cell_number;
 	coordinate grid_coordinates[8][8];
 
+	Boton pauseMenu, playBackButton, playForwardButton, playLastButton, playFirstButton;
+
+	//Colors
+	int br, bg, bb, wr, wg, wb;
+
+	Boton aguja;
+	float theta = 45;
+
 public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
 	void changeOrigin(int& value);
 	void rotateBoard(int value, int& col, int& row);
-	void drawBoard();
-	void drawPieces();
+	void drawBoard(int EstadoSkin);
+	void drawPieces(int EstadoSkin);
 	void drawPossibleMoves(std::vector<int>& move_list);
 	void drawLastMove(int* movement, std::vector<int>& move_list, bool check_list);
-	void drawMovement();
+	void drawMovement(int EstadoSkin);
 	void reshape(int w, int h);
-	void mouseBoard(int button, int state, int x, int y);
+	void mouseBoard(int button, int state, int x, int y, int & Estado);
 	void keyboardFullscreen(unsigned char key, int x, int y);
+
+	void drawButtons();
+	void mouseButtons(int button, int state, int x, int y, int& Estado);
+	void submenu(int& Estado);
 
 };
 
