@@ -1,13 +1,16 @@
 #include "Partida.h"
 #include "Tablero.h"
 #include "Casilla.h"
+#include "Pieza.h"
 #include "Clock.h"
 
 Partida::Partida(string w_player, string b_player,
-				 double initial_time,
-				 double increment,
-				 string init_pos)
+	double initial_time,
+	double increment,
+	string init_pos)
 {
+	Tablero::inicializar();
+
 	T = new Tablero(*this, init_pos);
 	m_w_player = w_player;
 	m_b_player = b_player;
@@ -18,7 +21,7 @@ Partida::Partida(string w_player, string b_player,
 		c->m_parent_board = T;
 }
 
-Partida::Partida(std::fstream &file)
+Partida::Partida(std::fstream& file)
 {
 	string raw, w_p, b_p;
 	float start_t, increment;
@@ -82,7 +85,7 @@ Partida::~Partida()
 	delete m_b_clock;
 }
 
-Tablero &Partida::getBoard()
+Tablero& Partida::getBoard()
 {
 	return *T;
 }
@@ -147,7 +150,7 @@ void Partida::add_pos()
 
 void Partida::undoMove()
 {
-	Tablero *p_T = T;
+	Tablero* p_T = T;
 	if (current_pos != (int)positions.size() - 1)
 		return;
 	positions.pop_back();
@@ -171,7 +174,7 @@ void Partida::save(string directory, string name)
 	saveFile.close();
 }
 
-int Partida::perf(Partida &p, int depth)
+int Partida::perf(Partida& p, int depth)
 {
 	if (depth == 0)
 		return 1;

@@ -5,18 +5,21 @@
 #include <math.h>
 
 // One object per piece type
-King *Tablero::s_king = new King();
-Queen *Tablero::s_queen = new Queen();
-Rook *Tablero::s_rook = new Rook();
-Knight *Tablero::s_knight = new Knight();
-Bishop *Tablero::s_bishop = new Bishop();
-Pawn *Tablero::s_pawn = new Pawn();
-Empty *Tablero::s_empty = new Empty();
 /// @brief Reads a FEN position for the board initial position
 /// @param fen the FEN value, should contain position  and turn only, no castling rights etc..
 /// FEN @link ://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-Tablero::Tablero(Partida &p, string fen)
+
+King* Tablero::s_king = nullptr;
+Queen* Tablero::s_queen = nullptr;
+Rook* Tablero::s_rook = nullptr;
+Knight* Tablero::s_knight = nullptr;
+Bishop* Tablero::s_bishop = nullptr;
+Pawn* Tablero::s_pawn = nullptr;
+Empty* Tablero::s_empty = nullptr;
+
+Tablero::Tablero(Partida& p, string fen)
 {
+
 	int cell = 0;
 	int all_pos = 0; // flag to check if FEN is complete
 	bool complete_move = false;
@@ -119,7 +122,7 @@ Tablero::Tablero(Partida &p, string fen)
 		// Set pieces
 		switch (c)
 		{
-		// black
+			// black
 		case 'R':
 		case 'r':
 			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), s_rook, Torre, col, cell);
@@ -134,7 +137,7 @@ Tablero::Tablero(Partida &p, string fen)
 			break;
 		case 'Q':
 		case 'q':
-			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), static_cast<Rook *>(s_queen), Reina, col, cell);
+			m_casilla[cell] = new Casilla(*(this->m_parent_game->T), static_cast<Rook*>(s_queen), Reina, col, cell);
 			break;
 		case 'K':
 		case 'k':
@@ -187,7 +190,7 @@ void Tablero::print()
 	{
 		if (!(i % 8))
 			cout << (i + 1) / 8;
-		Casilla &cell = *m_casilla[i];
+		Casilla& cell = *m_casilla[i];
 		int pieceVal = int(cell.m_figure);
 		int colorVal = int(cell.m_color);
 		pieceVal = colorVal == 1 ? pieceVal + NumOfPieces : pieceVal;  // blanco o negro
@@ -199,11 +202,11 @@ void Tablero::print()
 			cout << " abcdefgh";
 	}
 	cout << endl
-		 << "Turno de " << (turn == Blanco ? "Blancas" : "Negras") << endl
-		 << "========" << endl;
+		<< "Turno de " << (turn == Blanco ? "Blancas" : "Negras") << endl
+		<< "========" << endl;
 }
 /// @brief Prints a console representation of the possible moves of the @ref Piece contained on cell
-void Tablero::printPosibleMoves(Casilla &cell)
+void Tablero::printPosibleMoves(Casilla& cell)
 {
 	int cell_count = 0;
 	vector<int> moves;
@@ -239,7 +242,7 @@ string Tablero::get_fen()
 
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		Casilla &cell = *m_casilla[i];
+		Casilla& cell = *m_casilla[i];
 		// empty cell management
 		empty = is_empty(cell); // cell.getFigure() == figura::Vacio ? true : false;
 		if (empty)
@@ -304,7 +307,7 @@ string Tablero::get_fen()
 /// @brief Calculates the set of legal moves for the piece in a given cell
 /// @param cell
 /// @return a pointer to the first element of an array containing legal move cells
-void Tablero::set_possible_moves(Casilla &cell)
+void Tablero::set_possible_moves(Casilla& cell)
 {
 	cell.m_piece->possible_moves(*this, cell);
 }
@@ -313,7 +316,7 @@ void Tablero::reset_possible_moves()
 {
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		Casilla &cell = *m_casilla[i];
+		Casilla& cell = *m_casilla[i];
 		cell.m_posible_destination = false;
 	}
 }
@@ -323,7 +326,7 @@ void Tablero::reset_possible_moves()
 /// @param x The absolute x coordinate, equivalent to letters on real board
 /// @param y The absolute y coordinate, equivalent to numbers on real board
 /// @return The cell on the (x,y) coordinate
-Casilla &Tablero::get_cell(const int x, const int y)
+Casilla& Tablero::get_cell(const int x, const int y)
 {
 	const int size = 8;
 	// out of borders
@@ -339,7 +342,7 @@ Casilla &Tablero::get_cell(const int x, const int y)
 /// @param c the column
 /// @param y the row
 /// @return The (c,y) position on the board (Looking as white pieces)
-Casilla &Tablero::get_cell(const char c, const int y)
+Casilla& Tablero::get_cell(const char c, const int y)
 {
 	const int size = 8;
 	// out of borders
@@ -358,7 +361,7 @@ Casilla &Tablero::get_cell(const char c, const int y)
 ///			Expects valid input
 /// @param x The positio on the board
 /// @return the cell in the x position
-Casilla &Tablero::get_cell(const int x)
+Casilla& Tablero::get_cell(const int x)
 {
 	// 0 is upper left corner, 63 is opposite one.
 	// out of borders
@@ -375,7 +378,7 @@ Casilla &Tablero::get_cell(const int x)
 /// @param relative_x the x relative position from self
 /// @param relative_y the y relative position from self
 /// @return
-Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relative_y)
+Casilla& Tablero::get_cell(Casilla& self, const int relative_x, const int relative_y)
 {
 	const int size = 8;
 	int id = self.m_id;
@@ -393,7 +396,7 @@ Casilla &Tablero::get_cell(Casilla &self, const int relative_x, const int relati
 /// @brief Checks if a cell is a valid destination for a move
 /// @param cell
 /// @return 1 if cell is a valid destination
-bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
+bool Tablero::can_Move_To(Casilla& dst, Casilla& src)
 {
 	if (is_empty(dst) || dst.getColor() != src.getColor())
 		return true;
@@ -401,7 +404,7 @@ bool Tablero::can_Move_To(Casilla &dst, Casilla &src)
 }
 
 /// @return 1 if dst is empty 0 otherwise
-bool Tablero::is_empty(Casilla &dst)
+bool Tablero::is_empty(Casilla& dst)
 {
 	return (dst.getFigura() == figura::Vacio ? 1 : 0);
 }
@@ -429,7 +432,7 @@ int Tablero::can_castle(color c)
 
 bool Tablero::hasMoves(color c)
 {
-	Tablero &T = (*this->m_parent_game->T);
+	Tablero& T = (*this->m_parent_game->T);
 	bool has_moves = false;
 	vector<int> v = c == Blanco ? m_w_pieces : m_b_pieces;
 	for (auto piece : v)
@@ -452,7 +455,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 	if (m_event == Jaque_Mate || m_event == Tablas || m_event == Bandera)
 		return m_event; // si acabó, no mueve
 	int event = None;
-	Tablero &T = (*this);
+	Tablero& T = (*this);
 	T.move_count++;
 	// Al paso
 	//  condiciones de movimiento
@@ -465,10 +468,10 @@ int Tablero::do_move(int from, int to, bool calculating)
 		(from >= lim1 + 2 * offset && from < lim2 + 2 * offset))
 	{
 		// si hay peones a derecha o izquierda permitimos flag de tomar al paso.
-		Casilla &c_minus = T.get_cell(T[to], -1, 0);
+		Casilla& c_minus = T.get_cell(T[to], -1, 0);
 		if (c_minus != T[to] && c_minus.getFigura() == Peon && c_minus.getColor() != T[to].getColor())
 			T[to + offset].setEnPassant(true), T[to + offset].setEnPassant_move(T.move_count);
-		Casilla &c_plus = T.get_cell(T[to], 1, 0);
+		Casilla& c_plus = T.get_cell(T[to], 1, 0);
 		if (c_plus != T[to] && c_plus.getFigura() == Peon && c_plus.getColor() != T[to].getColor())
 			T[to + offset].setEnPassant(true), T[to + offset].setEnPassant_move(T.move_count);
 	}
@@ -498,7 +501,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 	T[from].clear();
 	// en caso de que sea tomar al paso hay que limpiar también el peón que me como
 	if (T[to].m_figure == Peon && T[to].m_en_passant_move == move_count - 1) // si el movimiento fue tomar al paso
-			T[to + offset].clear();
+		T[to + offset].clear();
 	// en caso de enroque mover también la torre
 	if (from == 60 && to == 62)
 	{
@@ -550,7 +553,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 		// Comprobación de tiempo
 		if (m_parent_game->getColorClock(turn) == 0)
 		{
-			vector<int> &op_pieces = oponent_color == Blanco ? m_w_pieces : m_b_pieces;
+			vector<int>& op_pieces = oponent_color == Blanco ? m_w_pieces : m_b_pieces;
 			if (op_pieces.size() > 2)
 			{
 				m_event = Bandera;
@@ -614,7 +617,7 @@ void Tablero::print_all_moves()
 			continue;
 		if ((*this)[i].m_color != turn)
 			continue;
-		vector<int> &Move_tem = (*this)[i].getMoveList();
+		vector<int>& Move_tem = (*this)[i].getMoveList();
 		if (Move_tem.size())
 			cout << i << "//	";
 		for (auto a : Move_tem)
@@ -657,7 +660,7 @@ void Tablero::setCoronacion(figura f)
 	case Peon:
 	case Rey:
 	case Reina:
-		m_coronacion = static_cast<Rook *>(s_queen);
+		m_coronacion = static_cast<Rook*>(s_queen);
 		break;
 	case Torre:
 		m_coronacion = s_rook;
@@ -669,14 +672,14 @@ void Tablero::setCoronacion(figura f)
 		m_coronacion = s_knight;
 		break;
 	default:
-		m_coronacion = static_cast<Rook *>(s_queen);
+		m_coronacion = static_cast<Rook*>(s_queen);
 		break;
 	}
 }
 
 bool Tablero::isThreeFold()
 {
-	const vector<FEN> &v = m_parent_game->positions;
+	const vector<FEN>& v = m_parent_game->positions;
 	string a, b;
 	for (int i = 0; i < (int)v.size() - 2; i++) // cada elemento
 	{
@@ -706,3 +709,12 @@ bool Tablero::isThreeFold()
 
 vector<int> Tablero::get_pseudo_moves(Casilla cell) { return ((cell).getPiece().pseudo_legal(*(this), cell)); }
 vector<int> Tablero::get_pseudo_moves(int cell) { return this->get_pseudo_moves(this->get_cell(cell)); }
+void Tablero::inicializar() {
+	s_king = new King();
+	s_queen = new Queen();
+	s_rook = new Rook();
+	s_knight = new Knight();
+	s_bishop = new Bishop();
+	s_pawn = new Pawn();
+	s_empty = new Empty();
+}
