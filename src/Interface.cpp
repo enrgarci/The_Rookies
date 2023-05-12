@@ -3,6 +3,7 @@
 #include "ETSIDI.h"
 #include "freeglut.h"
 #include <string.h>
+#include "Menu.h"
 
 #include "Tablero.h"
 #include "Partida.h"
@@ -556,5 +557,5 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 void Interface::submenu(int& Estado)
 {
     //11 Is the code for the Pause menu (Submenu_menu) in the enum in Menu.h
-    Estado = 11;
+    Estado = Menu::SUBMENU_MENU;
 }
