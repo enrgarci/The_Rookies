@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Boton.h"
+#include "Clock.h"
 
 
 class Interface
@@ -20,6 +21,8 @@ class Interface
 	bool doRotate = false;
 	int click_flag = 0;
 	int cell_number;
+	ChessClock *c;
+
 	coordinate grid_coordinates[8][8];
 
 	Boton pauseMenu, playBackButton, playForwardButton, playLastButton, playFirstButton;
@@ -47,6 +50,6 @@ public:
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
-	void reloj(float theta);
+	void reloj();
 
 };

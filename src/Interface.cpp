@@ -11,6 +11,7 @@
 #include "Pieza.h"
 #include "SoundController.h"
 #include "AI.h"
+#include "Clock.h"
 
 Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
@@ -52,6 +53,10 @@ void Interface::init()
 
     //Set initial position for the clock
     theta = 0;
+
+   
+    c = new ChessClock(50, 0);
+    c->setOrigin();
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
@@ -422,13 +427,16 @@ void Interface::drawButtons()
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
     
-    reloj(0.85);
-
+  
 }
 
-void Interface::reloj(float theta)
+
+
+void Interface::reloj()
 {
-    
+    theta = c->updateChessClock();
+    cout << c->updateChessClock();
+
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_ALPHA_TEST);
@@ -443,9 +451,9 @@ void Interface::reloj(float theta)
     float x = 1.5, y = 0.7, a = 1;
 
     glTranslatef(x, y, 0);
-    glRotatef(-theta * 360, 0.0f, 0.0f, 1.0f);
-    aguja.Draw();// inicio
     glRotatef(theta * 360, 0.0f, 0.0f, 1.0f);
+    aguja.Draw();// inicio
+    glRotatef(-theta * 360, 0.0f, 0.0f, 1.0f);
     glTranslatef(-x, -y, 0);
 
     glDisable(GL_TEXTURE_2D);
@@ -456,8 +464,8 @@ void Interface::reloj(float theta)
 
 void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
 {
-    //system("cls");
-    //playBackButton, playForwardButton, playLastButton, playFirstButton;
+    
+   
     if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
     if (playBackButton.isInside(button, state, x, y)) P.play_back();  //1 atras
     if (playForwardButton.isInside(button, state, x, y)) P.play_forward();//1 adelante

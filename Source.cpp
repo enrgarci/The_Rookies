@@ -5,7 +5,7 @@
 #include "Menu.h"
 #include "Boton.h"
 #include "Window.h"
-#include <cstdlib>
+
 
 Window window;
 Interface interfaz;
@@ -38,7 +38,9 @@ void onDraw()
 	case (Menu::JUEGO1VS1_MENU)://5
 		interfaz.drawBoard(menus.getEstadoSkin());
 		interfaz.drawPieces(menus.getEstadoSkin());
+		
 		interfaz.drawMovement(menus.getEstadoSkin());
+		interfaz.reloj();
 		break;
 
 	case (Menu::CREDITOS_MENU):

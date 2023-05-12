@@ -20,6 +20,9 @@ float	ChessClock::updateChessClock()
 	m_remaining -= (float)(clock() - m_origin) / CLOCKS_PER_SEC;
 	m_origin = clock();
 	if (m_remaining <= 0) return 0;
+	std::cout << m_remaining / m_total_time;
 	return (m_remaining / m_total_time);
+
+	
 }
 
