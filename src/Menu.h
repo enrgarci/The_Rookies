@@ -49,7 +49,4 @@ public:
 	//void poligonoLogo(void);
 	void keyboardVentana(unsigned char key, int x, int y);
 	void botonVentana(int button, int state, int x, int y);
-
-
 };
-

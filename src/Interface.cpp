@@ -48,6 +48,9 @@ void Interface::init()
     }
     S.playMusica("MainBGM", true);
     S.play("Board_Start");
+
+    //Set initial position for the clock
+    theta = 0;
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
@@ -105,7 +108,7 @@ void Interface::drawBoard(int EstadoSkin)
     {
     case 1: br = 0.71; bg = 0.53; bb = 0.37; wr = 0.94; wg = 0.85; wb = 0.71; break; //Default
     case 2: br = 0.1; bg = 0.275; bb = 0.1; wr = 0.4; wg = 0.9; wb = 0.4; break;    //Pvs>Z
-    case 3: br = 0.71; bg = 0.53; bb = 0.37; wr = 0.94; wg = 0.85; wb = 0.71; break;      //SW
+    case 3: br = 0.87; bg = 0.16; bb = 0.19; wr = 0.71; wg = 0.81; wb = 1; break;      //SW
     }
     
 
@@ -116,11 +119,11 @@ void Interface::drawBoard(int EstadoSkin)
         {
             if ((row + col) % 2 == 0)
             {
-                glColor3f(0.71, 0.53, 0.37); // color for black squares
+                glColor3f(br, bg, bb); // color for black squares
             }
             else
             {
-                glColor3f(0.94, 0.85, 0.71); // color for white squares
+                glColor3f(wr, wg, wb); // color for white squares
             }
 
             glBegin(GL_QUADS);
@@ -413,32 +416,41 @@ void Interface::drawButtons()
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Left-Double-Arrow.png").id);
     playFirstButton.Draw();// inicio
 
-    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
-
-    //AGUJA EN PROCESO
-    
-    aguja.Set(-14, -14, 30, 80, 200, 100, 150);
-    float x = 1.5, y = 0.7, a=10;
-
-    glTranslatef(x, y, 0);
-    for (int i = 0; i < a; i++)
-    {
-        glRotatef(theta, 0.0f, 0.0f, 1.0f);
-        aguja.Draw();// inicio
-
-    }
-    for (int i = 0; i < a; i++)
-    {
-        glRotatef(-theta, 0.0f, 0.0f, 1.0f);
-    }
-    glTranslatef(-x, -y, 0);
-
-    
+   
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
     
+    reloj(0.85);
 
+}
+
+void Interface::reloj(float theta)
+{
+    
+    glEnable(GL_TEXTURE_2D);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.5f);
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/marco reloj.png").id);
+    marco.Set(1215, 530, 150, 150, 200, 200, 200);
+    marco.Draw();
+
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
+    aguja.Set(-14, -14, 20, 70, 150, 100, 150);
+    float x = 1.5, y = 0.7, a = 1;
+
+    glTranslatef(x, y, 0);
+    glRotatef(-theta * 360, 0.0f, 0.0f, 1.0f);
+    aguja.Draw();// inicio
+    glRotatef(theta * 360, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-x, -y, 0);
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+   
 }
 
 void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
@@ -543,6 +555,6 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 
 void Interface::submenu(int& Estado)
 {
-    
+    //11 Is the code for the Pause menu (Submenu_menu) in the enum in Menu.h
     Estado = 11;
 }

@@ -175,18 +175,7 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		{
 			std::cout << "CARGADO";
 		}
-		if(Boton3min.isInside(button, state, x, y))
-		{
-			std::cout << "RELOJ A 3 MINUTOS";
-		}
-		if (Boton5min.isInside(button, state, x, y))
-		{
-			std::cout << "RELOJ A 5 MINUTOS";
-		}
-		if (Boton10min.isInside(button, state, x, y))
-		{
-			std::cout << "RELOJ A 10 MINUTOS";
-		}
+		
 		if (BotonReanudar.isInside(button, state, x, y))
 		{
 			Estado = 5;
@@ -398,15 +387,6 @@ void Menu::drawSubmenu(void)
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/CARGAR.png").id);
 	BotonCargar.Draw();
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/3min.png").id);
-	Boton3min.Draw();
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/5min.png").id);
-	Boton5min.Draw();
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/10min.png").id);
-	Boton10min.Draw();
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
