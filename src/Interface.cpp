@@ -246,6 +246,87 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
     }
 }
 
+void Interface::drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_list)
+{
+    //si el peon puede coronar en la siguiente jugada
+    if (P.T->get_cell(cell).getFigura() == Peon &&
+        ((P.T->get_cell(cell).getColor() == Negro && cell >= 48) ||
+            P.T->get_cell(cell).getColor() == Blanco && cell <= 15))
+    {
+        const int PiecesCor[4] = { Reina, Torre, Alfil, Caballo };
+        std::string skin = "skin_default";
+        std::string figure = "";
+        std::string color = "";
+        std::string direction = "";
+
+        switch (EstadoSkin)
+        {
+        case 1: skin = "skin_default"; break;
+        case 2: skin = "skin_pvsz"; break;
+        case 3: skin = "skin_sw"; break;
+        }
+
+        for (auto i : move_list)
+        {
+            int col;
+            int row;
+
+            rotateBoard(i, col, row);
+
+            switch (CorIndex)
+            {
+            case 0:
+                figure = "reina";
+                break;
+            case 1:
+                figure = "torre";
+                break;
+            case 2:
+                figure = "alfil";
+                break;
+            case 3:
+                figure = "caballo";
+                break;
+            }
+
+            switch (P.T->get_cell(cell).getColor())
+            {
+            case noColor:
+                break;
+            case Blanco:
+                color = "blanco";
+                break;
+            case Negro:
+                color = "negro";
+                break;
+            }
+
+            if (figure == "vacio") continue;
+
+            direction = "imagenes/" + skin + "/" + color + "/" + figure + ".png";
+            const char* texture_path = direction.c_str();
+
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture(texture_path).id);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDepthFunc(GL_LESS);
+
+            glBegin(GL_QUADS);
+            glColor3f(1, 1, 1);
+            glTexCoord2d(0, 1);     glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y);
+            glTexCoord2d(1, 1);     glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y);
+            glTexCoord2d(1, 0);     glVertex2f(grid_coordinates[col][row].x + square_size / screen_height, grid_coordinates[col][row].y + square_size / screen_height);
+            glTexCoord2d(0, 0);     glVertex2f(grid_coordinates[col][row].x, grid_coordinates[col][row].y + square_size / screen_height);
+            glEnd();
+
+            glDepthFunc(GL_LEQUAL);
+            glDisable(GL_BLEND);
+            glDisable(GL_TEXTURE_2D);
+        }
+    }
+}
+
 // Draws the last move made on the board
 // Takes a vector of two elements: the cell of origin and destination of the movement
 // Checks if those two cells match any of the valid moves, if they don't match, draws a semi-transparent yellow square in the corresponding locations
@@ -332,6 +413,7 @@ void Interface::drawMovement(int EstadoSkin)
         drawLastMove(movement, move_list, true);
         drawPossibleMoves(move_list);
         drawPieces(EstadoSkin);
+        drawCoronation(EstadoSkin ,cell_number, move_list);
         drawButtons();
         break;
     // Two clicks has been detected on the board grid
@@ -352,6 +434,7 @@ void Interface::drawMovement(int EstadoSkin)
             drawLastMove(movement, move_list, true);
             drawPossibleMoves(move_list);
             drawPieces(EstadoSkin);
+            drawCoronation(EstadoSkin, cell_number, move_list);
             drawButtons();
             break;
         }
@@ -447,10 +530,12 @@ void Interface::reloj(float theta)
     glRotatef(theta * 360, 0.0f, 0.0f, 1.0f);
     glTranslatef(-x, -y, 0);
 
+    
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
-   
+    
+
 }
 
 void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
@@ -524,7 +609,6 @@ void Interface::mouseBoard(int button, int state, int x, int y, int & Estado)
 void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 {
     const int PiecesCor[4] = { Reina, Torre, Alfil, Caballo };
-    static int CorIndex = 0;
     const char ESCAPE_KEY = 27;
     if (key == ESCAPE_KEY)
     {
@@ -551,6 +635,7 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
         (P.T)->setCoronacion((figura) PiecesCor[CorIndex]);
         cout << CorIndex << endl;
     }
+    glutPostRedisplay();
 }
 
 void Interface::submenu(int& Estado)
