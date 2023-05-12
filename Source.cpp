@@ -14,7 +14,7 @@ Menu menus;
 
 void onDraw() 
 {
-	//system("cls");
+
 	std::cout << "Estado: " << menus.getEstado();
 	switch (menus.getEstado())
 	{
@@ -72,7 +72,7 @@ void onDraw()
 
 
 	//glClear(GL_COLOR_BUFFER_BIT);
-
+	glutPostRedisplay();
     glutSwapBuffers();
 }
 
