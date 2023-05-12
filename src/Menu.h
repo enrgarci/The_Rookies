@@ -21,11 +21,12 @@ private:
 	Boton BotonGuardar, BotonCargar, Boton3min, Boton5min, Boton10min, BotonReanudar, BotonMenuPpal;
 	int aumento=1;
 
+
 public:
 	enum ventana {
 		INICIO_MENU = 1,       DEPASO_MENU,   INSTRUCIONES_MENU,     OPCION_MENU, 
 		JUEGO1VS1_MENU,    JUEGO1VSIA_MENU,   FINGANADO_MENU,    FINPERDIDO_MENU, 
-		TABLAS_MENU,         CREDITOS_MENU,   SUBMENU_MENU, EXIT_MENU
+		TABLAS_MENU,         CREDITOS_MENU,   SUBMENU_MENU, EXIT_MENU, MenuInicioPartida
 	};//en la ventanaDEPASO estan las instrucciones juego1vs1 juego1vsia y opcion
 
 	//enum skin { normal = 0, classic = 1, pvsz, sw };
@@ -43,6 +44,8 @@ public:
 	void drawOpcionSW(void);
 	void drawSubmenu(void);
 	void drawExit(void) { glutDestroyWindow(glutGetWindow()); }
+	void drawInicioPartida(void);
+
 	void reshape(int w, int h);
 	//void cambioVentana();
 	void poligonoVistaImagen(void);

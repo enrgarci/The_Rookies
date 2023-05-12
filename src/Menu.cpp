@@ -13,7 +13,7 @@ void Menu::menusIni()
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 1;//play
+	Estado = 5;//play
 	EstadoSkin = 1;//classic
 }
 
@@ -126,7 +126,7 @@ void Menu::keyboardVentana(unsigned char key, int x, int y)
 void Menu::botonVentana(int button, int state, int x, int y)
 {
 	//Change the current window to the one selected by a button
-	system("cls");
+	//system("cls");
 	//Main menu
 	if (Estado == INICIO_MENU) {
 		if (depaso.isInside(button, state, x, y)) Estado = DEPASO_MENU;

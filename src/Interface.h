@@ -28,8 +28,7 @@ class Interface
 	//Colors
 	float br, bg, bb, wr, wg, wb;
 
-	Boton aguja, marco;
-	float theta;
+
 
 public:
 	void init();
@@ -49,6 +48,6 @@ public:
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
-	void reloj(float theta);
+	
 
 };
