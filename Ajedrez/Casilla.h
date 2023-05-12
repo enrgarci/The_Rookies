@@ -4,10 +4,12 @@
 class Pieza;
 class Tablero;
 class Casilla;
+class Partida;
 #include "header.h"
 
 class Casilla
 {
+friend Partida;
 friend Tablero;
 private:
 	int		m_id;
