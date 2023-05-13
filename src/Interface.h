@@ -39,8 +39,9 @@ public:
 	void drawBoard(int EstadoSkin);
 	void drawPieces(int EstadoSkin);
 	void drawPossibleMoves(std::vector<int>& move_list);
-	void drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_list); //añadir
+	void drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_list);
 	void drawLastMove(int* movement, std::vector<int>& move_list, bool check_list);
+	bool nanoState(int key = 0);
 	void drawMovement(int EstadoSkin);
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y, int & Estado);
