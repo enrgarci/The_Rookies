@@ -134,6 +134,22 @@ void Interface::drawBoard(int EstadoSkin)
             glEnd();
         }
     }
+    if (nanoState()) 
+    {    
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/33.png").id);
+
+        glBegin(GL_QUADS);
+        glColor3f(1, 1, 1);
+        glTexCoord2d(0, 1);     glVertex2f(grid_coordinates[0][0].x, grid_coordinates[0][0].y);
+        glTexCoord2d(1, 1);     glVertex2f(grid_coordinates[0][0].x + board_size / screen_height, grid_coordinates[0][0].y);
+        glTexCoord2d(1, 0);     glVertex2f(grid_coordinates[0][0].x + board_size / screen_height, grid_coordinates[0][0].y + board_size / screen_height);
+        glTexCoord2d(0, 0);     glVertex2f(grid_coordinates[0][0].x, grid_coordinates[0][0].y + board_size / screen_height);
+        glEnd();
+
+        glDisable(GL_TEXTURE_2D);
+
+    }
 }
 
 // Draws the pieces on the board
@@ -363,6 +379,20 @@ void Interface::drawLastMove(int *movement, std::vector<int>& move_list, bool ch
     }
 }
 
+bool Interface::nanoState(int key)
+{
+    static bool state = false;
+    static int value = 0;
+    if (key == 0) return state;
+    if (key != '3') value = 0;
+    else if (key == '3' && value == 0) value = 1;
+    else if (key == '3' && value == 1) {
+        value = 0;
+        state = state == false ? true : false;
+    }
+    return state;
+}
+
 // Handles user input and updates the interface based on the game's state
 // Checks the value of a variable called click_flag, which keeps track of the number of clicks made by the user on the chessboard.
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
@@ -516,11 +546,11 @@ void Interface::reloj(float theta)
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.5f);
 
-    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/marco reloj.png").id);
+  //  glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/marco reloj.png").id);
     marco.Set(1215, 530, 150, 150, 200, 200, 200);
     marco.Draw();
 
-    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
+    //glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
     aguja.Set(-14, -14, 20, 70, 150, 100, 150);
     float x = 1.5, y = 0.7, a = 1;
 
@@ -623,6 +653,8 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
             fullscreen = true;
         }
     }
+    //nanothings
+    nanoState(key);
     //for game review puposes, you can go back and forward
     if (key == 'a')    P.play_back();
     if (key == 'd')    P.play_forward();
