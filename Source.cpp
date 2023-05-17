@@ -5,7 +5,7 @@
 #include "Menu.h"
 #include "Boton.h"
 #include "Window.h"
-#include <cstdlib>
+
 
 Window window;
 Interface interfaz;
@@ -14,7 +14,7 @@ Menu menus;
 
 void onDraw() 
 {
-	//system("cls");
+	system("cls");
 	std::cout << "Estado: " << menus.getEstado();
 	switch (menus.getEstado())
 	{
@@ -39,6 +39,7 @@ void onDraw()
 		interfaz.drawBoard(menus.getEstadoSkin());
 		interfaz.drawPieces(menus.getEstadoSkin());
 		interfaz.drawMovement(menus.getEstadoSkin());
+		interfaz.enableIA(false);
 		break;
 
 	case (Menu::CREDITOS_MENU):
@@ -46,7 +47,10 @@ void onDraw()
 
 		break;
 	case (Menu::JUEGO1VSIA_MENU):
-
+		interfaz.drawBoard(menus.getEstadoSkin());
+		interfaz.drawPieces(menus.getEstadoSkin());
+		interfaz.drawMovement(menus.getEstadoSkin());
+		interfaz.enableIA(true);
 		break;
 	case (Menu::FINGANADO_MENU):
 
@@ -70,7 +74,7 @@ void onDraw()
 
 
 	//glClear(GL_COLOR_BUFFER_BIT);
-
+	glutPostRedisplay();
     glutSwapBuffers();
 }
 

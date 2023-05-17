@@ -31,6 +31,9 @@ class Interface
 	Boton aguja, marco;
 	float theta;
 
+	//
+	bool enableIA_interface;
+
 public:
 	void init();
 	coordinate getGridCoordinate(int col, int row);
@@ -51,5 +54,5 @@ public:
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
 	void reloj(float theta);
-
+	void enableIA(bool enable);
 };
