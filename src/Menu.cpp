@@ -126,7 +126,7 @@ void Menu::keyboardVentana(unsigned char key, int x, int y)
 void Menu::botonVentana(int button, int state, int x, int y)
 {
 	//Change the current window to the one selected by a button
-	system("cls");
+	
 	//Main menu
 	if (Estado == INICIO_MENU) {
 		if (depaso.isInside(button, state, x, y)) Estado = DEPASO_MENU;

@@ -10,6 +10,7 @@
 #include "Pieza.h"
 #include "SoundController.h"
 #include "AI.h"
+#include "Menu.h"
 
 Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
@@ -409,13 +410,14 @@ void Interface::drawMovement(int EstadoSkin)
     drawPieces(EstadoSkin);
     drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
-    /*if (P.T->get_turn() == Negro)
+    if (P.T->get_turn() == Negro && enableIA_interface )
     {
         IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
-        drawBoard();
-        drawPieces();
-    }*/
+        drawBoard(EstadoSkin);
+        drawPieces(EstadoSkin);
+        drawButtons();
+    }
     
     switch (click_flag) 
     {
@@ -673,5 +675,13 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 void Interface::submenu(int& Estado)
 {
     //11 Is the code for the Pause menu (Submenu_menu) in the enum in Menu.h
-    Estado = 11;
+    Estado = Menu::SUBMENU_MENU;
+}
+
+void Interface::enableIA(bool enable)
+{
+    enableIA_interface = enable;
+
+    if (enable) IA.ON();
+    else IA.OFF();
 }
