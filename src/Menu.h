@@ -24,7 +24,7 @@ private:
 public:
 	enum ventana {
 		INICIO_MENU = 1,       DEPASO_MENU,   INSTRUCIONES_MENU,     OPCION_MENU, 
-		JUEGO1VS1_MENU,    JUEGO1VSIA_MENU,   FINGANADO_MENU,    FINPERDIDO_MENU, 
+		JUEGO1VS1_MENU,    JUEGO1VSIA_MENU,   FINBLANCAS_MENU,    FINNEGRAS_MENU, 
 		TABLAS_MENU,         CREDITOS_MENU,   SUBMENU_MENU, EXIT_MENU
 	};//en la ventanaDEPASO estan las instrucciones juego1vs1 juego1vsia y opcion
 
@@ -35,8 +35,13 @@ public:
 	void drawInicio(void);
 	void drawDepaso(void);
 	void drawInstrucciones(void);
+	void drawFinBlancas(void);
+	void drawFinNegras(void);
+	void drawTablas(void);
+	void botonHomeDraw(void);
+	void setEstadoPartida(int EstadoMenu) { Estado = EstadoMenu; }
 
-	void drawOpcionClassic(void);
+	void drawOpcion(void);
 	void drawSubmenu(void);
 	void drawExit(void) { glutDestroyWindow(glutGetWindow()); }
 	void reshape(int w, int h);

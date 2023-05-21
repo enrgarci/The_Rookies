@@ -11,6 +11,8 @@
 #include "SoundController.h"
 #include "AI.h"
 #include "Menu.h"
+#include "header.h"
+
 
 Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
@@ -399,24 +401,29 @@ bool Interface::nanoState(int key)
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
 void Interface::drawMovement(int EstadoSkin)
 {
-    int eventSound;
+    int eventSound=0;
     static std::vector<int> move_list;
     static int first_cell;
     static color first_piece_color;
     static int movement[2];
+
 
     drawBoard(EstadoSkin);
     drawLastMove(movement, move_list, false);
     drawPieces(EstadoSkin);
     drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
-    if (P.T->get_turn() == Negro && enableIA_interface )
+    if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2)
     {
         IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
         drawBoard(EstadoSkin);
         drawPieces(EstadoSkin);
         drawButtons();
+        if (eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+        {
+            S.play("Victory");
+        }
     }
     
     switch (click_flag) 
@@ -481,12 +488,22 @@ void Interface::drawMovement(int EstadoSkin)
                 //function to modify the board position
                 eventSound = (P.T)->do_move(first_cell, cell_number);
                 S.playevent(eventSound);
+                comoVaLaPartida(eventSound, P.T->get_turn());
+                
                 //board and pieces are drawn again
                 drawBoard(EstadoSkin);
                 drawLastMove(movement, move_list, false);
                 drawPieces(EstadoSkin);
                 drawButtons();
                 S.play("Move_Piece");
+                if (P.T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+                {
+                    S.play("Victory");
+                }
+                if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
+                {
+                    S.play("Defeat");
+                }
                 break;
             }
         }
@@ -496,7 +513,9 @@ void Interface::drawMovement(int EstadoSkin)
             click_flag = 0;
         }
         break;
+         
     }
+    //return eventSound;
 }
 
 void Interface::drawButtons()
@@ -682,6 +701,19 @@ void Interface::enableIA(bool enable)
 {
     enableIA_interface = enable;
 
-    if (enable) IA.ON();
-    else IA.OFF();
+}
+
+void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
+    if (estadoPartida == Jaque_Mate && Turno == Blanco) {
+        EstadoPartida = GANADONEGRAS;
+    }
+    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+        EstadoPartida = GANADOBLANCAS;
+    }
+    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+        EstadoPartida = TABLAS;
+    }
+    //falta perder por tiempo
+    else std::cout << "estas haciendo algo mal en comoValaPartida";
+    
 }

@@ -3,6 +3,8 @@
 #include <freeglut.h>
 #include <ETSIDI.h>
 #include "Boton.h"
+#include "header.h"
+#include <cstring>
 
 void Menu::menusIni()
 {
@@ -65,20 +67,58 @@ void Menu::drawDepaso(void)
 }
 
 void Menu::drawInstrucciones(void) {
-	//Common parameters of the buttons
-	int buttonsHeightMenu = 2.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	int const r = 250, g = 0, b = 250;
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Intruciones.png").id);
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 
-	depaso.Set(buttonsXPosition, 6 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	depaso.Draw();
+	botonHomeDraw();
+}
+void Menu::drawFinBlancas(void) {
+	
+	glEnable(GL_TEXTURE_2D);
+	if (EstadoSkin == 1) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_clasico/BlancoWin.png").id);
+	}
+	else if (EstadoSkin == 2) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_pvsz/BlancoWin.png").id);
+	}
+	else if (EstadoSkin == 3) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_sw/BlancoWin.png").id);
+	}
 
-	//fin imagen fondo
+	poligonoVistaImagen();
+	glDisable(GL_TEXTURE_2D);
+}
+void Menu::drawFinNegras(void) {
+
+	glEnable(GL_TEXTURE_2D);
+	if (EstadoSkin == 1) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_clasico/NegroWin.png").id);
+	}
+	else if (EstadoSkin == 2) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_pvsz/NegroWin.png").id);
+	}
+	else if (EstadoSkin == 3) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_sw/NegroWin.png").id);
+	}
+	poligonoVistaImagen();
+	glDisable(GL_TEXTURE_2D);
+}
+void Menu::drawTablas(void) {
+
+	glEnable(GL_TEXTURE_2D);
+	if (EstadoSkin == 1) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_clasico/Tablas.png").id);
+	}
+	else if (EstadoSkin == 2) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_pvsz/Tablas.png").id);
+	}
+	else if (EstadoSkin == 3) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Menu_sw/Tablas.png").id);
+	}
+	poligonoVistaImagen();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Menu::poligonoVistaImagen(void) {
@@ -94,7 +134,6 @@ void Menu::poligonoVistaImagen(void) {
 	glEnd();
 }
 
-//cosas de imagen
 void Menu::reshape(int w, int h)
 {
 	// Defining the viewport and projection
@@ -125,6 +164,7 @@ void Menu::keyboardVentana(unsigned char key, int x, int y)
 
 void Menu::botonVentana(int button, int state, int x, int y)
 {
+	//Tablero tablero;
 	//Change the current window to the one selected by a button
 	system("cls");
 	//Main menu
@@ -141,7 +181,7 @@ void Menu::botonVentana(int button, int state, int x, int y)
 	}
 	//instrucciones
 	if (Estado == INSTRUCIONES_MENU) {
-		if (depaso.isInside(button, state, x, y)) Estado = DEPASO_MENU;
+		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
 	}
 	//Options
 	if (Estado == OPCION_MENU)
@@ -150,17 +190,15 @@ void Menu::botonVentana(int button, int state, int x, int y)
 
 		if (Menu::classic.isInside(button, state, x, y)) {
 			EstadoSkin = classic;
-			drawOpcionClassic();
+			drawOpcion();
 		}
 		else if (Menu::pvsz.isInside(button, state, x, y)) {
 			EstadoSkin = pvsz;
-			//drawOpcionPvsz();
-			drawOpcionClassic();
+			drawOpcion();
 		}
 		else if (Menu::sw.isInside(button, state, x, y)) {
 			EstadoSkin = sw;
-			//drawOpcionSW();
-			drawOpcionClassic();
+			drawOpcion();
 		}
 
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
@@ -197,7 +235,54 @@ void Menu::botonVentana(int button, int state, int x, int y)
 	//}
 
 }
-void Menu::drawOpcionClassic(void) {
+
+/*void Menu::finPartida(int Partida, int turno) {
+	EstadoPartida = Partida;
+	Turno = turno;
+	if (EstadoPartida == Jaque_Mate && Turno == Negro) {
+		Estado = FINBLANCAS_MENU;
+	}
+	else if (EstadoPartida == Jaque_Mate && Turno == Blanco) {
+		Estado = FINNEGRAS_MENU;
+		drawFinNegras();
+	}
+	else if (EstadoPartida == Tablas) {
+		Estado = TABLAS_MENU;
+	}
+	else Estado = JUEGO1VS1_MENU;
+
+}
+*/
+
+void Menu::botonHomeDraw() {
+	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
+	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	int const r = 250, g = 0, b = 250;
+	int h = glutGet(GLUT_WINDOW_HEIGHT), w = glutGet(GLUT_WINDOW_WIDTH);
+	buttonsHeightMenu = 5 * h / 20;
+	int buttonsWidth = 10 * h / 20;
+	buttonsXPosition = 8 * w / 20;
+	//Main menu
+	//Seting position, size, and color
+	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
+	homefromBoton.Draw();
+	//Drawing
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Home.png").id);
+	homefromBoton.Set(1 * w / 20, 17 * h / 20, buttonsHeightMenu / 3, buttonsHeightMenu / 3, 100, 250, 100);
+	homefromBoton.Draw();
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+	//End of Main menu button
+}
+
+void Menu::drawOpcion(void) {
 	//Common parameters of the buttons
 	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
 	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
@@ -226,28 +311,9 @@ void Menu::drawOpcionClassic(void) {
 	glDisable(GL_TEXTURE_2D);
 	//fin imagen fondo
 
-	int h = glutGet(GLUT_WINDOW_HEIGHT), w = glutGet(GLUT_WINDOW_WIDTH);
-	buttonsHeightMenu = 5 * h / 20;
-	int buttonsWidth = 10 * h / 20;
-	buttonsXPosition = 8 * w / 20;
-	//Main menu
-	//Seting position, size, and color
-	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
-	homefromBoton.Draw();
-	//Drawing
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.5f);
+	//DIBUJAR BOTON LLAMANDO A SU FUNCION
+	botonHomeDraw();
 
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Home.png").id);
-	homefromBoton.Set(1 * w / 20, 17 * h / 20, buttonsHeightMenu / 3, buttonsHeightMenu / 3, 100, 250, 100);
-	homefromBoton.Draw();
-
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-	//End of Main menu button
 }
 
 void Menu::drawSubmenu(void)
@@ -289,3 +355,6 @@ void Menu::drawSubmenu(void)
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
 }
+
+
+//tiempos Son 3+2 5 10 y infinito

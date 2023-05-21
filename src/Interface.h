@@ -2,7 +2,6 @@
 #include <vector>
 #include "Boton.h"
 
-
 class Interface
 {
 
@@ -27,6 +26,7 @@ class Interface
 
 	//Colors
 	float br, bg, bb, wr, wg, wb;
+	int EstadoPartida;
 
 	Boton aguja, marco;
 	float theta;
@@ -35,6 +35,9 @@ class Interface
 	bool enableIA_interface;
 
 public:
+	enum EstadoPartidaAhora {
+		GANADOBLANCAS = 1, GANADONEGRAS, TABLAS
+	};
 	void init();
 	coordinate getGridCoordinate(int col, int row);
 	void changeOrigin(int& value);
@@ -49,10 +52,14 @@ public:
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y, int & Estado);
 	void keyboardFullscreen(unsigned char key, int x, int y);
+	
 
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
 	void reloj(float theta);
 	void enableIA(bool enable);
+	void comoVaLaPartida(int estadoPartida, int Turno);
+	int getEstadoPartida() {return EstadoPartida;}
+	
 };
