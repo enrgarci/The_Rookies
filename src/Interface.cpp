@@ -513,6 +513,7 @@ void Interface::drawMovement(int EstadoSkin)
             click_flag = 0;
         }
         break;
+    }
 }
 
 void Interface::drawButtons()
