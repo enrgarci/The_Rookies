@@ -11,6 +11,7 @@
 #include "SoundController.h"
 #include "AI.h"
 #include "Menu.h"
+#include <windows.h>
 
 Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
@@ -399,7 +400,7 @@ bool Interface::nanoState(int key)
 // Depending on the value of click flag, and the selected cell, the necessary functions are called to update the interface
 void Interface::drawMovement(int EstadoSkin)
 {
-    int eventSound;
+    int eventSound=0;
     static std::vector<int> move_list;
     static int first_cell;
     static color first_piece_color;
@@ -410,15 +411,19 @@ void Interface::drawMovement(int EstadoSkin)
     drawPieces(EstadoSkin);
     drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
-    if (P.T->get_turn() == Negro && enableIA_interface )
+    if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2)
     {
+        Sleep(1000);                //not the most efficient way to implement it, but at least it works
         IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
         drawBoard(EstadoSkin);
         drawPieces(EstadoSkin);
         drawButtons();
+        if (eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+        {
+            S.play("Victory");
+        }
     }
-    
     switch (click_flag) 
     {
     // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
@@ -487,6 +492,14 @@ void Interface::drawMovement(int EstadoSkin)
                 drawPieces(EstadoSkin);
                 drawButtons();
                 S.play("Move_Piece");
+                if (P.T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+                {
+                    S.play("Victory");
+                }
+                if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
+                {
+                    S.play("Defeat");                  
+                }
                 break;
             }
         }
@@ -496,7 +509,7 @@ void Interface::drawMovement(int EstadoSkin)
             click_flag = 0;
         }
         break;
-    }
+    }   
 }
 
 void Interface::drawButtons()
@@ -681,7 +694,4 @@ void Interface::submenu(int& Estado)
 void Interface::enableIA(bool enable)
 {
     enableIA_interface = enable;
-
-    if (enable) IA.ON();
-    else IA.OFF();
 }
