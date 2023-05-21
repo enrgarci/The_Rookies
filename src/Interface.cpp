@@ -12,7 +12,7 @@
 #include "AI.h"
 #include "Menu.h"
 #include "header.h"
-
+#include <windows.h>
 
 Partida P("", "");
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
@@ -415,6 +415,7 @@ void Interface::drawMovement(int EstadoSkin)
     // Pending of review, because it doesnt work with the move backwards and forwards
     if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2)
     {
+        Sleep(1000);                //not the most efficient way to implement it, but at least it works
         IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
         drawBoard(EstadoSkin);
@@ -425,7 +426,6 @@ void Interface::drawMovement(int EstadoSkin)
             S.play("Victory");
         }
     }
-    
     switch (click_flag) 
     {
     // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
@@ -513,9 +513,6 @@ void Interface::drawMovement(int EstadoSkin)
             click_flag = 0;
         }
         break;
-         
-    }
-    //return eventSound;
 }
 
 void Interface::drawButtons()
@@ -715,5 +712,4 @@ void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
     }
     //falta perder por tiempo
     else std::cout << "estas haciendo algo mal en comoValaPartida";
-    
 }
