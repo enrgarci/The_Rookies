@@ -126,7 +126,7 @@ void Menu::keyboardVentana(unsigned char key, int x, int y)
 void Menu::botonVentana(int button, int state, int x, int y)
 {
 	//Change the current window to the one selected by a button
-	
+	system("cls");
 	//Main menu
 	if (Estado == INICIO_MENU) {
 		if (depaso.isInside(button, state, x, y)) Estado = DEPASO_MENU;
@@ -154,11 +154,13 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 		else if (Menu::pvsz.isInside(button, state, x, y)) {
 			EstadoSkin = pvsz;
-			drawOpcionPvsz();
+			//drawOpcionPvsz();
+			drawOpcionClassic();
 		}
 		else if (Menu::sw.isInside(button, state, x, y)) {
 			EstadoSkin = sw;
-			drawOpcionSW();
+			//drawOpcionSW();
+			drawOpcionClassic();
 		}
 
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
@@ -184,7 +186,6 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		{
 			Estado = 2;
 		}
-		
 	}
 	if (Estado == EXIT_MENU)
 	{
@@ -200,58 +201,9 @@ void Menu::drawOpcionClassic(void) {
 	//Common parameters of the buttons
 	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
 	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	int r = 250, g = 0, b = 250;
-
-
-	//dibujando los botones
-	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	buttonsXPosition = 7 * glutGet(GLUT_WINDOW_WIDTH) / 20;// cambiamos posicion x
-	pvsz.Set(buttonsXPosition, 7.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	sw.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	classic.Draw();
-	pvsz.Draw();
-	sw.Draw();
-	glDisable(GL_TEXTURE_2D);
-
-
-	//Background picture
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesClassic.png").id);
-	poligonoVistaImagen();
-	glDisable(GL_TEXTURE_2D);
-	//fin imagen fondo
-
-	int h = glutGet(GLUT_WINDOW_HEIGHT), w = glutGet(GLUT_WINDOW_WIDTH);
-	buttonsHeightMenu = 5 * h / 20;
-	int buttonsWidth = 10 * h / 20;
-	buttonsXPosition = 8 * w / 20;
-	//Main menu
-	//Seting position, size, and color
-	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
-	homefromBoton.Draw();
-	//Drawing
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.5f);
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Home.png").id);
-	homefromBoton.Set(1 * w / 20, 17 * h / 20, buttonsHeightMenu / 3, buttonsHeightMenu / 3, 100, 250, 100);
-	homefromBoton.Draw();
-
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-	//End of Main menu button
-}
-void Menu::drawOpcionPvsz(void) {
-	//Common parameters of the buttons
-	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
 	int const r = 250, g = 0, b = 250;
-
 	//dibujando los botones
-	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);//, r, g, b);
 	buttonsXPosition = 7 * glutGet(GLUT_WINDOW_WIDTH) / 20;// cambiamos posicion x
 	pvsz.Set(buttonsXPosition, 7.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
 	sw.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
@@ -259,16 +211,21 @@ void Menu::drawOpcionPvsz(void) {
 	pvsz.Draw();
 	sw.Draw();
 	glDisable(GL_TEXTURE_2D);
-
-
 	//Background picture
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesPVSZ.png").id);
+	if (EstadoSkin == 1) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesClassic.png").id);
+	}
+	else if (EstadoSkin == 2) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesPVSZ.png").id);
+	}
+	else if (EstadoSkin == 3) {
+		glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesSW.png").id);
+	}
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 	//fin imagen fondo
-	// 
-	// 
+
 	int h = glutGet(GLUT_WINDOW_HEIGHT), w = glutGet(GLUT_WINDOW_WIDTH);
 	buttonsHeightMenu = 5 * h / 20;
 	int buttonsWidth = 10 * h / 20;
@@ -291,57 +248,6 @@ void Menu::drawOpcionPvsz(void) {
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
 	//End of Main menu button
-
-}
-void Menu::drawOpcionSW(void) {
-	//Common parameters of the buttons
-	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	int r = 250, g = 0, b = 250;
-
-
-	//dibujando los botones
-	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	buttonsXPosition = 7 * glutGet(GLUT_WINDOW_WIDTH) / 20;// cambiamos posicion x
-	pvsz.Set(buttonsXPosition, 7.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	sw.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	classic.Draw();
-	pvsz.Draw();
-	sw.Draw();
-	glDisable(GL_TEXTURE_2D);
-
-
-	//Background picture
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesSW.png").id);
-	poligonoVistaImagen();
-	glDisable(GL_TEXTURE_2D);
-	//fin imagen fondo
-	// 
-	// 
-	int h = glutGet(GLUT_WINDOW_HEIGHT), w = glutGet(GLUT_WINDOW_WIDTH);
-	buttonsHeightMenu = 5 * h / 20;
-	int buttonsWidth = 10 * h / 20;
-	buttonsXPosition = 8 * w / 20;
-	//Main menu
-	//Seting position, size, and color
-	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
-	homefromBoton.Draw();
-	//Drawing
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.5f);
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Home.png").id);
-	homefromBoton.Set(1 * w / 20, 17 * h / 20, buttonsHeightMenu / 3, buttonsHeightMenu / 3, 100, 250, 100);
-	homefromBoton.Draw();
-
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-	//End of Main menu button
-
 }
 
 void Menu::drawSubmenu(void)
@@ -350,15 +256,6 @@ void Menu::drawSubmenu(void)
 	float w = glutGet(GLUT_WINDOW_WIDTH), h = glutGet(GLUT_WINDOW_HEIGHT);
 	glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	/*
-	//Background picture
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/OpcionesSW.png").id);
-	poligonoVistaImagen();
-	glDisable(GL_TEXTURE_2D);
-	*/
 
 	//SET POSITION AND COLOR
 	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
@@ -391,9 +288,4 @@ void Menu::drawSubmenu(void)
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
-
-
-	
-
-	
 }

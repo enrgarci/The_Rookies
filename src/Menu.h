@@ -28,8 +28,6 @@ public:
 		TABLAS_MENU,         CREDITOS_MENU,   SUBMENU_MENU, EXIT_MENU
 	};//en la ventanaDEPASO estan las instrucciones juego1vs1 juego1vsia y opcion
 
-	//enum skin { normal = 0, classic = 1, pvsz, sw };
-
 	int getEstado() { return Estado; }
 	int getEstadoSkin() { return EstadoSkin; }
 	int* returnEstado() { return &Estado; }
@@ -39,14 +37,10 @@ public:
 	void drawInstrucciones(void);
 
 	void drawOpcionClassic(void);
-	void drawOpcionPvsz(void);
-	void drawOpcionSW(void);
 	void drawSubmenu(void);
 	void drawExit(void) { glutDestroyWindow(glutGetWindow()); }
 	void reshape(int w, int h);
-	//void cambioVentana();
 	void poligonoVistaImagen(void);
-	//void poligonoLogo(void);
 	void keyboardVentana(unsigned char key, int x, int y);
 	void botonVentana(int button, int state, int x, int y);
 };
