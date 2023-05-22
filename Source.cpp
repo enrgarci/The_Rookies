@@ -3,7 +3,6 @@
 #include "freeglut.h"
 #include "Interface.h"
 #include "Menu.h"
-#include "Boton.h"
 #include "Window.h"
 
 
@@ -14,6 +13,11 @@ Menu menus;
 
 void onDraw() 
 {
+	int EstadoPartida;
+	EstadoPartida = interfaz.getEstadoPartida();
+	if (EstadoPartida == Interface::GANADOBLANCAS) menus.setEstadoPartida(Menu::FINBLANCAS_MENU);
+	else if (EstadoPartida == Interface::GANADONEGRAS) menus.setEstadoPartida(Menu::FINNEGRAS_MENU);
+	else if (EstadoPartida == Interface::TABLAS) menus.setEstadoPartida(Menu::TABLAS_MENU);
 	system("cls");
 	std::cout << "Estado: " << menus.getEstado();
 	switch (menus.getEstado())
@@ -29,17 +33,15 @@ void onDraw()
 		menus.drawInstrucciones();
 		break;
 	case (Menu::OPCION_MENU):
-		if (menus.getEstadoSkin() == 1) { menus.drawOpcionClassic(); }
-		if (menus.getEstadoSkin() == 2) { menus.drawOpcionPvsz(); }
-		if (menus.getEstadoSkin() == 3) { menus.drawOpcionSW(); }
-
+		menus.drawOpcion();
 		break;
 
 	case (Menu::JUEGO1VS1_MENU)://5
 		interfaz.drawBoard(menus.getEstadoSkin());
 		interfaz.drawPieces(menus.getEstadoSkin());
 		interfaz.drawMovement(menus.getEstadoSkin());
-		interfaz.enableIA(false);
+
+		//interfaz.enableIA(false);
 		break;
 
 	case (Menu::CREDITOS_MENU):
@@ -52,15 +54,19 @@ void onDraw()
 		interfaz.drawMovement(menus.getEstadoSkin());
 		interfaz.enableIA(true);
 		break;
-	case (Menu::FINGANADO_MENU):
 
+	case (Menu::FINBLANCAS_MENU):
+		menus.drawFinBlancas();
 		break;
-	case (Menu::FINPERDIDO_MENU):
 
+	case (Menu::FINNEGRAS_MENU):
+		menus.drawFinNegras();
 		break;
+
 	case (Menu::TABLAS_MENU):
-
+		menus.drawTablas();
 		break;
+
 	case (Menu::EXIT_MENU):
 		menus.drawExit();
 		break;
@@ -71,7 +77,6 @@ void onDraw()
 	default: std::cout << "Ha fallado el source ventana";
 		break;
 	}
-
 
 	//glClear(GL_COLOR_BUFFER_BIT);
 	glutPostRedisplay();

@@ -29,6 +29,6 @@ public:
 	int getID(int button, int state, float xMouse, float yMouse);
 	bool isInside(int button, int state, float xMouse, float yMouse);
 	void Draw();
-	void Set(float x, float y, float length, float height, int r, int g, int b);
+	void Set(float x, float y, float length, float height, int r=0, int g=0, int b=0);
 	//bool isInside(int,);
 };

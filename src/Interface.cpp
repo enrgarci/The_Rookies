@@ -11,6 +11,7 @@
 #include "SoundController.h"
 #include "AI.h"
 #include "Menu.h"
+#include "header.h"
 #include <windows.h>
 
 Partida P("", "");
@@ -406,6 +407,7 @@ void Interface::drawMovement(int EstadoSkin)
     static color first_piece_color;
     static int movement[2];
 
+
     drawBoard(EstadoSkin);
     drawLastMove(movement, move_list, false);
     drawPieces(EstadoSkin);
@@ -486,6 +488,8 @@ void Interface::drawMovement(int EstadoSkin)
                 //function to modify the board position
                 eventSound = (P.T)->do_move(first_cell, cell_number);
                 S.playevent(eventSound);
+                comoVaLaPartida(eventSound, P.T->get_turn());
+                
                 //board and pieces are drawn again
                 drawBoard(EstadoSkin);
                 drawLastMove(movement, move_list, false);
@@ -498,7 +502,7 @@ void Interface::drawMovement(int EstadoSkin)
                 }
                 if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
                 {
-                    S.play("Defeat");                  
+                    S.play("Defeat");
                 }
                 break;
             }
@@ -509,7 +513,7 @@ void Interface::drawMovement(int EstadoSkin)
             click_flag = 0;
         }
         break;
-    }   
+    }
 }
 
 void Interface::drawButtons()
@@ -694,4 +698,19 @@ void Interface::submenu(int& Estado)
 void Interface::enableIA(bool enable)
 {
     enableIA_interface = enable;
+
+}
+
+void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
+    if (estadoPartida == Jaque_Mate && Turno == Blanco) {
+        EstadoPartida = GANADONEGRAS;
+    }
+    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+        EstadoPartida = GANADOBLANCAS;
+    }
+    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+        EstadoPartida = TABLAS;
+    }
+    //falta perder por tiempo
+    else std::cout << "estas haciendo algo mal en comoValaPartida";
 }
