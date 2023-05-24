@@ -165,6 +165,7 @@ vector<int> King::pseudo_legal(Tablero &board, Casilla &cell)
 	const int b_empty[6] = {1, 2, 3, 4, 5, 6};
 	// enroque corto
 	color c = cell.getColor();
+	if (cell.getCheck(c)) return moves;
 	if (board.can_castle(c) == 1 ||
 		board.can_castle(c) == 2) // no ha perdido los derechos de enroque
 	{
