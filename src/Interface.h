@@ -2,9 +2,12 @@
 #include <vector>
 #include "Boton.h"
 
+class Partida;
+class Casilla;
+
 class Interface
 {
-
+	Partida* P;
 	struct coordinate {
 		float x, y;
 	};
@@ -35,6 +38,7 @@ class Interface
 	bool enableIA_interface;
 
 public:
+	friend class menus;
 	enum EstadoPartidaAhora {
 		GANADOBLANCAS = 1, GANADONEGRAS, TABLAS
 	};

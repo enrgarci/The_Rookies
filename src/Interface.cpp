@@ -4,24 +4,21 @@
 #include "freeglut.h"
 #include <string.h>
 
-#include "Tablero.h"
 #include "Partida.h"
 #include "Casilla.h"
-#include "Pieza.h"
 #include "SoundController.h"
 #include "AI.h"
 #include "Menu.h"
 #include "header.h"
 #include <windows.h>
 
-Partida P("", "");
-//Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 SoundController S;
 AI IA;
 
 // Initializes interface attributes related to the screen and its coordinates
 void Interface::init()
 {
+    P = new Partida("", "");
     // Set screen dimensions
     gridSize = 8;
     fullscreen = true;
@@ -76,7 +73,7 @@ void Interface::changeOrigin(int& value)
 // Receives the cell number(0 - 63), and the column and row that will be modified
 void Interface::rotateBoard(int value, int& col, int& row)
 {
-    if (P.T->get_turn() == Blanco || doRotate == false)
+    if (P->T->get_turn() == Blanco || doRotate == false)
     {
         col = value % 8;
         row = 7 - (value / 8);
@@ -176,7 +173,7 @@ void Interface::drawPieces(int EstadoSkin)
         int row;
         rotateBoard(i, col, row);
 
-        switch (P.T->get_cell(i).getFigura())
+        switch (P->T->get_cell(i).getFigura())
         {
         case  Vacio:
             figure = "vacio";
@@ -201,7 +198,7 @@ void Interface::drawPieces(int EstadoSkin)
             break;
         }
 
-        switch (P.T->get_cell(i).getColor())
+        switch (P->T->get_cell(i).getColor())
         {
         case noColor:
             break;
@@ -268,9 +265,9 @@ void Interface::drawPossibleMoves(std::vector<int>& move_list)
 void Interface::drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_list)
 {
     //si el peon puede coronar en la siguiente jugada
-    if (P.T->get_cell(cell).getFigura() == Peon &&
-        ((P.T->get_cell(cell).getColor() == Negro && cell >= 48) ||
-            P.T->get_cell(cell).getColor() == Blanco && cell <= 15))
+    if (P->T->get_cell(cell).getFigura() == Peon &&
+        ((P->T->get_cell(cell).getColor() == Negro && cell >= 48) ||
+            P->T->get_cell(cell).getColor() == Blanco && cell <= 15))
     {
         const int PiecesCor[4] = { Reina, Torre, Alfil, Caballo };
         std::string skin = "skin_default";
@@ -308,7 +305,7 @@ void Interface::drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_
                 break;
             }
 
-            switch (P.T->get_cell(cell).getColor())
+            switch (P->T->get_cell(cell).getColor())
             {
             case noColor:
                 break;
@@ -351,7 +348,7 @@ void Interface::drawCoronation(int EstadoSkin, int cell, std::vector<int>& move_
 // Checks if those two cells match any of the valid moves, if they don't match, draws a semi-transparent yellow square in the corresponding locations
 void Interface::drawLastMove(int *movement, std::vector<int>& move_list, bool check_list)
 {
-    if (P.T->move_count == 0) return;
+    if (P->T->move_count == 0) return;
 
     for (int i = 0; i < 2; i++)
     {
@@ -413,10 +410,10 @@ void Interface::drawMovement(int EstadoSkin)
     drawPieces(EstadoSkin);
     drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
-    if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2)
+    if (P->T->get_turn() == Negro && enableIA_interface && eventSound != 2)
     {
         Sleep(1000);                //not the most efficient way to implement it, but at least it works
-        IA.randommove(*(P.T), Negro);
+        IA.randommove(*(P->T), Negro);
         S.play("Move_Piece");
         drawBoard(EstadoSkin);
         drawPieces(EstadoSkin);
@@ -434,17 +431,17 @@ void Interface::drawMovement(int EstadoSkin)
     // One click has been detected on the board grid
     case 1:
         // Empty cell
-        if (P.T->get_cell(cell_number).getColor() == Vacio)
+        if (P->T->get_cell(cell_number).getColor() == Vacio)
         {
             click_flag = 0;
             break;
         }
         // Select piece
-        move_list = P.T->get_cell(cell_number).getMoveList();
-        first_piece_color = P.T->get_cell(cell_number).getColor();
+        move_list = P->T->get_cell(cell_number).getMoveList();
+        first_piece_color = P->T->get_cell(cell_number).getColor();
         first_cell = cell_number;
         // Only allows to select a piece if the turn is equal to the piece clicked
-        if (P.T->get_turn() != first_piece_color) {
+        if (P->T->get_turn() != first_piece_color) {
             click_flag = 0;
             break;
         }
@@ -464,10 +461,10 @@ void Interface::drawMovement(int EstadoSkin)
             break;
         }
         // Piece of the same color - select new piece
-        if (first_piece_color == P.T->get_cell(cell_number).getColor())
+        if (first_piece_color == P->T->get_cell(cell_number).getColor())
         {
             click_flag = 1;
-            move_list = P.T->get_cell(cell_number).getMoveList();
+            move_list = P->T->get_cell(cell_number).getMoveList();
             first_cell = cell_number;
             drawBoard(EstadoSkin);
             drawLastMove(movement, move_list, true);
@@ -486,9 +483,9 @@ void Interface::drawMovement(int EstadoSkin)
                 movement[0] = first_cell;
                 movement[1] = cell_number;
                 //function to modify the board position
-                eventSound = (P.T)->do_move(first_cell, cell_number);
+                eventSound = (P->T)->do_move(first_cell, cell_number);
                 S.playevent(eventSound);
-                comoVaLaPartida(eventSound, P.T->get_turn());
+                comoVaLaPartida(eventSound, P->T->get_turn());
                 
                 //board and pieces are drawn again
                 drawBoard(EstadoSkin);
@@ -496,11 +493,11 @@ void Interface::drawMovement(int EstadoSkin)
                 drawPieces(EstadoSkin);
                 drawButtons();
                 S.play("Move_Piece");
-                if (P.T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+                if (P->T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
                 {
                     S.play("Victory");
                 }
-                if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
+                if (P->T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
                 {
                     S.play("Defeat");
                 }
@@ -592,10 +589,10 @@ void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
     //system("cls");
     //playBackButton, playForwardButton, playLastButton, playFirstButton;
     if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
-    if (playBackButton.isInside(button, state, x, y)) P.play_back();  //1 atras
-    if (playForwardButton.isInside(button, state, x, y)) P.play_forward();//1 adelante
-    if (playLastButton.isInside(button, state, x, y)) P.play_last(); // actual
-    if (playFirstButton.isInside(button, state, x, y)) P.play_first();// inicio
+    if (playBackButton.isInside(button, state, x, y)) P->play_back();  //1 atras
+    if (playForwardButton.isInside(button, state, x, y)) P->play_forward();//1 adelante
+    if (playLastButton.isInside(button, state, x, y)) P->play_last(); // actual
+    if (playFirstButton.isInside(button, state, x, y)) P->play_first();// inicio
 
 }
 
@@ -675,15 +672,15 @@ void Interface::keyboardFullscreen(unsigned char key, int x, int y)
     //nanothings
     nanoState(key);
     //for game review puposes, you can go back and forward
-    if (key == 'a')    P.play_back();
-    if (key == 'd')    P.play_forward();
-    if (key == 'w')    P.play_last();
-    if (key == 's')    P.play_first();
+    if (key == 'a')    P->play_back();
+    if (key == 'd')    P->play_forward();
+    if (key == 'w')    P->play_last();
+    if (key == 's')    P->play_first();
     if (key == ' ')
     {
         CorIndex++;
         CorIndex = CorIndex % 4;
-        (P.T)->setCoronacion((figura) PiecesCor[CorIndex]);
+        (P->T)->setCoronacion((figura) PiecesCor[CorIndex]);
         cout << CorIndex << endl;
     }
     glutPostRedisplay();
