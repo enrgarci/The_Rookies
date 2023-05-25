@@ -57,6 +57,8 @@ void Interface::init()
     S.playMusica("MainBGM", true);
     S.play("Board_Start");
 
+    //Set initial position for the clock
+   
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
@@ -526,15 +528,14 @@ void Interface::drawMovement(int EstadoSkin)
 
 void Interface::drawButtons()
 {
-  
-    //(1150, 10, 100, 100, 200, 100, 150); (1350, 10, 100, 100, 200, 100, 150);  (600, 10, 100, 100, 200, 100, 150);  (800, 10, 100, 100, 200, 100, 150);
-    pauseMenu.Set(10, 750, 100, 100, 200, 100, 150);
-    playBackButton.Set(638, 10, 100, 100, 200, 100, 150);
-    playForwardButton.Set(798, 10, 100, 100, 200, 100, 150);
-    playFirstButton.Set(485, 10, 100, 100, 200, 100, 150);
-    playLastButton.Set(950, 10, 100, 100, 200, 100, 150);
+    screen_width = glutGet(GLUT_SCREEN_WIDTH);
+    screen_height = glutGet(GLUT_SCREEN_HEIGHT);
 
-
+    pauseMenu.Set(screen_width*2/64, 750, 100, 100, 200, 100, 150);
+    playFirstButton.Set(screen_width * 21 / 64, screen_height/64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playBackButton.Set(screen_width * 27 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playForwardButton.Set(screen_width * 33 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playLastButton.Set(screen_width * 39 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
 
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
