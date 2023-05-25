@@ -15,7 +15,7 @@
 #include <windows.h>
 #include "Reloj.h"
 
-Partida P("", "",30,0);
+Partida P("", "",120,0);
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 SoundController S;
 AI IA;

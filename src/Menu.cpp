@@ -94,8 +94,9 @@ void Menu::menusIni(Interface inter)
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 1;//play
+	Estado = 3;//play
 	EstadoSkin = 1;//classic
+	imagenInstruccion = 1;
 }
 
 void Menu::drawInicio(void) {
@@ -146,12 +147,44 @@ void Menu::drawDepaso(void)
 }
 
 void Menu::drawInstrucciones(void) {
+	
+	//Common parameters of the buttons
+	float h = glutGet(GLUT_WINDOW_HEIGHT);
+	float w = glutGet(GLUT_WINDOW_WIDTH);
+	int const r = 250, g = 250, b = 250;
+
+	BotonSiguiente.Set(w * 55 /64, h * 54 /64, w * 5 / 64, h * 5 / 64, r, g, b);
+	BotonAnterior.Set(w * 55 / 64, h * 49 / 64, w * 5 / 64, h * 5 / 64, r, g, b);
+
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Intruciones.png").id);
+	if(imagenInstruccion==1)
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Instrucciones/Instruccion1.png").id);
+	if(imagenInstruccion==2)
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Instrucciones/Instruccion2.png").id);
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Left-Arrow.png").id);
+	BotonAnterior.Draw();
+	
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Right-Arrow.png").id);
+	BotonSiguiente.Draw();//1 adelante
+	
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+
+
 	botonHomeDraw();
+
+
+	
 }
 void Menu::drawFinBlancas(void) {
 	
@@ -257,10 +290,13 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (instrucciones.isInside(button, state, x, y)) Estado = INSTRUCIONES_MENU;
 		if (opciones.isInside(button, state, x, y)) Estado = OPCION_MENU;
 		if (exit.isInside(button, state, x, y)) Estado = EXIT_MENU;
+		imagenInstruccion = 1;
 	}
 	//instrucciones
 	if (Estado == INSTRUCIONES_MENU) {
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
+		if (BotonSiguiente.isInside(button, state, x, y) && imagenInstruccion == 1) imagenInstruccion = 2;
+		if (BotonAnterior.isInside(button, state, x, y) && imagenInstruccion == 2) imagenInstruccion = 1;
 	}
 	//Options
 	if (Estado == OPCION_MENU)
@@ -308,6 +344,7 @@ void Menu::botonVentana(int button, int state, int x, int y)
 	{
 		if (exit.isInside(button, state, x, y)) Estado = EXIT_MENU;
 	}
+
 	//1vs1
 	//if (Estado == 5) {
 	//	if (depaso.isInside(button, state, x, y)) Estado = 2;

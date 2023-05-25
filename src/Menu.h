@@ -22,6 +22,9 @@ private:
 	//Buttons in submenu
 	Boton BotonGuardar, BotonCargar, Boton3min, Boton5min, Boton10min, BotonReanudar, BotonMenuPpal;
 	int aumento=1;
+	//Buttons in instrucciones
+	Boton BotonAnterior, BotonSiguiente;
+	int imagenInstruccion;
 
 public:
 	enum ventana {
