@@ -422,10 +422,11 @@ void Interface::drawMovement(int EstadoSkin)
         drawBoard(EstadoSkin);
         drawPieces(EstadoSkin);
         drawButtons();
-        if (eventSound == 2) //if its white player´s turn and there is a checkmate, black player wins (the AI)
+        if (eventSound == 2) //if its white playerÂ´s turn and there is a checkmate, black player wins (the AI)
         {
             S.play("Defeat");
         }
+        comoVaLaPartida(eventSound, P.T->get_turn());
     }
         switch (click_flag)
         {
