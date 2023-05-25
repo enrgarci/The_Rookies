@@ -13,8 +13,9 @@
 #include "Menu.h"
 #include "header.h"
 #include <windows.h>
+#include "Reloj.h"
 
-Partida P("", "");
+Partida P("", "",120,0);
 //Partida P("", "", "r1b1kbnr/1pp2ppp/p1p5/4N3/3qP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 6");
 SoundController S;
 AI IA;
@@ -27,6 +28,10 @@ void Interface::init()
     fullscreen = true;
     screen_width = glutGet(GLUT_SCREEN_WIDTH);
     screen_height = glutGet(GLUT_SCREEN_HEIGHT);
+
+    //Inicializar reloj
+    RelojNegro = new Reloj(screen_width * 10 / 64, screen_height * 18 / 40, screen_width * 3 / 32, Negro);
+    RelojBlanco = new Reloj(screen_width * 24 / 32, screen_height * 18 / 40, screen_width * 3 / 32, Blanco);
 
     // Set board size as the minimum between the width and height of the screen
     board_size = min(screen_width, screen_height);
@@ -53,7 +58,7 @@ void Interface::init()
     S.play("Board_Start");
 
     //Set initial position for the clock
-    theta = 0;
+   
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
@@ -153,6 +158,9 @@ void Interface::drawBoard(int EstadoSkin)
         glDisable(GL_TEXTURE_2D);
 
     }
+
+    RelojNegro->draw(P);
+    RelojBlanco->draw(P);
 }
 
 // Draws the pieces on the board
@@ -520,15 +528,14 @@ void Interface::drawMovement(int EstadoSkin)
 
 void Interface::drawButtons()
 {
-  
-    //(1150, 10, 100, 100, 200, 100, 150); (1350, 10, 100, 100, 200, 100, 150);  (600, 10, 100, 100, 200, 100, 150);  (800, 10, 100, 100, 200, 100, 150);
-    pauseMenu.Set(10, 750, 100, 100, 200, 100, 150);
-    playBackButton.Set(638, 10, 100, 100, 200, 100, 150);
-    playForwardButton.Set(798, 10, 100, 100, 200, 100, 150);
-    playFirstButton.Set(485, 10, 100, 100, 200, 100, 150);
-    playLastButton.Set(950, 10, 100, 100, 200, 100, 150);
+    screen_width = glutGet(GLUT_SCREEN_WIDTH);
+    screen_height = glutGet(GLUT_SCREEN_HEIGHT);
 
-
+    pauseMenu.Set(screen_width*2/64, screen_height * 55 / 64, screen_width * 4 / 64, screen_width * 4 / 64, 200, 100, 150);
+    playFirstButton.Set(screen_width * 21 / 64, screen_height/64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playBackButton.Set(screen_width * 27 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playForwardButton.Set(screen_width * 33 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
+    playLastButton.Set(screen_width * 39 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
 
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -555,39 +562,10 @@ void Interface::drawButtons()
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
     
-    reloj(0.85);
-
-}
-
-void Interface::reloj(float theta)
-{
-    
-    glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.5f);
-
-  //  glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/marco reloj.png").id);
-    marco.Set(1215, 530, 150, 150, 200, 200, 200);
-    marco.Draw();
-
-    //glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Aguja.png").id);
-    aguja.Set(-14, -14, 20, 70, 150, 100, 150);
-    float x = 1.5, y = 0.7, a = 1;
-
-    glTranslatef(x, y, 0);
-    glRotatef(-theta * 360, 0.0f, 0.0f, 1.0f);
-    aguja.Draw();// inicio
-    glRotatef(theta * 360, 0.0f, 0.0f, 1.0f);
-    glTranslatef(-x, -y, 0);
-
-    
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_BLEND);
     
 
 }
+
 
 void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Boton.h"
+#include "Reloj.h"
 
 class Interface
 {
@@ -28,8 +29,9 @@ class Interface
 	float br, bg, bb, wr, wg, wb;
 	int EstadoPartida;
 
-	Boton aguja, marco;
-	float theta;
+	//Clocks
+	Reloj* RelojNegro;
+	Reloj* RelojBlanco;
 
 	//
 	bool enableIA_interface;
@@ -57,7 +59,6 @@ public:
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
-	void reloj(float theta);
 	void enableIA(bool enable);
 	void comoVaLaPartida(int estadoPartida, int Turno);
 	int getEstadoPartida() {return EstadoPartida;}
