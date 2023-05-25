@@ -413,62 +413,43 @@ void Interface::drawMovement(int EstadoSkin)
     drawPieces(EstadoSkin);
     drawButtons();
     // Pending of review, because it doesnt work with the move backwards and forwards
-    if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2)
+    if (P.T->get_turn() == Negro && enableIA_interface && eventSound != 2 && eventSound != 3 && (P.T)->move_count == (P.getCurrentPos())) 
     {
         Sleep(1000);                //not the most efficient way to implement it, but at least it works
-        IA.randommove(*(P.T), Negro);
+        eventSound = IA.randommove(*(P.T), Negro);
         S.play("Move_Piece");
+        S.playevent(eventSound);
         drawBoard(EstadoSkin);
         drawPieces(EstadoSkin);
         drawButtons();
-        if (eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+        if (eventSound == 2) //if its white player´s turn and there is a checkmate, black player wins (the AI)
         {
-            S.play("Victory");
+            S.play("Defeat");
         }
+        comoVaLaPartida(eventSound, P.T->get_turn());
     }
-    switch (click_flag) 
-    {
-    // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
-    case 0:
-        break;
-    // One click has been detected on the board grid
-    case 1:
-        // Empty cell
-        if (P.T->get_cell(cell_number).getColor() == Vacio)
+        switch (click_flag)
         {
-            click_flag = 0;
+            // No click has been detected on the board grid, or after two consecutive clicks if color is not repeated
+        case 0:
             break;
-        }
-        // Select piece
-        move_list = P.T->get_cell(cell_number).getMoveList();
-        first_piece_color = P.T->get_cell(cell_number).getColor();
-        first_cell = cell_number;
-        // Only allows to select a piece if the turn is equal to the piece clicked
-        if (P.T->get_turn() != first_piece_color) {
-            click_flag = 0;
-            break;
-        }
-        drawBoard(EstadoSkin);
-        drawLastMove(movement, move_list, true);
-        drawPossibleMoves(move_list);
-        drawPieces(EstadoSkin);
-        drawCoronation(EstadoSkin ,cell_number, move_list);
-        drawButtons();
-        break;
-    // Two clicks has been detected on the board grid
-    case 2:
-        // Repeated cell - deselect piece
-        if (first_cell == cell_number)
-        {
-            click_flag = 0;
-            break;
-        }
-        // Piece of the same color - select new piece
-        if (first_piece_color == P.T->get_cell(cell_number).getColor())
-        {
-            click_flag = 1;
+            // One click has been detected on the board grid
+        case 1:
+            // Empty cell
+            if (P.T->get_cell(cell_number).getColor() == Vacio)
+            {
+                click_flag = 0;
+                break;
+            }
+            // Select piece
             move_list = P.T->get_cell(cell_number).getMoveList();
+            first_piece_color = P.T->get_cell(cell_number).getColor();
             first_cell = cell_number;
+            // Only allows to select a piece if the turn is equal to the piece clicked
+            if (P.T->get_turn() != first_piece_color) {
+                click_flag = 0;
+                break;
+            }
             drawBoard(EstadoSkin);
             drawLastMove(movement, move_list, true);
             drawPossibleMoves(move_list);
@@ -476,43 +457,64 @@ void Interface::drawMovement(int EstadoSkin)
             drawCoronation(EstadoSkin, cell_number, move_list);
             drawButtons();
             break;
-        }
-        for (int i = 0; i < move_list.size(); i++)
-        {
-            // Selected possible move - redraw board and pieces
-            if (cell_number == move_list[i])
+            // Two clicks has been detected on the board grid
+        case 2:
+            // Repeated cell - deselect piece
+            if (first_cell == cell_number)
             {
                 click_flag = 0;
-                movement[0] = first_cell;
-                movement[1] = cell_number;
-                //function to modify the board position
-                eventSound = (P.T)->do_move(first_cell, cell_number);
-                S.playevent(eventSound);
-                comoVaLaPartida(eventSound, P.T->get_turn());
-                
-                //board and pieces are drawn again
-                drawBoard(EstadoSkin);
-                drawLastMove(movement, move_list, false);
-                drawPieces(EstadoSkin);
-                drawButtons();
-                S.play("Move_Piece");
-                if (P.T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
-                {
-                    S.play("Victory");
-                }
-                if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
-                {
-                    S.play("Defeat");
-                }
                 break;
             }
-        }
-        // Selected move not allowed - deselect cell
-        if (click_flag == 2)
-        {
-            click_flag = 0;
-        }
-        break;
+            // Piece of the same color - select new piece
+            if (first_piece_color == P.T->get_cell(cell_number).getColor())
+            {
+                click_flag = 1;
+                move_list = P.T->get_cell(cell_number).getMoveList();
+                first_cell = cell_number;
+                drawBoard(EstadoSkin);
+                drawLastMove(movement, move_list, true);
+                drawPossibleMoves(move_list);
+                drawPieces(EstadoSkin);
+                drawCoronation(EstadoSkin, cell_number, move_list);
+                drawButtons();
+                break;
+            }
+            for (int i = 0; i < move_list.size(); i++)
+            {
+                // Selected possible move - redraw board and pieces
+                if (cell_number == move_list[i])
+                {
+                    click_flag = 0;
+                    movement[0] = first_cell;
+                    movement[1] = cell_number;
+                    //function to modify the board position
+                    eventSound = (P.T)->do_move(first_cell, cell_number);
+                    S.playevent(eventSound);
+                    comoVaLaPartida(eventSound, P.T->get_turn());
+
+                    //board and pieces are drawn again
+                    drawBoard(EstadoSkin);
+                    drawLastMove(movement, move_list, false);
+                    drawPieces(EstadoSkin);
+                    drawButtons();
+                    S.play("Move_Piece");
+                    if (P.T->get_turn() == Negro && eventSound == 2) //si le toca al negro y hay jaque mate gana el blanco
+                    {
+                        S.play("Victory");
+                    }
+                    if (P.T->get_turn() == Blanco && eventSound == 2) //si le toca al blanco y hay jaque mate gana el negro
+                    {
+                        S.play("Defeat");
+                    }
+                    break;
+                }
+            }
+            // Selected move not allowed - deselect cell
+            if (click_flag == 2)
+            {
+                click_flag = 0;
+            }
+            break;
     }
 }
 
@@ -708,7 +710,7 @@ void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
     else if (estadoPartida == Jaque_Mate && Turno == Negro) {
         EstadoPartida = GANADOBLANCAS;
     }
-    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+    else if (estadoPartida == Tablas) {
         EstadoPartida = TABLAS;
     }
     //falta perder por tiempo
