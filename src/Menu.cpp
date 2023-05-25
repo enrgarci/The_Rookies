@@ -6,9 +6,88 @@
 #include "header.h"
 #include <cstring>
 
-void Menu::menusIni()
+void Menu::Draw()
+{
+	int EstadoPartida;
+	EstadoPartida = interfaz.getEstadoPartida();
+	if (EstadoPartida == Interface::GANADOBLANCAS) setEstadoPartida(FINBLANCAS_MENU);
+	else if (EstadoPartida == Interface::GANADONEGRAS) setEstadoPartida(Menu::FINNEGRAS_MENU);
+	else if (EstadoPartida == Interface::TABLAS) setEstadoPartida(Menu::TABLAS_MENU);
+	system("cls");
+	std::cout << "Estado: " << getEstado();
+	switch (Estado)
+	{
+	case (Menu::INICIO_MENU): //1
+		drawInicio();
+		break;
+
+	case (Menu::DEPASO_MENU):
+		drawDepaso();
+		break;
+	case (Menu::INSTRUCIONES_MENU):
+		drawInstrucciones();
+		break;
+	case (Menu::OPCION_MENU):
+		drawOpcion();
+		break;
+
+	case (Menu::JUEGO1VS1_MENU)://5
+		interfaz.drawBoard(getEstadoSkin());
+		interfaz.drawPieces(getEstadoSkin());
+		interfaz.drawMovement(getEstadoSkin());
+
+		interfaz.enableIA(false);
+		break;
+
+	case (Menu::CREDITOS_MENU):
+
+
+		break;
+	case (Menu::JUEGO1VSIA_MENU):
+		interfaz.drawBoard(getEstadoSkin());
+		interfaz.drawPieces(getEstadoSkin());
+		interfaz.drawMovement(getEstadoSkin());
+		interfaz.enableIA(true);
+		break;
+
+	case (Menu::FINBLANCAS_MENU):
+		drawFinBlancas();
+		break;
+
+	case (Menu::FINNEGRAS_MENU):
+		drawFinNegras();
+		break;
+
+	case (Menu::TABLAS_MENU):
+		drawTablas();
+		break;
+
+	case (Menu::EXIT_MENU):
+		drawExit();
+		break;
+	case (Menu::SUBMENU_MENU):
+		drawSubmenu();
+
+		break;
+	case (Menu::FINPARTIDA_BOTON_MENU):
+		drawSubmenu_segundo();
+
+		break;
+	default: std::cout << "Ha fallado el source ventana";
+		break;
+	}
+
+	//glClear(GL_COLOR_BUFFER_BIT);
+	glutPostRedisplay();
+	glutSwapBuffers();
+}
+
+
+void Menu::menusIni(Interface inter)
 {
 	//inicializa valores 
+	interfaz = inter;
+	interfaz.init();
 	fullscreen = true;
 	screen_width = glutGet(GLUT_SCREEN_WIDTH);
 	screen_height = glutGet(GLUT_SCREEN_HEIGHT);
@@ -315,6 +394,36 @@ void Menu::drawOpcion(void) {
 	botonHomeDraw();
 
 }
+void Menu::drawSubmenu_segundo(void) {
+	//Common parameters of the buttons
+	int buttonsHeightMenu = 2.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
+	int buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+
+
+	//Background picture
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/finpartidaimagen.png").id);
+	poligonoVistaImagen();
+	glDisable(GL_TEXTURE_2D);
+	//fin imagen fondo
+
+	juego1vs1.Set(buttonsXPosition, 16 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
+	juego1vs1.Draw();
+	juego1vsia.Set(buttonsXPosition, 12.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
+	juego1vsia.Draw();
+	buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	instrucciones.Set(buttonsXPosition, 9 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 7 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
+	instrucciones.Draw();
+	buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	opciones.Set(buttonsXPosition, 6 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
+	opciones.Draw();
+	exit.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
+	exit.Draw();
+
+
+	botonHomeDraw();
+
+}
 
 void Menu::drawSubmenu(void)
 {
@@ -348,12 +457,16 @@ void Menu::drawSubmenu(void)
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/GUARDAR.png").id);
 	BotonGuardar.Draw();
 
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/CARGAR.png").id);
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/exit.png").id);
 	BotonCargar.Draw();
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
+}
+
+void Menu::ratonInterfaz(int button, int state, int x, int y) {
+	interfaz.mouseBoard(button, state, x, y, *returnEstado());
 }
 
 
