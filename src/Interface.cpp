@@ -710,7 +710,7 @@ void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
     else if (estadoPartida == Jaque_Mate && Turno == Negro) {
         EstadoPartida = GANADOBLANCAS;
     }
-    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+    else if (estadoPartida == Tablas) {
         EstadoPartida = TABLAS;
     }
     //falta perder por tiempo
