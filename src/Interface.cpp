@@ -57,8 +57,6 @@ void Interface::init()
     S.playMusica("MainBGM", true);
     S.play("Board_Start");
 
-    //Set initial position for the clock
-   
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
