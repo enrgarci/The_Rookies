@@ -7,13 +7,11 @@ class Partida;
 class Reloj
 {
 private:
-		Boton aguja, marco;
+	Boton aguja, marco;
 	float theta;
 	float posx; 
-	//float posxAguja;
 	float posy;
 	float size;
-
 	color c;
 
 public:
