@@ -531,7 +531,7 @@ void Interface::drawButtons()
     screen_width = glutGet(GLUT_SCREEN_WIDTH);
     screen_height = glutGet(GLUT_SCREEN_HEIGHT);
 
-    pauseMenu.Set(screen_width*2/64, 750, 100, 100, 200, 100, 150);
+    pauseMenu.Set(screen_width*2/64, screen_height * 55 / 64, screen_width * 4 / 64, screen_width * 4 / 64, 200, 100, 150);
     playFirstButton.Set(screen_width * 21 / 64, screen_height/64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
     playBackButton.Set(screen_width * 27 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
     playForwardButton.Set(screen_width * 33 / 64, screen_height / 64, screen_width * 4 / 64, screen_height * 6 / 64, 200, 100, 150);
