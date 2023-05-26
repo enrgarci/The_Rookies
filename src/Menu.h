@@ -18,11 +18,9 @@ private:
 	Boton instrucciones, opciones, juego1vs1,
 		juego1vsia, creditos, Logo, depaso, exit;
 	//Buttons in options
-	Boton homefromBoton,Boton3min, Boton5min, Boton10min, classic, pvsz, sw, pk, visualiza;
-	int tiempo;
-	float aum3min, aum5min, aum10min;
+	Boton homefromBoton, classic, pvsz, sw, pk, visualiza;
 	//Buttons in submenu
-	Boton BotonGuardar, BotonExit, BotonReanudar, BotonMenuPpal;
+	Boton BotonGuardar, BotonCargar, Boton3min, Boton5min, Boton10min, BotonReanudar, BotonMenuPpal;
 	int aumento=1;
 	//Buttons in instrucciones
 	Boton BotonAnterior, BotonSiguiente;
@@ -56,7 +54,7 @@ public:
 
 	void drawOpcion(void);
 	void drawSubmenu(void);
-	void drawExit(void) { glutDestroyWindow(glutGetWindow()); }
+	void Exit(void) { glutDestroyWindow(glutGetWindow()); }
 	void poligonoVistaImagen(void);
 	void keyboardVentana(unsigned char key, int x, int y);
 	void botonVentana(int button, int state, int x, int y);
