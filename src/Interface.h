@@ -3,8 +3,12 @@
 #include "Boton.h"
 #include "Reloj.h"
 
+class Partida;
+class Casilla;
+
 class Interface
 {
+	Partida* P;
 
 	struct coordinate {
 		float x, y;
