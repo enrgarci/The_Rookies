@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     glutFullScreen();
 
     // Registrar las funciones de callback
-    interfaz.init();
+    if(menus.getEstado() == Menu::JUEGO1VS1_MENU) interfaz.init();
 	menus.menusIni(interfaz);
     glutDisplayFunc(onDraw);
     glutReshapeFunc(onReshape);
