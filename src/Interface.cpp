@@ -158,9 +158,11 @@ void Interface::drawBoard(int EstadoSkin)
         glDisable(GL_TEXTURE_2D);
 
     }
-
-    RelojNegro->draw(P);
-    RelojBlanco->draw(P);
+    extern Menu menus;
+    if (menus.getEstado() == menus.JUEGO1VS1_MENU) {
+        RelojNegro->draw(P);
+        RelojBlanco->draw(P);
+    }
 }
 
 // Draws the pieces on the board
@@ -541,7 +543,7 @@ void Interface::drawButtons()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.5f);
-
+    
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Pause.png").id);
     pauseMenu.Draw();
 
@@ -561,17 +563,17 @@ void Interface::drawButtons()
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
-    
-    
-
 }
 
 
 void Interface::mouseButtons(int button, int state, int x, int y, int& Estado)
 {
+    extern Menu menus;
     //system("cls");
     //playBackButton, playForwardButton, playLastButton, playFirstButton;
-    if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
+    //if (pauseMenu.isInside(button, state, x, y)) submenu(Estado);
+
+    if (pauseMenu.isInside(button, state, x, y) &&( menus.getEstado () == Menu::JUEGO1VS1_MENU || menus.getEstado() == Menu::JUEGO1VSIA_MENU)) submenu(Estado) ;
     if (playBackButton.isInside(button, state, x, y)) P.play_back();  //1 atras
     if (playForwardButton.isInside(button, state, x, y)) P.play_forward();//1 adelante
     if (playLastButton.isInside(button, state, x, y)) P.play_last(); // actual
@@ -638,20 +640,6 @@ void Interface::mouseBoard(int button, int state, int x, int y, int & Estado)
 void Interface::keyboardFullscreen(unsigned char key, int x, int y)
 {
     const int PiecesCor[4] = { Reina, Torre, Alfil, Caballo };
-    const char ESCAPE_KEY = 27;
-    if (key == ESCAPE_KEY)
-    {
-        if (fullscreen)
-        {
-            glutReshapeWindow(screen_width, screen_height);
-            fullscreen = false;
-        }
-        else
-        {
-            glutFullScreen();
-            fullscreen = true;
-        }
-    }
     //nanothings
     nanoState(key);
     //for game review puposes, you can go back and forward
@@ -681,15 +669,21 @@ void Interface::enableIA(bool enable)
 
 }
 
-void Interface::comoVaLaPartida(int estadoPartida, int Turno) {
-    if (estadoPartida == Jaque_Mate && Turno == Blanco) {
+void Interface::comoVaLaPartida(int estadoPartida_, int Turno) {
+    if (estadoPartida_ == Jaque_Mate && Turno == Blanco) {
         EstadoPartida = GANADONEGRAS;
     }
-    else if (estadoPartida == Jaque_Mate && Turno == Negro) {
+    else if (estadoPartida_ == Jaque_Mate && Turno == Negro) {
         EstadoPartida = GANADOBLANCAS;
     }
-    else if (estadoPartida == Tablas) {
+    else if (estadoPartida_ == Tablas) {
         EstadoPartida = TABLAS;
+    }
+    else if (estadoPartida_ == Bandera && Turno == Blanco) {
+        EstadoPartida = GANADONEGRAS;
+    }
+    else if (estadoPartida_ == Bandera && Turno == Negro) {
+        EstadoPartida = GANADOBLANCAS;
     }
     //falta perder por tiempo
     else std::cout << "estas haciendo algo mal en comoValaPartida";

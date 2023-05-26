@@ -8,16 +8,11 @@
 
 void Menu::Draw()
 {
-	int EstadoPartida;
-	EstadoPartida = interfaz.getEstadoPartida();
-	if (EstadoPartida == Interface::GANADOBLANCAS) setEstadoPartida(FINBLANCAS_MENU);
-	else if (EstadoPartida == Interface::GANADONEGRAS) setEstadoPartida(Menu::FINNEGRAS_MENU);
-	else if (EstadoPartida == Interface::TABLAS) setEstadoPartida(Menu::TABLAS_MENU);
 	system("cls");
 	std::cout << "Estado: " << getEstado();
 	switch (Estado)
 	{
-	case (Menu::INICIO_MENU): //1
+	case (Menu::INICIO_MENU):
 		drawInicio();
 		break;
 
@@ -31,12 +26,13 @@ void Menu::Draw()
 		drawOpcion();
 		break;
 
-	case (Menu::JUEGO1VS1_MENU)://5
+	case (Menu::JUEGO1VS1_MENU):
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
 
 		interfaz.enableIA(false);
+		estdoPartidaDraw();
 		break;
 
 	case (Menu::CREDITOS_MENU):
@@ -47,7 +43,9 @@ void Menu::Draw()
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
+
 		interfaz.enableIA(true);
+		estdoPartidaDraw();
 		break;
 
 	case (Menu::FINBLANCAS_MENU):
@@ -67,10 +65,6 @@ void Menu::Draw()
 		break;
 	case (Menu::SUBMENU_MENU):
 		drawSubmenu();
-
-		break;
-	case (Menu::FINPARTIDA_BOTON_MENU):
-		drawSubmenu_segundo();
 
 		break;
 	default: std::cout << "Ha fallado el source ventana";
@@ -94,7 +88,7 @@ void Menu::menusIni(Interface inter)
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 4;//play
+	Estado = 1;//play
 	EstadoSkin = 1;//classic
 	imagenInstruccion = 1;
 	tiempo = 180; //3min default
@@ -186,8 +180,6 @@ void Menu::drawInstrucciones(void) {
 
 
 	botonHomeDraw();
-
-
 	
 }
 void Menu::drawFinBlancas(void) {
@@ -205,6 +197,7 @@ void Menu::drawFinBlancas(void) {
 
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 void Menu::drawFinNegras(void) {
 
@@ -220,6 +213,7 @@ void Menu::drawFinNegras(void) {
 	}
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 void Menu::drawTablas(void) {
 
@@ -235,6 +229,7 @@ void Menu::drawTablas(void) {
 	}
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 
 void Menu::poligonoVistaImagen(void) {
@@ -248,22 +243,6 @@ void Menu::poligonoVistaImagen(void) {
 	glTexCoord2d(0, 0);     glVertex2f(0, y);
 	glTexCoord2d(1, 0);     glVertex2f(x, y);
 	glEnd();
-}
-
-void Menu::reshape(int w, int h)
-{
-	// Defining the viewport and projection
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	if (w <= h) {
-		glOrtho(0, 1.0, 0 * (GLfloat)h / (GLfloat)w, 1.0 * (GLfloat)h / (GLfloat)w, -1.0, 1.0);
-	}
-	else {
-		glOrtho(0 * (GLfloat)w / (GLfloat)h, 1.0 * (GLfloat)w / (GLfloat)h, 0, 1.0, -1.0, 1.0);
-	}
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void Menu::keyboardVentana(unsigned char key, int x, int y)
@@ -317,6 +296,7 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 		else if (Menu::sw.isInside(button, state, x, y)) {
 			EstadoSkin = sw;
+
 			drawOpcion();
 		}
 		//Time buttons
@@ -368,38 +348,18 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 		if (BotonMenuPpal.isInside(button, state, x, y))
 		{
-			Estado = 2;
+			Estado = DEPASO_MENU;
 		}
+	}
+	if (Estado == FINBLANCAS_MENU || Estado == FINNEGRAS_MENU || Estado == TABLAS_MENU) {
+
+		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
 	}
 	if (Estado == EXIT_MENU)
 	{
 		if (exit.isInside(button, state, x, y)) Estado = EXIT_MENU;
 	}
-
-	//1vs1
-	//if (Estado == 5) {
-	//	if (depaso.isInside(button, state, x, y)) Estado = 2;
-	//}
-
 }
-
-/*void Menu::finPartida(int Partida, int turno) {
-	EstadoPartida = Partida;
-	Turno = turno;
-	if (EstadoPartida == Jaque_Mate && Turno == Negro) {
-		Estado = FINBLANCAS_MENU;
-	}
-	else if (EstadoPartida == Jaque_Mate && Turno == Blanco) {
-		Estado = FINNEGRAS_MENU;
-		drawFinNegras();
-	}
-	else if (EstadoPartida == Tablas) {
-		Estado = TABLAS_MENU;
-	}
-	else Estado = JUEGO1VS1_MENU;
-
-}
-*/
 
 void Menu::botonHomeDraw() {
 	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
@@ -411,6 +371,7 @@ void Menu::botonHomeDraw() {
 	buttonsXPosition = 8 * w / 20;
 	//Main menu
 	//Seting position, size, and color
+	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
 	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
 	homefromBoton.Draw();
 	//Drawing
@@ -488,36 +449,6 @@ void Menu::drawOpcion(void) {
 	botonHomeDraw();
 
 }
-void Menu::drawSubmenu_segundo(void) {
-	//Common parameters of the buttons
-	int buttonsHeightMenu = 2.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-
-
-	//Background picture
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/finpartidaimagen.png").id);
-	poligonoVistaImagen();
-	glDisable(GL_TEXTURE_2D);
-	//fin imagen fondo
-
-	juego1vs1.Set(buttonsXPosition, 16 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	juego1vs1.Draw();
-	juego1vsia.Set(buttonsXPosition, 12.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	juego1vsia.Draw();
-	buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	instrucciones.Set(buttonsXPosition, 9 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 7 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	instrucciones.Draw();
-	buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	opciones.Set(buttonsXPosition, 6 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	opciones.Draw();
-	exit.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	exit.Draw();
-
-
-	botonHomeDraw();
-
-}
 
 void Menu::drawSubmenu(void)
 {
@@ -560,6 +491,19 @@ void Menu::drawSubmenu(void)
 void Menu::ratonInterfaz(int button, int state, int x, int y) {
 	interfaz.mouseBoard(button, state, x, y, *returnEstado());
 }
+void Menu::keyboardFullscreenMenu(unsigned char key, int x, int y) {
+	interfaz.keyboardFullscreen(key, x, y);
+}
 
-
+void Menu::estdoPartidaDraw(void) {
+	if (Estado != FINBLANCAS_MENU) {
+		if (Estado != FINNEGRAS_MENU) {
+			if (Estado != TABLAS_MENU) {
+				if (interfaz.EstadoPartida == Interface::GANADOBLANCAS) Estado = FINBLANCAS_MENU;
+				else if (interfaz.EstadoPartida == Interface::GANADONEGRAS) Estado = FINNEGRAS_MENU;
+				else if (interfaz.EstadoPartida == Interface::TABLAS) Estado = TABLAS_MENU;
+			}
+		}
+	}
+}
 //tiempos Son 3+2 5 10 y infinito
