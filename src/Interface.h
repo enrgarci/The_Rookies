@@ -58,7 +58,7 @@ public:
 	void reshape(int w, int h);
 	void mouseBoard(int button, int state, int x, int y, int& Estado);
 	void keyboardFullscreen(unsigned char key, int x, int y);
-
+	void nuevaPartida();
 
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
