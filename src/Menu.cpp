@@ -7,7 +7,7 @@
 #include <cstring>
 #include <SoundController.h>
 
-SoundController So;
+int tiempo; 
 
 void Menu::Draw()
 {
@@ -303,7 +303,6 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (Boton5min.isInside(button, state, x, y))
 		{
 			tiempo = 300;
-			tiempo = 180;
 			aum3min = 1.0;
 			aum5min = 1.2;
 			aum10min = 1.0;
@@ -311,7 +310,6 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (Boton10min.isInside(button, state, x, y))
 		{
 			tiempo = 600;
-			tiempo = 180;
 			aum3min = 1.0;
 			aum5min = 1.0;
 			aum10min = 1.2;

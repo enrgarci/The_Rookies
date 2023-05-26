@@ -3,7 +3,6 @@
 #include "ETSIDI.h"
 #include "freeglut.h"
 #include <string.h>
-
 #include "Tablero.h"
 #include "Partida.h"
 #include "Casilla.h"
@@ -16,10 +15,9 @@
 #include "Reloj.h"
 #include "Clock.h"
 
-float tiempo = 100.0;
 SoundController S;
 AI IA;
-
+extern int tiempo;
 // Initializes interface attributes related to the screen and its coordinates
 void Interface::init()
 {

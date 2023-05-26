@@ -549,7 +549,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 		m_parent_game->add_pos();
 		// Comenzar el otro reloj
 		color oponent_color = turn == Blanco ? Negro : Blanco;
-		m_parent_game->startColorClock(oponent_color);
+		
 		// Comprobación de tiempo
 		if (m_parent_game->getColorClock(turn) == 0)
 		{
@@ -582,6 +582,7 @@ int Tablero::do_move(int from, int to, bool calculating)
 				return Bandera;
 			} // Pierdes
 		}
+		m_parent_game->startColorClock(oponent_color);
 		// actualizar turno
 		turn = turn == Blanco ? Negro : Blanco;
 		// ver si se da el evento de jaque, jaque mate o tablas

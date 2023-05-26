@@ -9,8 +9,8 @@ Reloj::Reloj()
 }
 void Reloj::draw(Partida& P)
 {
-    GLfloat matrix[16];
-    glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+    GLfloat matrix[16]; //Matriz de glut
+    glGetFloatv(GL_MODELVIEW_MATRIX, matrix); //guarda la matriz actual del mundo en matriz
     //SIZE OF THE CLOCK
     float toScreenWidth = (float)1 / glutGet(GLUT_WINDOW_WIDTH);
     float toScreenHeigth = (float)1 / glutGet(GLUT_SCREEN_HEIGHT);
@@ -25,7 +25,7 @@ void Reloj::draw(Partida& P)
         glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Marco_Reloj_Negro.png").id);
     if (c == Blanco)
         glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Marco_Reloj_Blanco.png").id);
-    if (P.getColorClock(c) < 0.1)
+    if (P.T->get_turn() == c && P.getColorClock(c) < 0.1)
     {
         size = abs(minsize + amplitud * sin(aum));
         aum += 0.4;
@@ -42,7 +42,7 @@ void Reloj::draw(Partida& P)
     aguja.Draw();
     glRotatef(-theta * 360, 0.0f, 0.0f, 1.0f);
     glTranslatef(-x, -y, 0);
-    glLoadMatrixf(matrix);
+    glLoadMatrixf(matrix); //carga la matriz del principio al mundo
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
