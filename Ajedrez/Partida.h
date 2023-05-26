@@ -16,6 +16,7 @@ private:
 	ChessClock *m_w_clock;
 	ChessClock *m_b_clock;
 public:
+	friend class Interface;
 	vector<FEN> positions;
 	Tablero *T;
 	Partida(string w_player,
@@ -46,6 +47,6 @@ public:
 	void	save(string directory = "./",string name = "myGame.txt");
 };
 
-inline int Partida::getCurrentPos(){return positions.size() - 1;};
+inline int Partida::getCurrentPos() { return positions.size() - 1; };
 inline void Partida::setCurrentPos(int i){current_pos = i;};
 #endif
