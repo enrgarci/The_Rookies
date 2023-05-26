@@ -56,9 +56,7 @@ void Interface::init()
     }
     S.playMusica("MainBGM", true);
     S.play("Board_Start");
-
-    //Set initial position for the clock
-   
+    //Set initial position for the clock   
 }
 
 Interface::coordinate Interface::getGridCoordinate(int col, int row)
@@ -98,7 +96,6 @@ void Interface::drawBoard(int EstadoSkin)
 {
     glClearColor(0.03f, 0.52f, 0.11f, 0.5f); // background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     //draw board border
     float k = 1.2;  //coeficient to draw the board border bigger than the grid
     float border_size = k * board_size;
