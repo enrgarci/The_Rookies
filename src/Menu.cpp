@@ -94,9 +94,13 @@ void Menu::menusIni(Interface inter)
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 3;//play
+	Estado = 4;//play
 	EstadoSkin = 1;//classic
 	imagenInstruccion = 1;
+	tiempo = 180; //3min default
+	aum3min = 1.2;
+	aum5min = 1.0;
+	aum10min = 1.0;
 }
 
 void Menu::drawInicio(void) {
@@ -315,6 +319,31 @@ void Menu::botonVentana(int button, int state, int x, int y)
 			EstadoSkin = sw;
 			drawOpcion();
 		}
+		//Time buttons
+		if (Boton3min.isInside(button, state, x, y))
+		{
+			tiempo = 180;
+			aum3min = 1.2;
+			aum5min = 1.0;
+			aum10min = 1.0;
+		}
+		if (Boton5min.isInside(button, state, x, y))
+		{
+			tiempo = 300;
+			tiempo = 180;
+			aum3min = 1.0;
+			aum5min = 1.2;
+			aum10min = 1.0;
+		}
+		if (Boton10min.isInside(button, state, x, y))
+		{
+			tiempo = 600;
+			tiempo = 180;
+			aum3min = 1.0;
+			aum5min = 1.0;
+			aum10min = 1.2;
+
+		}
 
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
 	}
@@ -324,10 +353,12 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		//std::cout << "Probando"<< BotonGuardar.isInside(button, state, x, y);
 		if (BotonGuardar.isInside(button, state, x, y)) 
 		{
+			
 			std::cout << "GUARDADO";
 		}
-		if (BotonCargar.isInside(button, state, x, y))
+		if (BotonExit.isInside(button, state, x, y))
 		{
+			Estado = EXIT_MENU;
 			std::cout << "CARGADO";
 		}
 		
@@ -400,17 +431,26 @@ void Menu::botonHomeDraw() {
 
 void Menu::drawOpcion(void) {
 	//Common parameters of the buttons
-	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	int const r = 250, g = 0, b = 250;
-	//dibujando los botones
-	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);//, r, g, b);
-	buttonsXPosition = 7 * glutGet(GLUT_WINDOW_WIDTH) / 20;// cambiamos posicion x
-	pvsz.Set(buttonsXPosition, 7.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	sw.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	classic.Draw();
-	pvsz.Draw();
-	sw.Draw();
+	float w = glutGet(GLUT_WINDOW_WIDTH);
+	float h = glutGet(GLUT_WINDOW_HEIGHT);
+	float buttonsHeightMenu = 27 * h / 100;
+	float timebuttonsHeight = 10 * h / 100;
+	float buttonsXPosition = 32.5 * w / 100;
+	float timebuttonsXPosition = w * 3 / 64;
+	float buttonslength = 50 * w / 100;
+	float timebuttonslength = 20 * w / 100;
+	float const r = 250, g = 0, b = 250;
+	//Sets properties of each button
+		classic.Set(buttonsXPosition, 12 * h / 20, buttonslength, buttonsHeightMenu,250,0,0);//, r, g, b);
+		pvsz.Set(buttonsXPosition, 6.5 * h / 20, buttonslength, buttonsHeightMenu, 0, 250, 0);
+		sw.Set(buttonsXPosition, 1 * h / 20, buttonslength, buttonsHeightMenu, 0, 0, 250);
+		Boton3min.Set(timebuttonsXPosition, h * 28 / 64, timebuttonslength* aum3min, timebuttonsHeight* aum3min,250,250,250);
+		Boton5min.Set(timebuttonsXPosition, h * 18 / 64, timebuttonslength* aum5min, timebuttonsHeight* aum5min, 250, 250, 250);
+		Boton10min.Set(timebuttonsXPosition, h * 8 / 64, timebuttonslength* aum10min, timebuttonsHeight* aum10min, 250, 250, 250);
+
+	//Draws each button
+	
+	
 	glDisable(GL_TEXTURE_2D);
 	//Background picture
 	glEnable(GL_TEXTURE_2D);
@@ -426,6 +466,23 @@ void Menu::drawOpcion(void) {
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 	//fin imagen fondo
+	
+	//Time button
+
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/3min.png").id);
+	Boton3min.Draw();
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/5min.png").id);
+	Boton5min.Draw();
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/10min.png").id);
+	Boton10min.Draw();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 
 	//DIBUJAR BOTON LLAMANDO A SU FUNCION
 	botonHomeDraw();
@@ -473,10 +530,8 @@ void Menu::drawSubmenu(void)
 	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonMenuPpal.Set(5.5 * w / 16, 8 * h / 16, 5 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonGuardar.Set(4 * w / 16, 5 * h / 16, 3.25 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonCargar.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton3min.Set(4 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton5min.Set(7 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton10min.Set(10 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonExit.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
+	
 
 	
 	//Drawing
@@ -495,7 +550,7 @@ void Menu::drawSubmenu(void)
 	BotonGuardar.Draw();
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/exit.png").id);
-	BotonCargar.Draw();
+	BotonExit.Draw();
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
