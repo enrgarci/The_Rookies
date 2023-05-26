@@ -8,6 +8,7 @@
 #include <SoundController.h>
 
 int tiempo; 
+extern SoundController S;
 
 void Menu::Draw()
 {
@@ -16,10 +17,21 @@ void Menu::Draw()
 	switch (Estado)
 	{
 	case (Menu::INICIO_MENU):
+		if (funca1 == false)
+		{
+			S.stopMusica();
+			S.playMusica("Menu", true);
+			funca1 = true;
+		}
 		drawInicio();
 		break;
-
 	case (Menu::DEPASO_MENU):
+		if (funca1 == false)
+		{
+			S.stopMusica();
+			S.playMusica("Menu", true);
+			funca1 = true;
+		}
 		drawDepaso();
 		break;
 	case (Menu::INSTRUCIONES_MENU):
@@ -29,6 +41,14 @@ void Menu::Draw()
 		drawOpcion();
 		break;
 	case (Menu::JUEGO1VS1_MENU):
+		if (funca == false)
+		{
+			S.stopMusica();
+			S.playMusica("MainBGM", true);
+			interfaz.nuevaPartida();
+			funca = true;
+			funca1 = false;
+		}
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
@@ -38,6 +58,14 @@ void Menu::Draw()
 	case (Menu::CREDITOS_MENU):
 		break;
 	case (Menu::JUEGO1VSIA_MENU):
+		if (funca == false)
+		{
+			S.stopMusica();
+			S.playMusica("MainBGM", true);
+			interfaz.nuevaPartida();
+			funca = true;
+			funca1 = false;
+		}
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
@@ -379,6 +407,8 @@ void Menu::botonHomeDraw() {
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
 	//End of Main menu button
+	funca = false;
+	S.stopMusica();
 }
 
 void Menu::drawOpcion(void) {
@@ -451,8 +481,7 @@ void Menu::drawSubmenu(void)
 	//SET POSITION AND COLOR
 	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonMenuPpal.Set(5.5 * w / 16, 8 * h / 16, 5 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonGuardar.Set(4 * w / 16, 5 * h / 16, 3.25 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonExit.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonExit.Set(6.2 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
 
 
 
@@ -467,9 +496,6 @@ void Menu::drawSubmenu(void)
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/MenuPpal.png").id);
 	BotonMenuPpal.Draw();
-
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/GUARDAR.png").id);
-	BotonGuardar.Draw();
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/exit.png").id);
 	BotonExit.Draw();

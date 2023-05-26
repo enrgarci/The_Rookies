@@ -53,7 +53,6 @@ void Interface::init()
                                            (board_origin_y + row * square_size) / screen_height };
         }
     }
-    S.playMusica("MainBGM", true);
     S.play("Board_Start");
     //Set initial position for the clock   
 }
@@ -689,4 +688,8 @@ void Interface::comoVaLaPartida(int estadoPartida_, int Turno) {
     }
     //falta perder por tiempo
     else std::cout << "estas haciendo algo mal en comoValaPartida";
+}
+void Interface::nuevaPartida()
+{
+    P = new Partida("", "", -1);
 }

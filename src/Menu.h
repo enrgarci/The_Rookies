@@ -11,6 +11,7 @@ private:
     int screen_width;
     int screen_height;
     bool fullscreen;
+    bool funca = false, funca1 = false;
     int Estado;
     int EstadoSkin;
     Interface interfaz;
