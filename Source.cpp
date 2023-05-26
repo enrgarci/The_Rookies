@@ -31,6 +31,7 @@ void onMouse(int button, int state, int x, int y)
 void onKeyboard(unsigned char key, int x, int y) 
 {
 	menus.keyboardVentana(key, x, y);
+    menus.keyboardFullscreenMenu(key, x, y);
 }
 
 int main(int argc, char** argv) 

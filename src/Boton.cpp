@@ -37,10 +37,6 @@ void Boton::Set(float x, float y, float length, float height, int r, int g, int 
 	this->b = b;
 }
 
-int Boton::getID(int button, int state, float xMouse, float yMouse) {
-	if (isInside(button, state, xMouse, yMouse))
-		return id;
-}
 
 bool Boton::isInside(int button,int state,float xMouse,float yMouse) {
 	

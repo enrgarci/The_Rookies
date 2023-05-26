@@ -46,6 +46,6 @@ public:
 	void	save(string directory = "./",string name = "myGame.txt");
 };
 
-inline int Partida::getCurrentPos(){return current_pos;};
+inline int Partida::getCurrentPos(){return positions.size() - 1;};
 inline void Partida::setCurrentPos(int i){current_pos = i;};
 #endif

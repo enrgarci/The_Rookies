@@ -8,16 +8,11 @@
 
 void Menu::Draw()
 {
-	int EstadoPartida;
-	EstadoPartida = interfaz.getEstadoPartida();
-	if (EstadoPartida == Interface::GANADOBLANCAS) setEstadoPartida(FINBLANCAS_MENU);
-	else if (EstadoPartida == Interface::GANADONEGRAS) setEstadoPartida(Menu::FINNEGRAS_MENU);
-	else if (EstadoPartida == Interface::TABLAS) setEstadoPartida(Menu::TABLAS_MENU);
 	system("cls");
 	std::cout << "Estado: " << getEstado();
 	switch (Estado)
 	{
-	case (Menu::INICIO_MENU): //1
+	case (Menu::INICIO_MENU):
 		drawInicio();
 		break;
 
@@ -31,12 +26,13 @@ void Menu::Draw()
 		drawOpcion();
 		break;
 
-	case (Menu::JUEGO1VS1_MENU)://5
+	case (Menu::JUEGO1VS1_MENU):
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
 
 		interfaz.enableIA(false);
+		estdoPartidaDraw();
 		break;
 
 	case (Menu::CREDITOS_MENU):
@@ -47,7 +43,9 @@ void Menu::Draw()
 		interfaz.drawBoard(getEstadoSkin());
 		interfaz.drawPieces(getEstadoSkin());
 		interfaz.drawMovement(getEstadoSkin());
+
 		interfaz.enableIA(true);
+		estdoPartidaDraw();
 		break;
 
 	case (Menu::FINBLANCAS_MENU):
@@ -67,10 +65,6 @@ void Menu::Draw()
 		break;
 	case (Menu::SUBMENU_MENU):
 		drawSubmenu();
-
-		break;
-	case (Menu::FINPARTIDA_BOTON_MENU):
-		drawSubmenu_segundo();
 
 		break;
 	default: std::cout << "Ha fallado el source ventana";
@@ -96,6 +90,11 @@ void Menu::menusIni(Interface inter)
 	coordenadas.y = 0;
 	Estado = 1;//play
 	EstadoSkin = 1;//classic
+	imagenInstruccion = 1;
+	tiempo = 180; //3min default
+	aum3min = 1.2;
+	aum5min = 1.0;
+	aum10min = 1.0;
 }
 
 void Menu::drawInicio(void) {
@@ -146,12 +145,42 @@ void Menu::drawDepaso(void)
 }
 
 void Menu::drawInstrucciones(void) {
+	
+	//Common parameters of the buttons
+	float h = glutGet(GLUT_WINDOW_HEIGHT);
+	float w = glutGet(GLUT_WINDOW_WIDTH);
+	int const r = 250, g = 250, b = 250;
+
+	BotonSiguiente.Set(w * 55 /64, h * 54 /64, w * 5 / 64, h * 5 / 64, r, g, b);
+	BotonAnterior.Set(w * 55 / 64, h * 49 / 64, w * 5 / 64, h * 5 / 64, r, g, b);
+
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Intruciones.png").id);
+	if(imagenInstruccion==1)
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Instrucciones/Instruccion1.png").id);
+	if(imagenInstruccion==2)
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Instrucciones/Instruccion2.png").id);
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Left-Arrow.png").id);
+	BotonAnterior.Draw();
+	
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/ButtonsInterface/Right-Arrow.png").id);
+	BotonSiguiente.Draw();//1 adelante
+	
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+
+
 	botonHomeDraw();
+	
 }
 void Menu::drawFinBlancas(void) {
 	
@@ -168,6 +197,7 @@ void Menu::drawFinBlancas(void) {
 
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 void Menu::drawFinNegras(void) {
 
@@ -183,6 +213,7 @@ void Menu::drawFinNegras(void) {
 	}
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 void Menu::drawTablas(void) {
 
@@ -198,6 +229,7 @@ void Menu::drawTablas(void) {
 	}
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
+	botonHomeDraw();
 }
 
 void Menu::poligonoVistaImagen(void) {
@@ -211,22 +243,6 @@ void Menu::poligonoVistaImagen(void) {
 	glTexCoord2d(0, 0);     glVertex2f(0, y);
 	glTexCoord2d(1, 0);     glVertex2f(x, y);
 	glEnd();
-}
-
-void Menu::reshape(int w, int h)
-{
-	// Defining the viewport and projection
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	if (w <= h) {
-		glOrtho(0, 1.0, 0 * (GLfloat)h / (GLfloat)w, 1.0 * (GLfloat)h / (GLfloat)w, -1.0, 1.0);
-	}
-	else {
-		glOrtho(0 * (GLfloat)w / (GLfloat)h, 1.0 * (GLfloat)w / (GLfloat)h, 0, 1.0, -1.0, 1.0);
-	}
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void Menu::keyboardVentana(unsigned char key, int x, int y)
@@ -257,10 +273,13 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (instrucciones.isInside(button, state, x, y)) Estado = INSTRUCIONES_MENU;
 		if (opciones.isInside(button, state, x, y)) Estado = OPCION_MENU;
 		if (exit.isInside(button, state, x, y)) Estado = EXIT_MENU;
+		imagenInstruccion = 1;
 	}
 	//instrucciones
 	if (Estado == INSTRUCIONES_MENU) {
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
+		if (BotonSiguiente.isInside(button, state, x, y) && imagenInstruccion == 1) imagenInstruccion = 2;
+		if (BotonAnterior.isInside(button, state, x, y) && imagenInstruccion == 2) imagenInstruccion = 1;
 	}
 	//Options
 	if (Estado == OPCION_MENU)
@@ -277,7 +296,33 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 		else if (Menu::sw.isInside(button, state, x, y)) {
 			EstadoSkin = sw;
+
 			drawOpcion();
+		}
+		//Time buttons
+		if (Boton3min.isInside(button, state, x, y))
+		{
+			tiempo = 180;
+			aum3min = 1.2;
+			aum5min = 1.0;
+			aum10min = 1.0;
+		}
+		if (Boton5min.isInside(button, state, x, y))
+		{
+			tiempo = 300;
+			tiempo = 180;
+			aum3min = 1.0;
+			aum5min = 1.2;
+			aum10min = 1.0;
+		}
+		if (Boton10min.isInside(button, state, x, y))
+		{
+			tiempo = 600;
+			tiempo = 180;
+			aum3min = 1.0;
+			aum5min = 1.0;
+			aum10min = 1.2;
+
 		}
 
 		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
@@ -288,10 +333,12 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		//std::cout << "Probando"<< BotonGuardar.isInside(button, state, x, y);
 		if (BotonGuardar.isInside(button, state, x, y)) 
 		{
+			
 			std::cout << "GUARDADO";
 		}
-		if (BotonCargar.isInside(button, state, x, y))
+		if (BotonExit.isInside(button, state, x, y))
 		{
+			Estado = EXIT_MENU;
 			std::cout << "CARGADO";
 		}
 		
@@ -301,37 +348,18 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		}
 		if (BotonMenuPpal.isInside(button, state, x, y))
 		{
-			Estado = 2;
+			Estado = DEPASO_MENU;
 		}
+	}
+	if (Estado == FINBLANCAS_MENU || Estado == FINNEGRAS_MENU || Estado == TABLAS_MENU) {
+
+		if (homefromBoton.isInside(button, state, x, y)) Estado = DEPASO_MENU;
 	}
 	if (Estado == EXIT_MENU)
 	{
 		if (exit.isInside(button, state, x, y)) Estado = EXIT_MENU;
 	}
-	//1vs1
-	//if (Estado == 5) {
-	//	if (depaso.isInside(button, state, x, y)) Estado = 2;
-	//}
-
 }
-
-/*void Menu::finPartida(int Partida, int turno) {
-	EstadoPartida = Partida;
-	Turno = turno;
-	if (EstadoPartida == Jaque_Mate && Turno == Negro) {
-		Estado = FINBLANCAS_MENU;
-	}
-	else if (EstadoPartida == Jaque_Mate && Turno == Blanco) {
-		Estado = FINNEGRAS_MENU;
-		drawFinNegras();
-	}
-	else if (EstadoPartida == Tablas) {
-		Estado = TABLAS_MENU;
-	}
-	else Estado = JUEGO1VS1_MENU;
-
-}
-*/
 
 void Menu::botonHomeDraw() {
 	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
@@ -343,6 +371,7 @@ void Menu::botonHomeDraw() {
 	buttonsXPosition = 8 * w / 20;
 	//Main menu
 	//Seting position, size, and color
+	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
 	homefromBoton.Set(0.9 * w / 20, 16.8 * h / 20, buttonsHeightMenu / 2.5, buttonsHeightMenu / 2.5, 160, 200, 100);
 	homefromBoton.Draw();
 	//Drawing
@@ -363,17 +392,26 @@ void Menu::botonHomeDraw() {
 
 void Menu::drawOpcion(void) {
 	//Common parameters of the buttons
-	int buttonsHeightMenu = 4 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	int const r = 250, g = 0, b = 250;
-	//dibujando los botones
-	classic.Set(buttonsXPosition, 13 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);//, r, g, b);
-	buttonsXPosition = 7 * glutGet(GLUT_WINDOW_WIDTH) / 20;// cambiamos posicion x
-	pvsz.Set(buttonsXPosition, 7.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	sw.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 6 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
-	classic.Draw();
-	pvsz.Draw();
-	sw.Draw();
+	float w = glutGet(GLUT_WINDOW_WIDTH);
+	float h = glutGet(GLUT_WINDOW_HEIGHT);
+	float buttonsHeightMenu = 27 * h / 100;
+	float timebuttonsHeight = 10 * h / 100;
+	float buttonsXPosition = 32.5 * w / 100;
+	float timebuttonsXPosition = w * 3 / 64;
+	float buttonslength = 50 * w / 100;
+	float timebuttonslength = 20 * w / 100;
+	float const r = 250, g = 0, b = 250;
+	//Sets properties of each button
+		classic.Set(buttonsXPosition, 12 * h / 20, buttonslength, buttonsHeightMenu,250,0,0);//, r, g, b);
+		pvsz.Set(buttonsXPosition, 6.5 * h / 20, buttonslength, buttonsHeightMenu, 0, 250, 0);
+		sw.Set(buttonsXPosition, 1 * h / 20, buttonslength, buttonsHeightMenu, 0, 0, 250);
+		Boton3min.Set(timebuttonsXPosition, h * 28 / 64, timebuttonslength* aum3min, timebuttonsHeight* aum3min,250,250,250);
+		Boton5min.Set(timebuttonsXPosition, h * 18 / 64, timebuttonslength* aum5min, timebuttonsHeight* aum5min, 250, 250, 250);
+		Boton10min.Set(timebuttonsXPosition, h * 8 / 64, timebuttonslength* aum10min, timebuttonsHeight* aum10min, 250, 250, 250);
+
+	//Draws each button
+	
+	
 	glDisable(GL_TEXTURE_2D);
 	//Background picture
 	glEnable(GL_TEXTURE_2D);
@@ -389,38 +427,25 @@ void Menu::drawOpcion(void) {
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 	//fin imagen fondo
+	
+	//Time button
+
+	glEnable(GL_TEXTURE_2D);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
+
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/3min.png").id);
+	Boton3min.Draw();
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/5min.png").id);
+	Boton5min.Draw();
+	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Opciones/10min.png").id);
+	Boton10min.Draw();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 
 	//DIBUJAR BOTON LLAMANDO A SU FUNCION
-	botonHomeDraw();
-
-}
-void Menu::drawSubmenu_segundo(void) {
-	//Common parameters of the buttons
-	int buttonsHeightMenu = 2.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
-	int buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-
-
-	//Background picture
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/finpartidaimagen.png").id);
-	poligonoVistaImagen();
-	glDisable(GL_TEXTURE_2D);
-	//fin imagen fondo
-
-	juego1vs1.Set(buttonsXPosition, 16 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	juego1vs1.Draw();
-	juego1vsia.Set(buttonsXPosition, 12.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	juego1vsia.Draw();
-	buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	instrucciones.Set(buttonsXPosition, 9 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 7 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	instrucciones.Draw();
-	buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	opciones.Set(buttonsXPosition, 6 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	opciones.Draw();
-	exit.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu);
-	exit.Draw();
-
-
 	botonHomeDraw();
 
 }
@@ -436,10 +461,8 @@ void Menu::drawSubmenu(void)
 	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonMenuPpal.Set(5.5 * w / 16, 8 * h / 16, 5 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonGuardar.Set(4 * w / 16, 5 * h / 16, 3.25 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonCargar.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton3min.Set(4 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton5min.Set(7 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
-	Boton10min.Set(10 * w / 16, 2 * h / 16, 2 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonExit.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
+	
 
 	
 	//Drawing
@@ -458,7 +481,7 @@ void Menu::drawSubmenu(void)
 	BotonGuardar.Draw();
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/exit.png").id);
-	BotonCargar.Draw();
+	BotonExit.Draw();
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
@@ -468,6 +491,19 @@ void Menu::drawSubmenu(void)
 void Menu::ratonInterfaz(int button, int state, int x, int y) {
 	interfaz.mouseBoard(button, state, x, y, *returnEstado());
 }
+void Menu::keyboardFullscreenMenu(unsigned char key, int x, int y) {
+	interfaz.keyboardFullscreen(key, x, y);
+}
 
-
+void Menu::estdoPartidaDraw(void) {
+	if (Estado != FINBLANCAS_MENU) {
+		if (Estado != FINNEGRAS_MENU) {
+			if (Estado != TABLAS_MENU) {
+				if (interfaz.EstadoPartida == Interface::GANADOBLANCAS) Estado = FINBLANCAS_MENU;
+				else if (interfaz.EstadoPartida == Interface::GANADONEGRAS) Estado = FINNEGRAS_MENU;
+				else if (interfaz.EstadoPartida == Interface::TABLAS) Estado = TABLAS_MENU;
+			}
+		}
+	}
+}
 //tiempos Son 3+2 5 10 y infinito
