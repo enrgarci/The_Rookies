@@ -10,10 +10,11 @@ using namespace std;
 //the AI makes a move randomly, selecting one of its available pieces only if that piece has moves that it can perform, then moves from its initial square to one selectect from its posible moves at random
 int AI::randommove(Tablero& T, color col)
 {
-	int selectpiece=-1, numpiece, canmove=0, soundmove=0;
+	int selectpiece = -1, numpiece, canmove = 0, soundmove = 0;
+	float evaluation = 900;
 	color piece_color;
 	vector<int> ia_list_pieces, ia_move_list, enemy_list_pieces;
-	int ia_move_size, destinationelement;
+	int ia_move_size, destinationelement, ia_piece_type, enemy_piece_type;
 	ia_list_pieces = T.get_Color_Pieces(col);
 	enemy_list_pieces = T.get_Color_Pieces(Blanco);
 	numpiece = ia_list_pieces.size();
@@ -25,24 +26,37 @@ int AI::randommove(Tablero& T, color col)
 			canmove = 1;
 			break;
 		}
-	}
+	} 
 	if (canmove == 1)
 	{
 		for (int piece = 0; piece < numpiece; piece++)
 		{
 			ia_move_list = T[ia_list_pieces[piece]].getMoveList();
+			ia_piece_type = T[ia_list_pieces[piece]].getFigura();
 			for (int move = 0; move < ia_move_list.size(); move++)
 			{
 				for (int white_p = 0; white_p < enemy_list_pieces.size(); white_p++)
 				{
+					enemy_piece_type = T[enemy_list_pieces[white_p]].getFigura();
 					if (ia_move_list[move] == enemy_list_pieces[white_p])
 					{
-						selectpiece = ia_list_pieces[piece];
-						destinationelement = move;
+						if (ia_piece_type >= enemy_piece_type && enemy_piece_type <= evaluation)
+						{
+							evaluation = enemy_piece_type;
+							selectpiece = ia_list_pieces[piece];
+							destinationelement = move;
+						}
+						if (ia_piece_type < enemy_piece_type && !T[ia_move_list[move]].getCheck(Negro) && enemy_piece_type <= evaluation) //white piece is un-protected
+						{
+							evaluation = enemy_piece_type-0.25f;
+							selectpiece = ia_list_pieces[piece];
+							destinationelement = move;
+						}
 					}
 				}
 			}
 		}
+		//
 		if (selectpiece == -1)
 		{
 			do
