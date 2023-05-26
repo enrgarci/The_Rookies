@@ -1,6 +1,7 @@
 #pragma once
 #include "Boton.h"
 #include "Interface.h"
+
 class Menu
 {
 private:
@@ -19,7 +20,6 @@ private:
         juego1vsia, creditos, Logo, depaso, exit;
     //Buttons in options
     Boton homefromBoton, Boton3min, Boton5min, Boton10min, classic, pvsz, sw, pk, visualiza;
-    int tiempo;
     float aum3min, aum5min, aum10min;
     //Buttons in submenu
     Boton BotonGuardar, BotonExit, BotonReanudar, BotonMenuPpal;

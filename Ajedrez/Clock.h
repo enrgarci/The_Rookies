@@ -24,5 +24,5 @@ public:
 inline float ChessClock::getInitialTime(){return (float)m_total_time;}
 inline float ChessClock::getIncremet(){return (float)m_increment;}
 inline void ChessClock::setOrigin(){m_origin = clock();}
-inline void ChessClock::setTime(float time){m_total_time = time;}
+inline void ChessClock::setTime(float time) { m_total_time = time; m_remaining = time; }
 #endif // CLOCK_H
