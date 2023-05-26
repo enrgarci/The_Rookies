@@ -94,7 +94,7 @@ void Menu::menusIni(Interface inter)
 	coordinate coordenadas;
 	coordenadas.x = 0;
 	coordenadas.y = 0;
-	Estado = 4;//play
+	Estado = 2;//play
 	EstadoSkin = 1;//classic
 	imagenInstruccion = 1;
 	tiempo = 180; //3min default
@@ -125,21 +125,25 @@ void Menu::drawInicio(void) {
 void Menu::drawDepaso(void)
 {
 	//Common parameters of the buttons
-	int buttonsHeightMenu = 2.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
+	int buttonsHeightMenu = 3 * glutGet(GLUT_WINDOW_HEIGHT) / 20;
 	int buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	int buttonsWidth = 4 * glutGet(GLUT_WINDOW_WIDTH) / 20;
 	int const r = 250, g = 0, b = 250;
 
-	juego1vs1.Set(buttonsXPosition, 16 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	
+
+	juego1vs1.Set(buttonsXPosition, 16 * glutGet(GLUT_WINDOW_HEIGHT) / 20, buttonsWidth, buttonsHeightMenu, r, g, b);
 	juego1vs1.Draw();
-	juego1vsia.Set(buttonsXPosition, 12.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	juego1vsia.Set(buttonsXPosition, 12.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, buttonsWidth, buttonsHeightMenu, r, g, b);
 	juego1vsia.Draw();
-	buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	instrucciones.Set(buttonsXPosition, 9 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 7 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	buttonsXPosition = 5 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	instrucciones.Set(buttonsXPosition, 8.5 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 10 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
 	instrucciones.Draw();
-	buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
-	opciones.Set(buttonsXPosition, 6 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	buttonsXPosition = 6 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	opciones.Set(buttonsXPosition, 4.5	 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 8 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
 	opciones.Draw();
-	exit.Set(buttonsXPosition, 2 * glutGet(GLUT_WINDOW_HEIGHT) / 20, 4 * glutGet(GLUT_WINDOW_WIDTH) / 20, buttonsHeightMenu, r, g, b);
+	buttonsXPosition = 8 * glutGet(GLUT_WINDOW_WIDTH) / 20;
+	exit.Set(buttonsXPosition, 1 * glutGet(GLUT_WINDOW_HEIGHT) / 20, buttonsWidth, buttonsHeightMenu, r, g, b);
 	exit.Draw();
 
 	//Background picture
@@ -148,6 +152,7 @@ void Menu::drawDepaso(void)
 	poligonoVistaImagen();
 	glDisable(GL_TEXTURE_2D);
 	//fin imagen fondo
+	
 }
 
 void Menu::drawInstrucciones(void) {
@@ -330,7 +335,6 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (Boton5min.isInside(button, state, x, y))
 		{
 			tiempo = 300;
-			tiempo = 180;
 			aum3min = 1.0;
 			aum5min = 1.2;
 			aum10min = 1.0;
@@ -338,7 +342,6 @@ void Menu::botonVentana(int button, int state, int x, int y)
 		if (Boton10min.isInside(button, state, x, y))
 		{
 			tiempo = 600;
-			tiempo = 180;
 			aum3min = 1.0;
 			aum5min = 1.0;
 			aum10min = 1.2;
@@ -529,8 +532,7 @@ void Menu::drawSubmenu(void)
 	//SET POSITION AND COLOR
 	BotonReanudar.Set(6 * w / 16, 11 * h / 16, 4 * w / 16, 2 * h / 16, 200, 200, 200);
 	BotonMenuPpal.Set(5.5 * w / 16, 8 * h / 16, 5 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonGuardar.Set(4 * w / 16, 5 * h / 16, 3.25 * w / 16, 2 * h / 16, 200, 200, 200);
-	BotonExit.Set(9 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
+	BotonExit.Set(6.7 * w / 16, 5 * h / 16, 3 * w / 16, 2 * h / 16, 200, 200, 200);
 	
 
 	
@@ -546,8 +548,7 @@ void Menu::drawSubmenu(void)
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/MenuPpal.png").id);
 	BotonMenuPpal.Draw();
 
-	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/GUARDAR.png").id);
-	BotonGuardar.Draw();
+	
 
 	glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("imagenes/Submenu/exit.png").id);
 	BotonExit.Draw();
@@ -560,6 +561,3 @@ void Menu::drawSubmenu(void)
 void Menu::ratonInterfaz(int button, int state, int x, int y) {
 	interfaz.mouseBoard(button, state, x, y, *returnEstado());
 }
-
-
-//tiempos Son 3+2 5 10 y infinito
