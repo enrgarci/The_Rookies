@@ -18,9 +18,11 @@ private:
 	Boton instrucciones, opciones, juego1vs1,
 		juego1vsia, creditos, Logo, depaso, exit;
 	//Buttons in options
-	Boton homefromBoton, classic, pvsz, sw, pk, visualiza;
+	Boton homefromBoton,Boton3min, Boton5min, Boton10min, classic, pvsz, sw, pk, visualiza;
+	int tiempo;
+	float aum3min, aum5min, aum10min;
 	//Buttons in submenu
-	Boton BotonGuardar, BotonCargar, Boton3min, Boton5min, Boton10min, BotonReanudar, BotonMenuPpal;
+	Boton BotonGuardar, BotonExit, BotonReanudar, BotonMenuPpal;
 	int aumento=1;
 	//Buttons in instrucciones
 	Boton BotonAnterior, BotonSiguiente;
