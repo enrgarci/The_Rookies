@@ -7,17 +7,22 @@ class Partida;
 class Reloj
 {
 private:
-	Boton aguja, marco;
+		Boton aguja, marco;
 	float theta;
 	float posx; 
+	//float posxAguja;
 	float posy;
-	float size;
+	float size, minsize, amplitud;
+	float aum;
+
 	color c;
 
 public:
 
 	Reloj();
-	Reloj(const float posx,const float posy,const float size,const color colorR) : posx(posx), posy(posy), size(size), c(colorR) {};
+	Reloj(const float posx,const float posy,const float size,const color colorR) : 
+		posx(posx), posy(posy), size(size), c(colorR),
+		minsize(size), amplitud(size*0.05), aum(0.1) {};
 	void draw(Partida &P);
 };
 
