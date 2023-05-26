@@ -409,6 +409,7 @@ void Menu::botonHomeDraw() {
 	//End of Main menu button
 	funca = false;
 	S.stopMusica();
+	interfaz.EstadoPartida = 0;
 }
 
 void Menu::drawOpcion(void) {
