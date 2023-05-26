@@ -52,17 +52,16 @@ public:
 	bool nanoState(int key = 0);
 	void drawMovement(int EstadoSkin);
 	void reshape(int w, int h);
-	void mouseBoard(int button, int state, int x, int y, int & Estado);
+	void mouseBoard(int button, int state, int x, int y, int& Estado);
 	void keyboardFullscreen(unsigned char key, int x, int y);
-	
+
 
 	void drawButtons();
 	void mouseButtons(int button, int state, int x, int y, int& Estado);
 	void submenu(int& Estado);
 	void enableIA(bool enable);
 	void comoVaLaPartida(int estadoPartida, int Turno);
-	int getEstadoPartida() {return EstadoPartida;}
+	int getEstadoPartida() { return EstadoPartida; }
 
 	friend class Menu;
 };
-
