@@ -62,5 +62,7 @@ public:
 	void enableIA(bool enable);
 	void comoVaLaPartida(int estadoPartida, int Turno);
 	int getEstadoPartida() {return EstadoPartida;}
-	
+
+	friend class Menu;
 };
+
